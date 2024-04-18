@@ -14,10 +14,38 @@
 //  limitations under the License.
 //
 
+/// A type that can be compared for identity equality.
+///
 public protocol CowBox {
+  /// Returns a Boolean value indicating whether two instances are equal by identity.
+  ///
+  /// - Parameters:
+  ///   - other: An instance to compare.
   func isIdentical(to other: Self) -> Bool
 }
 
+/// If the value is `.withPublic`, the generated member-wise initializer is `public`. If the value is `.withInternal`, the generated member-wise initializer is `internal`.
+public enum CowBoxInit {
+  /// The generated member-wise initializer is `internal`.
+  case withInternal
+  /// The generated member-wise initializer is `public`.
+  case withPublic
+}
+
+/// Generates a CowBox for a struct.
+///
+/// - Parameters:
+///   - init: If the value is `.withPublic`, the generated member-wise initializer is `public`. If the value is `.withInternal`, the generated member-wise initializer is `internal`.
+@attached(member, names: named(_Storage), named(_storage), named(init), named(==), named(hash), named(CodingKeys), named(encode), named(description))
+@attached(extension, conformances: CowBox, names: named(isIdentical))
+public macro CowBox(init: CowBoxInit) = #externalMacro(
+  module: "CowBoxMacros",
+  type: "CowBoxMacro"
+)
+
+/// Generates a CowBox for a struct.
+///
+/// If the struct is `public`, the generated member-wise initializer is `public`. If the struct is not `public`, the generated member-wise initializer is `internal`.
 @attached(member, names: named(_Storage), named(_storage), named(init), named(==), named(hash), named(CodingKeys), named(encode), named(description))
 @attached(extension, conformances: CowBox, names: named(isIdentical))
 public macro CowBox() = #externalMacro(
@@ -25,12 +53,16 @@ public macro CowBox() = #externalMacro(
   type: "CowBoxMacro"
 )
 
+/// Generates a CowBox getter and setter for a stored instance property.
+///
 @attached(accessor)
 public macro CowBoxMutating() = #externalMacro(
   module: "CowBoxMacros",
   type: "CowBoxMutatingMacro"
 )
 
+/// Generates a CowBox getter for a stored instance property.
+///
 @attached(accessor)
 public macro CowBoxNonMutating() = #externalMacro(
   module: "CowBoxMacros",

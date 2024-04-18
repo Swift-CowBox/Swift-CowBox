@@ -19,28 +19,6 @@ import CowBox
 //  MARK: KNOWN ISSUES
 //  MARK: -
 
-//  MARK: NESTED STRUCT
-//  CowBox fails when applied to a nested struct.
-
-//  struct Parent {
-//    @CowBox struct Person {
-//      @CowBoxNonMutating var id: String
-//      @CowBoxMutating var name: String
-//    }
-//  }
-
-//  Workaround:
-//  Move nested struct to top-level.
-
-//  struct Parent {
-//
-//  }
-//
-//  @CowBox struct Person {
-//    @CowBoxNonMutating var id: String
-//    @CowBoxMutating var name: String
-//  }
-
 //  MARK: PROTOCOL IN EXTENSION
 //  CowBox fails to synthesize conformance when protocol is adopted in extension.
 
