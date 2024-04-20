@@ -38,33 +38,21 @@ public enum CowBoxInit {
 ///   - init: If the value is `.withPublic`, the generated member-wise initializer is `public`. If the value is `.withInternal`, the generated member-wise initializer is `internal`.
 @attached(member, names: named(_Storage), named(_storage), named(init), named(==), named(hash), named(CodingKeys), named(encode), named(description))
 @attached(extension, conformances: CowBox, names: named(isIdentical))
-public macro CowBox(init: CowBoxInit) = #externalMacro(
-  module: "CowBoxMacros",
-  type: "CowBoxMacro"
-)
+public macro CowBox(init: CowBoxInit) = #externalMacro(module: "CowBoxMacros", type: "CowBoxMacro")
 
 /// Generates a CowBox for a struct.
 ///
 /// If the struct is `public`, the generated member-wise initializer is `public`. If the struct is not `public`, the generated member-wise initializer is `internal`.
 @attached(member, names: named(_Storage), named(_storage), named(init), named(==), named(hash), named(CodingKeys), named(encode), named(description))
 @attached(extension, conformances: CowBox, names: named(isIdentical))
-public macro CowBox() = #externalMacro(
-  module: "CowBoxMacros",
-  type: "CowBoxMacro"
-)
+public macro CowBox() = #externalMacro(module: "CowBoxMacros", type: "CowBoxMacro")
 
 /// Generates a CowBox getter and setter for a stored instance property.
 ///
 @attached(accessor)
-public macro CowBoxMutating() = #externalMacro(
-  module: "CowBoxMacros",
-  type: "CowBoxMutatingMacro"
-)
+public macro CowBoxMutating() = #externalMacro(module: "CowBoxMacros", type: "CowBoxMutatingMacro")
 
 /// Generates a CowBox getter for a stored instance property.
 ///
 @attached(accessor)
-public macro CowBoxNonMutating() = #externalMacro(
-  module: "CowBoxMacros",
-  type: "CowBoxNonMutatingMacro"
-)
+public macro CowBoxNonMutating() = #externalMacro(module: "CowBoxMacros", type: "CowBoxNonMutatingMacro")

@@ -72,34 +72,18 @@ import CowBox
 //  }
 //
 //  let _ = Person(id: "id")
+//  let _ = Person(id: "id", name: nil)
 
 //  Workaround:
-//  Define a new initializer or explicitly pass `nil` to the default memberwise initializer.
+//  Explicitly define `nil` as a default property value.
 
 //  @CowBox struct Person {
 //    @CowBoxNonMutating var id: String
-//    @CowBoxMutating var name: String?
-//  }
-//
-//  extension Person {
-//    init(id: String) {
-//      self.init(
-//        id: id,
-//        name: nil
-//      )
-//    }
+//    @CowBoxMutating var name: String? = nil
 //  }
 //
 //  let _ = Person(id: "id")
 //  let _ = Person(id: "id", name: nil)
-
-//  MARK: STORED PROPERTIES WITH DEFAULT VALUES
-//  Not currently supported.
-
-//  @CowBox struct Person {
-//    @CowBoxNonMutating var id: String = "id"
-//    @CowBoxMutating var name: String = "name"
-//  }
 
 //  MARK: STORED PROPERTIES WITH INFERRED TYPES
 //  Not currently supported.

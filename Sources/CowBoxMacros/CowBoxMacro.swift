@@ -121,6 +121,122 @@ extension CowBoxMacro.SimpleDiagnosticMessage {
   }
 }
 
+extension CowBoxMacro: MemberMacro {
+  public static func expansion(
+    of node: AttributeSyntax,
+    providingMembersOf declaration: some DeclGroupSyntax,
+    in context: some MacroExpansionContext
+  ) throws -> [DeclSyntax] {
+    guard
+      let declaration = declaration.as(StructDeclSyntax.self)
+    else {
+      context.diagnose(
+        Diagnostic(
+          node: node,
+          message: SimpleDiagnosticMessage.notStruct
+        )
+      )
+      throw SimpleDiagnosticMessage.notStruct
+    }
+    
+    let storageClassVariables = declaration.storageClassVariables
+    let storageClassParameters = declaration.storageClassParameters
+    
+    var expansion = [
+      DeclSyntax(
+        self.storageClass(
+          storageClassVariables: storageClassVariables,
+          storageClassParameters: storageClassParameters
+        )
+      ),
+      DeclSyntax(
+        self.storageVariable()
+      ),
+      DeclSyntax(
+        self.initializer(
+          isPublic: declaration.isPublic,
+          with: node.initArgument(),
+          storageClassVariables: storageClassVariables,
+          storageClassParameters: storageClassParameters
+        )
+      ),
+    ]
+    
+    if declaration.isCustomStringConvertible,
+       declaration.hasDescriptionVariable == false {
+      expansion.append(
+        DeclSyntax(
+          self.descriptionVariable(
+            isPublic: declaration.isPublic,
+            with: declaration.name,
+            storageClassParameters: storageClassParameters
+          )
+        )
+      )
+    }
+    
+    if declaration.isEquatable,
+       declaration.hasEqualFunction == false {
+      expansion.append(
+        DeclSyntax(
+          self.equalFunction(
+            isPublic: declaration.isPublic,
+            with: declaration.name,
+            storageClassParameters: storageClassParameters
+          )
+        )
+      )
+    }
+    
+    if declaration.isHashable,
+       declaration.hasHashFunction == false {
+      expansion.append(
+        DeclSyntax(
+          self.hashFunction(
+            isPublic: declaration.isPublic,
+            storageClassParameters: storageClassParameters
+          )
+        )
+      )
+    }
+    
+    if declaration.isDecodable || declaration.isEncodable,
+       declaration.hasCodingKeys == false {
+      expansion.append(
+        DeclSyntax(
+          self.codingKeys(storageClassParameters: storageClassParameters)
+        )
+      )
+    }
+    
+    if declaration.isDecodable,
+       declaration.hasDecodeInitializer == false {
+      expansion.append(
+        DeclSyntax(
+          self.decodeInitializer(
+            isPublic: declaration.isPublic,
+            storageClassParameters: storageClassParameters
+          )
+        )
+      )
+    }
+    
+    if declaration.isEncodable,
+       declaration.hasEncodeFunction == false {
+      expansion.append(
+        DeclSyntax(
+          self.encodeFunction(
+            isPublic: declaration.isPublic,
+            storageClassParameters: storageClassParameters
+          )
+        )
+      )
+    }
+    
+    return expansion
+  }
+}
+
 extension CowBoxMacro: ExtensionMacro {
   public static func expansion(
     of node: AttributeSyntax,
@@ -143,153 +259,197 @@ extension CowBoxMacro: ExtensionMacro {
     }
     
     let expansion = [
-      Self.cowBoxExtension(
-        attachedTo: declaration,
-        providingExtensionsOf: type
-      ),
-    ]
-    
-    return expansion
-  }
-}
-
-extension CowBoxMacro: MemberMacro {
-  public static func expansion(
-    of node: AttributeSyntax,
-    providingMembersOf declaration: some DeclGroupSyntax,
-    in context: some MacroExpansionContext
-  ) throws -> [DeclSyntax] {
-    guard
-      let declaration = declaration.as(StructDeclSyntax.self)
-    else {
-      context.diagnose(
-        Diagnostic(
-          node: node,
-          message: SimpleDiagnosticMessage.notStruct
-        )
-      )
-      throw SimpleDiagnosticMessage.notStruct
-    }
-    
-    var expansion = [
-      DeclSyntax(declaration.storageClass),
-      DeclSyntax(declaration.storageVariable),
-      DeclSyntax(
-        declaration.initializer(
-          with: node.initArgument()
-        )
-      ),
-    ]
-    
-    if declaration.isCustomStringConvertible,
-       declaration.hasDescriptionVariable == false {
-      expansion.append(
-        DeclSyntax(declaration.descriptionVariable)
-      )
-    }
-    
-    if declaration.isEquatable,
-       declaration.hasEqualFunction == false {
-      expansion.append(
-        DeclSyntax(declaration.equalFunction)
-      )
-    }
-    
-    if declaration.isHashable,
-       declaration.hasHashFunction == false {
-      expansion.append(
-        DeclSyntax(declaration.hashFunction)
-      )
-    }
-    
-    if declaration.isDecodable || declaration.isEncodable,
-       declaration.hasCodingKeys == false {
-      expansion.append(
-        DeclSyntax(declaration.codingKeys)
-      )
-    }
-    
-    if declaration.isDecodable,
-       declaration.hasDecodeInitializer == false {
-      expansion.append(
-        DeclSyntax(declaration.decodeInitializer)
-      )
-    }
-    
-    if declaration.isEncodable,
-       declaration.hasEncodeFunction == false {
-      expansion.append(
-        DeclSyntax(declaration.encodeFunction)
-      )
-    }
-    
-    return expansion
-  }
-}
-
-extension CowBoxMacro {
-  static func cowBoxExtension(
-    attachedTo declaration: StructDeclSyntax,
-    providingExtensionsOf type: some TypeSyntaxProtocol
-  ) -> ExtensionDeclSyntax {
-    ExtensionDeclSyntax(
-      extendedType: type.trimmed,
-      inheritanceClause: InheritanceClauseSyntax {
-        InheritedTypeSyntax(type: TypeSyntax("CowBox"))
-      }
-    ) {
-      self.identicalFunction(
+      self.cowBoxExtension(
         isPublic: declaration.isPublic,
         with: type
-      )
+      ),
+    ]
+    
+    return expansion
+  }
+}
+
+extension CowBoxMacro {
+  static func storageClass(
+    storageClassVariables: [VariableDeclSyntax],
+    storageClassParameters: [FunctionParameterSyntax]
+  ) -> ClassDeclSyntax {
+    ClassDeclSyntax(
+      modifiers: DeclModifierListSyntax {
+        DeclModifierSyntax(name: TokenSyntax(.keyword(.private), presence: .present))
+        DeclModifierSyntax(name: TokenSyntax(.keyword(.final), presence: .present))
+      },
+      name: TokenSyntax(.identifier(CowBoxMacro.storageClassName), presence: .present),
+      inheritanceClause: InheritanceClauseSyntax {
+        InheritedTypeSyntax(type: TypeSyntax("@unchecked Sendable"))
+      }
+    ) {
+      for variable in storageClassVariables {
+        variable
+      }
+      self.storageClassInitializer(storageClassParameters: storageClassParameters)
+      self.storageClassCopyFunction(storageClassParameters: storageClassParameters)
     }
   }
 }
 
 extension CowBoxMacro {
-  static func identicalFunction(
-    isPublic: Bool,
-    with type: some TypeSyntaxProtocol
-  ) -> FunctionDeclSyntax {
-    FunctionDeclSyntax(
-      modifiers: DeclModifierListSyntax {
-        if isPublic {
-          DeclModifierSyntax(name: .keyword(.public))
-        }
-      },
-      name: "isIdentical",
+  static func storageClassInitializer(storageClassParameters: [FunctionParameterSyntax]) -> InitializerDeclSyntax {
+    InitializerDeclSyntax(
       signature: FunctionSignatureSyntax(
         parameterClause: FunctionParameterClauseSyntax {
-          "to other: \(type.trimmed)"
-        },
-        returnClause: ReturnClauseSyntax(
-          type: IdentifierTypeSyntax(name: "Bool")
-        )
+          FunctionParameterListSyntax {
+            for parameter in storageClassParameters {
+              FunctionParameterSyntax(
+                firstName: parameter.firstName,
+                type: parameter.type
+              )
+            }
+          }
+        }
       )
     ) {
-      "self.\(raw: CowBoxMacro.storageVariableName) === other.\(raw: CowBoxMacro.storageVariableName)"
+      for parameter in storageClassParameters {
+        "self.\(parameter.firstName) = \(parameter.firstName)"
+      }
     }
   }
 }
 
 extension CowBoxMacro {
-  static func customStringConvertibleExtension(
-    attachedTo declaration: StructDeclSyntax,
-    providingExtensionsOf type: some TypeSyntaxProtocol
-  ) -> ExtensionDeclSyntax {
-    ExtensionDeclSyntax(
-      extendedType: type,
-      inheritanceClause: InheritanceClauseSyntax {
-        InheritedTypeSyntax(type: TypeSyntax("CustomStringConvertible"))
-      }
+  static func storageClassCopyFunction(storageClassParameters: [FunctionParameterSyntax]) -> FunctionDeclSyntax {
+    FunctionDeclSyntax(
+      name: TokenSyntax(.identifier(CowBoxMacro.copyFunctionName), presence: .present),
+      signature: FunctionSignatureSyntax(
+        parameterClause: FunctionParameterClauseSyntax { },
+        returnClause: ReturnClauseSyntax(
+          type: IdentifierTypeSyntax(
+            name: TokenSyntax(.identifier(CowBoxMacro.storageClassName), presence: .present)
+          )
+        )
+      )
     ) {
-      if declaration.hasDescriptionVariable == false {
-        self.descriptionVariable(
-          isPublic: declaration.isPublic,
-          with: type,
-          storageClassParameters: declaration.storageClassParameters
+      FunctionCallExprSyntax(
+        calledExpression: DeclReferenceExprSyntax(
+          baseName: TokenSyntax(.identifier(CowBoxMacro.storageClassName), presence: .present)
+        ),
+        leftParen: .leftParenToken(),
+        arguments: LabeledExprListSyntax {
+          for parameter in storageClassParameters {
+            LabeledExprSyntax(
+              label: parameter.firstName,
+              colon: .colonToken(),
+              expression: DeclReferenceExprSyntax(
+                baseName: "self.\(parameter.firstName)"
+              )
+            )
+          }
+        },
+        rightParen: .rightParenToken()
+      )
+    }
+  }
+}
+
+extension CowBoxMacro {
+  static func storageVariable() -> VariableDeclSyntax {
+    VariableDeclSyntax(
+      modifiers: DeclModifierListSyntax {
+        DeclModifierSyntax(name: .keyword(.private))
+      },
+      bindingSpecifier: TokenSyntax(.keyword(.var), presence: .present),
+      bindings: PatternBindingListSyntax {
+        PatternBindingSyntax(
+          pattern: IdentifierPatternSyntax(
+            identifier: TokenSyntax(.identifier(CowBoxMacro.storageVariableName), presence: .present)
+          ),
+          typeAnnotation: TypeAnnotationSyntax(
+            type: IdentifierTypeSyntax(
+              name: TokenSyntax(.identifier(CowBoxMacro.storageClassName), presence: .present)
+            )
+          )
         )
       }
+    )
+  }
+}
+
+extension CowBoxMacro {
+  static func initializer(
+    isPublic: Bool,
+    with initArgument: CowBoxInit?,
+    storageClassVariables: [VariableDeclSyntax],
+    storageClassParameters: [FunctionParameterSyntax]
+  ) -> InitializerDeclSyntax {
+    //  https://github.com/apple/swift-evolution/blob/main/proposals/0242-default-values-memberwise.md
+    
+    let parameters: [FunctionParameterSyntax] = Swift.zip(storageClassVariables, storageClassParameters).compactMap { variable, parameter in
+      if variable.bindingSpecifier.tokenKind == .keyword(.let),
+         parameter.defaultValue != nil {
+        return nil
+      }
+      return parameter
+    }
+    
+    let arguments: [LabeledExprSyntax] = Swift.zip(storageClassVariables, storageClassParameters).map { variable, parameter in
+      if variable.bindingSpecifier.tokenKind == .keyword(.let),
+         let value = parameter.defaultValue?.value {
+        return LabeledExprSyntax(
+          label: parameter.firstName,
+          colon: .colonToken(),
+          expression: value
+        )
+      }
+      return LabeledExprSyntax(
+        label: parameter.firstName,
+        colon: .colonToken(),
+        expression: DeclReferenceExprSyntax(
+          baseName: parameter.firstName
+        )
+      )
+    }
+    
+    return InitializerDeclSyntax(
+      modifiers: DeclModifierListSyntax {
+        if let initArgument = initArgument {
+          if case .withPublic = initArgument {
+            DeclModifierSyntax(name: .keyword(.public))
+          }
+        } else {
+          if isPublic {
+            DeclModifierSyntax(name: .keyword(.public))
+          }
+        }
+      },
+      signature: FunctionSignatureSyntax(
+        parameterClause: FunctionParameterClauseSyntax {
+          FunctionParameterListSyntax(parameters)
+        }
+      )
+    ) {
+      InfixOperatorExprSyntax(
+        leftOperand: MemberAccessExprSyntax(
+          base: DeclReferenceExprSyntax(
+            baseName: TokenSyntax(.keyword(.`self`), presence: .present)
+          ),
+          declName: DeclReferenceExprSyntax(
+            baseName: TokenSyntax(.identifier(CowBoxMacro.storageVariableName), presence: .present)
+          )
+        ),
+        operator: AssignmentExprSyntax(),
+        rightOperand: FunctionCallExprSyntax(
+          calledExpression: DeclReferenceExprSyntax(
+            baseName: TokenSyntax(.identifier(CowBoxMacro.storageClassName), presence: .present)
+          ),
+          leftParen: .leftParenToken(),
+          arguments: LabeledExprListSyntax {
+            for argument in arguments {
+              argument
+            }
+          },
+          rightParen: .rightParenToken()
+        )
+      )
     }
   }
 }
@@ -297,7 +457,7 @@ extension CowBoxMacro {
 extension CowBoxMacro {
   static func descriptionVariable(
     isPublic: Bool,
-    with type: some TypeSyntaxProtocol,
+    with type: some SyntaxProtocol,
     storageClassParameters: [FunctionParameterSyntax]
   ) -> VariableDeclSyntax {
     //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/stdlib/public/core/OutputStream.swift#L339-L355
@@ -347,6 +507,232 @@ extension CowBoxMacro {
         )
       }
     )
+  }
+}
+
+extension CowBoxMacro {
+  static func equalFunction(
+    isPublic: Bool,
+    with type: some SyntaxProtocol,
+    storageClassParameters: [FunctionParameterSyntax]
+  ) -> FunctionDeclSyntax {
+    //  https://github.com/apple/swift-evolution/blob/main/proposals/0185-synthesize-equatable-hashable.md
+    
+    //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceEquatableHashable.cpp#L292-L341
+    
+    FunctionDeclSyntax(
+      modifiers: DeclModifierListSyntax {
+        if isPublic {
+          DeclModifierSyntax(name: .keyword(.public))
+        }
+        DeclModifierSyntax(name: TokenSyntax(.keyword(.static), presence: .present))
+      },
+      name: .binaryOperator("=="),
+      signature: FunctionSignatureSyntax(
+        parameterClause: FunctionParameterClauseSyntax {
+          "lhs: \(type.trimmed)"
+          "rhs: \(type.trimmed)"
+        },
+        returnClause: ReturnClauseSyntax(
+          type: IdentifierTypeSyntax(name: "Bool")
+        )
+      )
+    ) {
+      "if lhs.isIdentical(to: rhs) { return true }"
+      for parameter in storageClassParameters {
+        "guard lhs.\(parameter.firstName) == rhs.\(parameter.firstName) else { return false }"
+      }
+      "return true"
+    }
+  }
+}
+
+extension CowBoxMacro {
+  static func hashFunction(
+    isPublic: Bool,
+    storageClassParameters: [FunctionParameterSyntax]
+  ) -> FunctionDeclSyntax {
+    //  https://github.com/apple/swift-evolution/blob/main/proposals/0185-synthesize-equatable-hashable.md
+    //  https://github.com/apple/swift-evolution/blob/main/proposals/0206-hashable-enhancements.md
+    
+    //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceEquatableHashable.cpp#L778-L820
+    
+    //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceEquatableHashable.cpp#L574-L595
+    //  TODO: SUPPORT LEGACY HASH VALUE
+    
+    FunctionDeclSyntax(
+      modifiers: DeclModifierListSyntax {
+        if isPublic {
+          DeclModifierSyntax(name: .keyword(.public))
+        }
+      },
+      name: TokenSyntax(.identifier("hash"), presence: .present),
+      signature: FunctionSignatureSyntax(
+        parameterClause: FunctionParameterClauseSyntax {
+          "into hasher: inout Hasher"
+        }
+      )
+    ) {
+      for parameter in storageClassParameters {
+        "hasher.combine(self.\(parameter.firstName))"
+      }
+    }
+  }
+}
+
+extension CowBoxMacro {
+  static func codingKeys(storageClassParameters: [FunctionParameterSyntax]) -> EnumDeclSyntax {
+    //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceCodable.cpp#L216-L244
+    
+    EnumDeclSyntax(
+      modifiers: DeclModifierListSyntax {
+        DeclModifierSyntax(name: .keyword(.private))
+      },
+      name: "CodingKeys",
+      inheritanceClause: InheritanceClauseSyntax {
+        InheritedTypeSyntax(type: TypeSyntax("String"))
+        InheritedTypeSyntax(type: TypeSyntax("CodingKey"))
+      }
+    ) {
+      for parameter in storageClassParameters {
+        EnumCaseDeclSyntax(
+          elements: EnumCaseElementListSyntax {
+            EnumCaseElementSyntax(name: parameter.firstName)
+          }
+        )
+      }
+    }
+  }
+}
+
+extension CowBoxMacro {
+  static func decodeInitializer(
+    isPublic: Bool,
+    storageClassParameters: [FunctionParameterSyntax]
+  ) -> InitializerDeclSyntax {
+    //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceCodable.cpp#L1304-L1541
+    
+    InitializerDeclSyntax(
+      modifiers: DeclModifierListSyntax {
+        if isPublic {
+          DeclModifierSyntax(name: .keyword(.public))
+        }
+      },
+      signature: FunctionSignatureSyntax(
+        parameterClause: FunctionParameterClauseSyntax {
+          "from decoder: Decoder"
+        },
+        effectSpecifiers: FunctionEffectSpecifiersSyntax(
+          //  throwsClause: ThrowsClauseSyntax(throwsSpecifier: .keyword(.throws))
+          throwsSpecifier: .keyword(.throws)
+        )
+      )
+    ) {
+      "let values = try decoder.container(keyedBy: CodingKeys.self)"
+      for parameter in storageClassParameters {
+        "let \(parameter.firstName) = try values.decode(\(parameter.type).self, forKey: .\(parameter.firstName))"
+      }
+      FunctionCallExprSyntax(
+        calledExpression: MemberAccessExprSyntax(
+          base: DeclReferenceExprSyntax(
+            baseName: TokenSyntax(.keyword(.self), presence: .present)
+          ),
+          declName: DeclReferenceExprSyntax(
+            baseName: TokenSyntax(.keyword(.`init`), presence: .present)
+          )
+        ),
+        leftParen: .leftParenToken(),
+        arguments: LabeledExprListSyntax {
+          for parameter in storageClassParameters {
+            LabeledExprSyntax(
+              label: parameter.firstName,
+              colon: .colonToken(),
+              expression: DeclReferenceExprSyntax(
+                baseName: parameter.firstName
+              )
+            )
+          }
+        },
+        rightParen: .rightParenToken()
+      )
+    }
+  }
+}
+
+extension CowBoxMacro {
+  static func encodeFunction(
+    isPublic: Bool,
+    storageClassParameters: [FunctionParameterSyntax]
+  ) -> FunctionDeclSyntax {
+    //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceCodable.cpp#L790-L928
+    
+    FunctionDeclSyntax(
+      modifiers: DeclModifierListSyntax {
+        if isPublic {
+          DeclModifierSyntax(name: .keyword(.public))
+        }
+      },
+      name: TokenSyntax(.identifier("encode"), presence: .present),
+      signature: FunctionSignatureSyntax(
+        parameterClause: FunctionParameterClauseSyntax {
+          "to encoder: any Encoder"
+        },
+        effectSpecifiers: FunctionEffectSpecifiersSyntax(
+          //  throwsClause: ThrowsClauseSyntax(throwsSpecifier: .keyword(.throws))
+          throwsSpecifier: .keyword(.throws)
+        )
+      )
+    ) {
+      "var container = encoder.container(keyedBy: CodingKeys.self)"
+      for parameter in storageClassParameters {
+        "try container.encode(self.\(parameter.firstName), forKey: .\(parameter.firstName))"
+      }
+    }
+  }
+}
+
+extension CowBoxMacro {
+  static func cowBoxExtension(
+    isPublic: Bool,
+    with type: some TypeSyntaxProtocol
+  ) -> ExtensionDeclSyntax {
+    ExtensionDeclSyntax(
+      extendedType: type,
+      inheritanceClause: InheritanceClauseSyntax {
+        InheritedTypeSyntax(type: TypeSyntax("CowBox"))
+      }
+    ) {
+      self.identicalFunction(
+        isPublic: isPublic,
+        with: type
+      )
+    }
+  }
+}
+
+extension CowBoxMacro {
+  static func identicalFunction(
+    isPublic: Bool,
+    with type: some TypeSyntaxProtocol
+  ) -> FunctionDeclSyntax {
+    FunctionDeclSyntax(
+      modifiers: DeclModifierListSyntax {
+        if isPublic {
+          DeclModifierSyntax(name: .keyword(.public))
+        }
+      },
+      name: "isIdentical",
+      signature: FunctionSignatureSyntax(
+        parameterClause: FunctionParameterClauseSyntax {
+          "to other: \(type.trimmed)"
+        },
+        returnClause: ReturnClauseSyntax(
+          type: IdentifierTypeSyntax(name: "Bool")
+        )
+      )
+    ) {
+      "self.\(raw: CowBoxMacro.storageVariableName) === other.\(raw: CowBoxMacro.storageVariableName)"
+    }
   }
 }
 
@@ -593,388 +979,21 @@ extension InitializerDeclSyntax {
 //  MARK: -
 
 extension StructDeclSyntax {
-  func initializer(with initArgument: CowBoxInit?) -> InitializerDeclSyntax {
-    //  https://github.com/apple/swift-evolution/blob/main/proposals/0242-default-values-memberwise.md
-    //  TODO: SUPPORT DEFAULT VALUES
-    
-    let parameters = self.storageClassParameters
-    
-    return InitializerDeclSyntax(
-      modifiers: DeclModifierListSyntax {
-        if let initArgument = initArgument {
-          if case .withPublic = initArgument {
-            DeclModifierSyntax(name: .keyword(.public))
-          }
-        } else {
-          if self.isPublic {
-            DeclModifierSyntax(name: .keyword(.public))
-          }
-        }
-      },
-      signature: FunctionSignatureSyntax(
-        parameterClause: FunctionParameterClauseSyntax {
-          FunctionParameterListSyntax(parameters)
-        }
-      )
-    ) {
-      InfixOperatorExprSyntax(
-        leftOperand: MemberAccessExprSyntax(
-          base: DeclReferenceExprSyntax(
-            baseName: TokenSyntax(.keyword(.`self`), presence: .present)
-          ),
-          declName: DeclReferenceExprSyntax(
-            baseName: TokenSyntax(.identifier(CowBoxMacro.storageVariableName), presence: .present)
-          )
-        ),
-        operator: AssignmentExprSyntax(),
-        rightOperand: FunctionCallExprSyntax(
-          calledExpression: DeclReferenceExprSyntax(
-            baseName: TokenSyntax(.identifier(CowBoxMacro.storageClassName), presence: .present)
-          ),
-          leftParen: .leftParenToken(),
-          arguments: LabeledExprListSyntax {
-            for parameter in parameters {
-              LabeledExprSyntax(
-                label: parameter.firstName,
-                colon: .colonToken(),
-                expression: DeclReferenceExprSyntax(
-                  baseName: parameter.firstName
-                )
-              )
-            }
-          },
-          rightParen: .rightParenToken()
-        )
-      )
-    }
-  }
-}
-
-extension StructDeclSyntax {
-  var storageClassInitializer: InitializerDeclSyntax {
-    let parameters = self.storageClassParameters
-    
-    return InitializerDeclSyntax(
-      signature: FunctionSignatureSyntax(
-        parameterClause: FunctionParameterClauseSyntax {
-          FunctionParameterListSyntax(parameters)
-        }
-      )
-    ) {
-      for parameter in parameters {
-        "self.\(parameter.firstName) = \(parameter.firstName)"
-      }
-    }
-  }
-}
-
-extension StructDeclSyntax {
-  var storageClassCopyFunction: FunctionDeclSyntax {
-    return FunctionDeclSyntax(
-      name: TokenSyntax(.identifier(CowBoxMacro.copyFunctionName), presence: .present),
-      signature: FunctionSignatureSyntax(
-        parameterClause: FunctionParameterClauseSyntax { },
-        returnClause: ReturnClauseSyntax(
-          type: IdentifierTypeSyntax(
-            name: TokenSyntax(.identifier(CowBoxMacro.storageClassName), presence: .present)
-          )
-        )
-      )
-    ) {
-      FunctionCallExprSyntax(
-        calledExpression: DeclReferenceExprSyntax(
-          baseName: TokenSyntax(.identifier(CowBoxMacro.storageClassName), presence: .present)
-        ),
-        leftParen: .leftParenToken(),
-        arguments: LabeledExprListSyntax {
-          for parameter in self.storageClassParameters {
-            LabeledExprSyntax(
-              label: parameter.firstName,
-              colon: .colonToken(),
-              expression: DeclReferenceExprSyntax(
-                baseName: "self.\(parameter.firstName)"
-              )
-            )
-          }
-        },
-        rightParen: .rightParenToken()
-      )
-    }
-  }
-}
-
-extension StructDeclSyntax {
-  var storageVariable: VariableDeclSyntax {
-    VariableDeclSyntax(
-      modifiers: DeclModifierListSyntax {
-        DeclModifierSyntax(name: .keyword(.private))
-      },
-      bindingSpecifier: TokenSyntax(.keyword(.var), presence: .present),
-      bindings: PatternBindingListSyntax {
-        PatternBindingSyntax(
-          pattern: IdentifierPatternSyntax(
-            identifier: TokenSyntax(.identifier(CowBoxMacro.storageVariableName), presence: .present)
-          ),
-          typeAnnotation: TypeAnnotationSyntax(
-            type: IdentifierTypeSyntax(
-              name: TokenSyntax(.identifier(CowBoxMacro.storageClassName), presence: .present)
-            )
-          )
-        )
-      }
-    )
-  }
-}
-
-extension StructDeclSyntax {
-  var storageClass: ClassDeclSyntax {
-    //  https://github.com/apple/swift-evolution/blob/main/proposals/0302-concurrent-value-and-concurrent-closures.md
-    
-    ClassDeclSyntax(
-      modifiers: DeclModifierListSyntax {
-        DeclModifierSyntax(name: TokenSyntax(.keyword(.private), presence: .present))
-        DeclModifierSyntax(name: TokenSyntax(.keyword(.final), presence: .present))
-      },
-      name: TokenSyntax(.identifier(CowBoxMacro.storageClassName), presence: .present),
-      inheritanceClause: InheritanceClauseSyntax {
-        InheritedTypeSyntax(type: TypeSyntax("@unchecked Sendable"))
-      }
-    ) {
-      for variable in self.storageClassVariables {
-        variable
-      }
-      self.storageClassInitializer
-      self.storageClassCopyFunction
-    }
-  }
-}
-
-extension StructDeclSyntax {
-  var descriptionVariable: VariableDeclSyntax {
-    //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/stdlib/public/core/OutputStream.swift#L339-L355
-    
-    //  https://oleb.net/blog/2016/12/optionals-string-interpolation/
-    //  FIXME: OPTIONAL VALUE WARNING
-    
-    let parameters = self.storageClassParameters.map { parameter in
-      CodeBlockItemListSyntax {
-        "string += \"\(parameter.firstName): \\(self.\(parameter.firstName))\""
-      }
-    }.joined(
-      separator: CodeBlockItemListSyntax {
-        "string += \", \""
-      }
-    )
-    
-    return VariableDeclSyntax(
-      modifiers: DeclModifierListSyntax {
-        if self.isPublic {
-          DeclModifierSyntax(name: .keyword(.public))
-        }
-      },
-      bindingSpecifier: TokenSyntax(.keyword(.var), presence: .present),
-      bindings: PatternBindingListSyntax {
-        PatternBindingSyntax(
-          pattern: IdentifierPatternSyntax(
-            identifier: TokenSyntax(.identifier("description"), presence: .present)
-          ),
-          typeAnnotation: TypeAnnotationSyntax(
-            type: IdentifierTypeSyntax(
-              name: TokenSyntax(.identifier("String"), presence: .present)
-            )
-          ),
-          accessorBlock: AccessorBlockSyntax(
-            accessors: .getter(
-              CodeBlockItemListSyntax {
-                "var string = \"\(self.name.trimmed)(\""
-                for parameter in parameters {
-                  parameter
-                }
-                "string += \")\""
-                "return string"
-              }
-            )
-          )
-        )
-      }
-    )
-  }
-}
-
-extension StructDeclSyntax {
-  var hashFunction: FunctionDeclSyntax {
-    //  https://github.com/apple/swift-evolution/blob/main/proposals/0185-synthesize-equatable-hashable.md
-    //  https://github.com/apple/swift-evolution/blob/main/proposals/0206-hashable-enhancements.md
-    
-    //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceEquatableHashable.cpp#L778-L820
-    
-    //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceEquatableHashable.cpp#L574-L595
-    //  TODO: SUPPORT LEGACY HASH VALUE
-    
-    FunctionDeclSyntax(
-      modifiers: DeclModifierListSyntax {
-        if self.isPublic {
-          DeclModifierSyntax(name: .keyword(.public))
-        }
-      },
-      name: TokenSyntax(.identifier("hash"), presence: .present),
-      signature: FunctionSignatureSyntax(
-        parameterClause: FunctionParameterClauseSyntax {
-          "into hasher: inout Hasher"
-        }
-      )
-    ) {
-      for parameter in self.storageClassParameters {
-        "hasher.combine(self.\(parameter.firstName))"
-      }
-    }
-  }
-}
-
-extension StructDeclSyntax {
-  var codingKeys: EnumDeclSyntax {
-    //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceCodable.cpp#L216-L244
-    
-    EnumDeclSyntax(
-      modifiers: DeclModifierListSyntax {
-        DeclModifierSyntax(name: .keyword(.private))
-      },
-      name: "CodingKeys",
-      inheritanceClause: InheritanceClauseSyntax {
-        InheritedTypeSyntax(type: TypeSyntax("String"))
-        InheritedTypeSyntax(type: TypeSyntax("CodingKey"))
-      }
-    ) {
-      for parameter in self.storageClassParameters {
-        EnumCaseDeclSyntax(
-          elements: EnumCaseElementListSyntax {
-            EnumCaseElementSyntax(name: parameter.firstName)
-          }
-        )
-      }
-    }
-  }
-}
-
-extension StructDeclSyntax {
-  var equalFunction: FunctionDeclSyntax {
-    //  https://github.com/apple/swift-evolution/blob/main/proposals/0185-synthesize-equatable-hashable.md
-    
-    //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceEquatableHashable.cpp#L292-L341
-    
-    FunctionDeclSyntax(
-      modifiers: DeclModifierListSyntax {
-        if self.isPublic {
-          DeclModifierSyntax(name: .keyword(.public))
-        }
-        DeclModifierSyntax(name: TokenSyntax(.keyword(.static), presence: .present))
-      },
-      name: .binaryOperator("=="),
-      signature: FunctionSignatureSyntax(
-        parameterClause: FunctionParameterClauseSyntax {
-          "lhs: \(self.name.trimmed)"
-          "rhs: \(self.name.trimmed)"
-        },
-        returnClause: ReturnClauseSyntax(
-          type: IdentifierTypeSyntax(name: "Bool")
-        )
-      )
-    ) {
-      "if lhs.isIdentical(to: rhs) { return true }"
-      for parameter in self.storageClassParameters {
-        "guard lhs.\(parameter.firstName) == rhs.\(parameter.firstName) else { return false }"
-      }
-      "return true"
-    }
-  }
-}
-
-extension StructDeclSyntax {
-  var decodeInitializer: InitializerDeclSyntax {
-    //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceCodable.cpp#L1304-L1541
-    
-    let parameters = self.storageClassParameters
-    
-    return InitializerDeclSyntax(
-      modifiers: DeclModifierListSyntax {
-        if self.isPublic {
-          DeclModifierSyntax(name: .keyword(.public))
-        }
-      },
-      signature: FunctionSignatureSyntax(
-        parameterClause: FunctionParameterClauseSyntax {
-          "from decoder: Decoder"
-        },
-        effectSpecifiers: FunctionEffectSpecifiersSyntax(
-          //  throwsClause: ThrowsClauseSyntax(throwsSpecifier: .keyword(.throws))
-          throwsSpecifier: .keyword(.throws)
-        )
-      )
-    ) {
-      "let values = try decoder.container(keyedBy: CodingKeys.self)"
-      for parameter in parameters {
-        "let \(parameter.firstName) = try values.decode(\(parameter.type).self, forKey: .\(parameter.firstName))"
-      }
-      FunctionCallExprSyntax(
-        calledExpression: MemberAccessExprSyntax(
-          base: DeclReferenceExprSyntax(
-            baseName: TokenSyntax(.keyword(.self), presence: .present)
-          ),
-          declName: DeclReferenceExprSyntax(
-            baseName: TokenSyntax(.keyword(.`init`), presence: .present)
-          )
-        ),
-        leftParen: .leftParenToken(),
-        arguments: LabeledExprListSyntax {
-          for parameter in parameters {
-            LabeledExprSyntax(
-              label: parameter.firstName,
-              colon: .colonToken(),
-              expression: DeclReferenceExprSyntax(
-                baseName: parameter.firstName
-              )
-            )
-          }
-        },
-        rightParen: .rightParenToken()
-      )
-    }
-  }
-}
-
-extension StructDeclSyntax {
-  var encodeFunction: FunctionDeclSyntax {
-    //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceCodable.cpp#L790-L928
-    
-    FunctionDeclSyntax(
-      modifiers: DeclModifierListSyntax {
-        if self.isPublic {
-          DeclModifierSyntax(name: .keyword(.public))
-        }
-      },
-      name: TokenSyntax(.identifier("encode"), presence: .present),
-      signature: FunctionSignatureSyntax(
-        parameterClause: FunctionParameterClauseSyntax {
-          "to encoder: any Encoder"
-        },
-        effectSpecifiers: FunctionEffectSpecifiersSyntax(
-          //  throwsClause: ThrowsClauseSyntax(throwsSpecifier: .keyword(.throws))
-          throwsSpecifier: .keyword(.throws)
-        )
-      )
-    ) {
-      "var container = encoder.container(keyedBy: CodingKeys.self)"
-      for parameter in self.storageClassParameters {
-        "try container.encode(self.\(parameter.firstName), forKey: .\(parameter.firstName))"
-      }
-    }
-  }
-}
-
-extension StructDeclSyntax {
   var storageClassVariables: [VariableDeclSyntax] {
     self.definedVariables.compactMap { variable in
-      variable.storageVariable
+      if variable.isComputed == false,
+         variable.isInstance,
+         let identifier = variable.identifierPattern?.identifier,
+         identifier.text != CowBoxMacro.storageVariableName {
+        if variable.hasMacroApplication(CowBoxNonMutatingMacro.macroName) {
+          return variable.nonMutating
+        }
+        if variable.hasMacroApplication(CowBoxMutatingMacro.macroName) {
+          return variable.mutating
+        }
+        return nil
+      }
+      return nil
     }
   }
 }
@@ -982,7 +1001,28 @@ extension StructDeclSyntax {
 extension StructDeclSyntax {
   var storageClassParameters: [FunctionParameterSyntax] {
     self.definedVariables.compactMap { variable in
-      variable.storageParameter
+      if variable.isComputed == false,
+         variable.isInstance,
+         let identifier = variable.identifierPattern?.identifier,
+         identifier.text != CowBoxMacro.storageVariableName,
+         let type = variable.type {
+        if variable.hasMacroApplication(CowBoxNonMutatingMacro.macroName) {
+          return FunctionParameterSyntax(
+            firstName: identifier.trimmed,
+            type: type.trimmed,
+            defaultValue: variable.initializer?.trimmed
+          )
+        }
+        if variable.hasMacroApplication(CowBoxMutatingMacro.macroName) {
+          return FunctionParameterSyntax(
+            firstName: identifier.trimmed,
+            type: type.trimmed,
+            defaultValue: variable.initializer?.trimmed
+          )
+        }
+        return nil
+      }
+      return nil
     }
   }
 }
@@ -1230,65 +1270,44 @@ extension VariableDeclSyntax {
 
 extension VariableDeclSyntax {
   var mutating: VariableDeclSyntax {
+    guard
+      let binding = self.bindings.first
+    else {
+      //  TODO: THROW ERROR
+      fatalError()
+    }
     //  FIXME: SAVE ATTRIBUTES
     //  FIXME: SAVE MODIFIERS
-    VariableDeclSyntax(
+    return VariableDeclSyntax(
       bindingSpecifier: TokenSyntax(.keyword(.var), presence: .present),
-      bindings: self.bindings
+      bindings: PatternBindingListSyntax {
+        PatternBindingSyntax(
+          pattern: binding.pattern.trimmed,
+          typeAnnotation: binding.typeAnnotation?.trimmed
+        )
+      }
     )
   }
 }
 
 extension VariableDeclSyntax {
   var nonMutating: VariableDeclSyntax {
+    guard
+      let binding = self.bindings.first
+    else {
+      //  TODO: THROW ERROR
+      fatalError()
+    }
     //  FIXME: SAVE ATTRIBUTES
     //  FIXME: SAVE MODIFIERS
-    VariableDeclSyntax(
+    return VariableDeclSyntax(
       bindingSpecifier: TokenSyntax(.keyword(.let), presence: .present),
-      bindings: self.bindings
+      bindings: PatternBindingListSyntax {
+        PatternBindingSyntax(
+          pattern: binding.pattern.trimmed,
+          typeAnnotation: binding.typeAnnotation?.trimmed
+        )
+      }
     )
-  }
-}
-
-extension VariableDeclSyntax {
-  var storageParameter: FunctionParameterSyntax? {
-    if self.isComputed == false,
-       self.isInstance,
-       let identifier = self.identifierPattern?.identifier,
-       identifier.text != CowBoxMacro.storageVariableName,
-       let type = self.type {
-      if self.hasMacroApplication(CowBoxNonMutatingMacro.macroName) {
-        return FunctionParameterSyntax(
-          firstName: identifier.trimmed,
-          type: type.trimmed
-        )
-      }
-      if self.hasMacroApplication(CowBoxMutatingMacro.macroName) {
-        return FunctionParameterSyntax(
-          firstName: identifier.trimmed,
-          type: type.trimmed
-        )
-      }
-      return nil
-    }
-    return nil
-  }
-}
-
-extension VariableDeclSyntax {
-  var storageVariable: VariableDeclSyntax? {
-    if self.isComputed == false,
-       self.isInstance,
-       let identifier = self.identifierPattern?.identifier,
-       identifier.text != CowBoxMacro.storageVariableName {
-      if self.hasMacroApplication(CowBoxNonMutatingMacro.macroName) {
-        return self.nonMutating
-      }
-      if self.hasMacroApplication(CowBoxMutatingMacro.macroName) {
-        return self.mutating
-      }
-      return nil
-    }
-    return nil
   }
 }
