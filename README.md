@@ -1,4 +1,4 @@
-# Swift-CowBox 0.1.0
+# Swift-CowBox 0.2.0
 
 `Swift-CowBox` is a simple set of Swift Macros for adding easy copy-on-write semantics to Swift Structs.
 
@@ -31,7 +31,7 @@ If we want to keep the benefits of modeling our data with an immutable value typ
 
 If you've used the Swift Standard Library Collections (like `Array`), then you’ve already seen copy-on-write in action! The `Array` is a value type from the perspective of the public interface, but it’s built on an object reference internally.[^7] When we pass an instance of an `Array` “by-value”, the `Array` instance copies an object reference. We don’t actually copy all `N` objects in the `Array` until a mutation occurs.
 
-Writing our own copy-on-write data structures has always been an option, but meant writing (and maintaining) a lot of repetitive boilerplate code. Leveraging Swift Macros[^8], we can finally make it easy to add copy-on-write semantics in just a few steps.
+Writing our own copy-on-write data structures has always been an option, but meant writing (and maintaining) a lot of repetitive boilerplate code.[^8] Leveraging Swift Macros[^9], we can finally make it easy to add copy-on-write semantics in just a few steps.
 
 ## Requirements
 
@@ -288,6 +288,10 @@ Time (total CPU)
 
 Many more benchmarks are defined in the `Benchmarks` package. If you choose to experiment with `CowBox` in your own project, you can start with trying to benchmark your current simple Swift structs for memory and CPU. Then, try and benchmark those same structs using the `CowBox` macro. You would expect to measure the biggest performance improvements with complex struct elements that need to be copied many times through the course of your app lifecycle.
 
+## SwiftUI Sample App
+
+Please reference the `Swift-CowBox-Sample`[^13] repo to see `CowBox` used in a SwiftUI application. We will also run Benchmarks and Instruments to measure the performance improvements from migrating to copy-on-write semantics.
+
 ## Known Issues
 
 Please reference the `CowBoxClient` executable for examples of known issues and limitations of the macro (along with some suggested workarounds).
@@ -321,7 +325,9 @@ limitations under the License.
 [^5]: https://developer.apple.com/documentation/xcode/reduce-terminations-in-your-app#Understand-termination-reasons
 [^6]: https://en.wikipedia.org/wiki/Immutable_object#Copy-on-write
 [^7]: https://www.mikeash.com/pyblog/friday-qa-2015-04-17-lets-build-swiftarray.html
-[^8]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/macros/
-[^9]: https://jaredkhan.com/blog/swift-copy-on-write#many-structs
-[^10]: https://github.com/ordo-one/package-benchmark
-[^11]: https://github.com/apple/swift/blob/release/5.10/stdlib/public/core/Array.swift#L1774-L1777
+[^8]: https://www.youtube.com/watch?v=iLDldae64xE
+[^9]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/macros/
+[^10]: https://jaredkhan.com/blog/swift-copy-on-write#many-structs
+[^11]: https://github.com/ordo-one/package-benchmark
+[^12]: https://github.com/apple/swift/blob/release/5.10/stdlib/public/core/Array.swift#L1774-L1777
+[^13]: https://github.com/Swift-CowBox/Swift-CowBox-Sample

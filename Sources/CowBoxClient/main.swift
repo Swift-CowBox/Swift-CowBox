@@ -19,6 +19,28 @@ import CowBox
 //  MARK: KNOWN ISSUES
 //  MARK: -
 
+//  MARK: CUSTOM EQUATABLE
+//  CowBox fails with custom `Equatable` conformance.
+
+//  @CowBox struct Person: Equatable {
+//    @CowBoxNonMutating var id: String
+//    @CowBoxMutating var name: String
+//
+//    static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+//  }
+
+//  WORKAROUND:
+//  Move `Equatable` conformance to extension.
+
+//  @CowBox struct Person {
+//    @CowBoxNonMutating var id: String
+//    @CowBoxMutating var name: String
+//  }
+//
+//  extension Person: Equatable {
+//    static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+//  }
+
 //  MARK: PROTOCOL IN EXTENSION
 //  CowBox fails to synthesize conformance when protocol is adopted in extension.
 
