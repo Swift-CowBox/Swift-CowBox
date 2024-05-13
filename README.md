@@ -167,7 +167,7 @@ The following protocols are currently supported with `CowBox`:
 
 How does `CowBox` affect performance? How does `CowBox` improve CPU or memory usage?
 
-Let's start with an experiment inspired by Jared Khan.[^9] We’ll define a simple Swift Struct with ten 64-bit integers stored as properties:
+Let's start with an experiment inspired by Jared Khan.[^10] We’ll define a simple Swift Struct with ten 64-bit integers stored as properties:
 
 ```swift
 struct StructElement {
@@ -206,7 +206,7 @@ Suppose we now build a `CowBox` version of this. What would that look like?
 
 What does the memory usage look like now? We can assume that creating an instance of `CowBoxElement` from scratch should need at least 88 bytes of memory. We need 640 bits (or 80 bytes) to store the original ten properties. We also need (assuming we are running on a 64 bit platform) an additional 64 bits (or 8 bytes) for a pointer. That’s the memory of our *first* instance. What about our *second* instance (assuming we are copying without making any mutations)? The second instance needs a pointer (8 bytes), but the storage object reference *itself* is shared between both instances. Our two `CowBox` struct instances need (in the aggregate) at least 96 bytes, but our two simple Swift struct instances need at least 160 bytes.
 
-Let’s continue with this experiment and see how these two types perform in large arrays. We’ll start by adding ten million instances of our simple Swift struct to a standard `Swift.Array`, and then try making one mutation on a copy of that array (we append one additional element). This mutation will cause `Array` to copy all `N` elements over to a new instance. We’ll use the Ordo One package for benchmarking memory and CPU.[^10]
+Let’s continue with this experiment and see how these two types perform in large arrays. We’ll start by adding ten million instances of our simple Swift struct to a standard `Swift.Array`, and then try making one mutation on a copy of that array (we append one additional element). This mutation will cause `Array` to copy all `N` elements over to a new instance. We’ll use the Ordo One package for benchmarking memory and CPU.[^11]
 
 ```
 Memory (resident peak)
@@ -271,7 +271,7 @@ We spend a lot more time creating `CowBox` elements from scratch, but if those e
 
 Another side effect of the `CowBox` macro is we get a cheap and easy way to test for equality when two struct values wrap the same storage object reference. Instead of performing an equality comparison against all stored properties, if we know that two `CowBox` struct instances point to the same storage object reference, the instances must be equal by value. Let’s see how much time that can save us.
 
-As discussed earlier, `Swift.Array` implements copy-on-write semantics: if one `Array` instance is copied (without any mutations), both of those instances point to the same storage object reference. This means that an equality check against those two references can return in constant time (without needing to linearly check through all `N` elements).[^11] To opt-out of this behavior (and benchmark the performance of our elements), we create two different two different `Array` instances from scratch (created from the same elements).
+As discussed earlier, `Swift.Array` implements copy-on-write semantics: if one `Array` instance is copied (without any mutations), both of those instances point to the same storage object reference. This means that an equality check against those two references can return in constant time (without needing to linearly check through all `N` elements).[^12] To opt-out of this behavior (and benchmark the performance of our elements), we create two different two different `Array` instances from scratch (created from the same elements).
 
 When we try this experiment (comparing an `Array` built from simple Swift structs against an `Array` built from `CowBox` structs), we see that the `Array` built from simple Swift structs performs its equality check over five times slower than the `Array` built from `CowBox` structs.
 
