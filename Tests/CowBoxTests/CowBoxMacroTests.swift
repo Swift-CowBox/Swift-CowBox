@@ -1259,3 +1259,1209 @@ extension CowBoxMacroTests {
 #endif
   }
 }
+
+extension CowBoxMacroTests {
+  func testCowBoxWithTypeStoredProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox struct Person {
+        @CowBoxNonMutating var id: String
+        @CowBoxMutating var name: String
+      
+        static var typeStored = false
+      }
+      """,
+      expandedSource: #"""
+        struct Person {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          static var typeStored = false
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxInitWithInternalWithTypeStoredProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withInternal) struct Person {
+        @CowBoxNonMutating var id: String
+        @CowBoxMutating var name: String
+      
+        static var typeStored = false
+      }
+      """,
+      expandedSource: #"""
+        struct Person {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          static var typeStored = false
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxInitWithPublicWithTypeStoredProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) struct Person {
+        @CowBoxNonMutating var id: String
+        @CowBoxMutating var name: String
+      
+        static var typeStored = false
+      }
+      """,
+      expandedSource: #"""
+        struct Person {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          static var typeStored = false
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPublicCowBoxWithTypeStoredProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox public struct Person {
+        @CowBoxNonMutating public var id: String
+        @CowBoxMutating public internal(set) var name: String
+      
+        public static var typeStored = false
+      }
+      """,
+      expandedSource: #"""
+        public struct Person {
+          public var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          public internal(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          public static var typeStored = false
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          public func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPublicCowBoxInitWithInternalWithTypeStoredProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withInternal) public struct Person {
+        @CowBoxNonMutating public var id: String
+        @CowBoxMutating public internal(set) var name: String
+      
+        public static var typeStored = false
+      }
+      """,
+      expandedSource: #"""
+        public struct Person {
+          public var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          public internal(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          public static var typeStored = false
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          public func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPublicCowBoxInitWithPublicWithTypeStoredProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) public struct Person {
+        @CowBoxNonMutating public var id: String
+        @CowBoxMutating public internal(set) var name: String
+      
+        public static var typeStored = false
+      }
+      """,
+      expandedSource: #"""
+        public struct Person {
+          public var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          public internal(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          public static var typeStored = false
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          public func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxWithTypeComputedProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox struct Person {
+        @CowBoxNonMutating var id: String
+        @CowBoxMutating var name: String
+      
+        static var typeComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        struct Person {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          static var typeComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxInitWithInternalWithTypeComputedProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withInternal) struct Person {
+        @CowBoxNonMutating var id: String
+        @CowBoxMutating var name: String
+      
+        static var typeComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        struct Person {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          static var typeComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxInitWithPublicWithTypeComputedProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) struct Person {
+        @CowBoxNonMutating var id: String
+        @CowBoxMutating var name: String
+      
+        static var typeComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        struct Person {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          static var typeComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPublicCowBoxWithTypeComputedProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox public struct Person {
+        @CowBoxNonMutating public var id: String
+        @CowBoxMutating public internal(set) var name: String
+      
+        public static var typeComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person {
+          public var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          public internal(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          public static var typeComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          public func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPublicCowBoxInitWithInternalWithTypeComputedProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withInternal) public struct Person {
+        @CowBoxNonMutating public var id: String
+        @CowBoxMutating public internal(set) var name: String
+      
+        public static var typeComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person {
+          public var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          public internal(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          public static var typeComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          public func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPublicCowBoxInitWithPublicWithTypeComputedProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) public struct Person {
+        @CowBoxNonMutating public var id: String
+        @CowBoxMutating public internal(set) var name: String
+      
+        public static var typeComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person {
+          public var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          public internal(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          public static var typeComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          public func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxWithInstanceComputedProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox struct Person {
+        @CowBoxNonMutating var id: String
+        @CowBoxMutating var name: String
+      
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        struct Person {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxInitWithInternalWithInstanceComputedProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withInternal) struct Person {
+        @CowBoxNonMutating var id: String
+        @CowBoxMutating var name: String
+      
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        struct Person {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxInitWithPublicWithInstanceComputedProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) struct Person {
+        @CowBoxNonMutating var id: String
+        @CowBoxMutating var name: String
+      
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        struct Person {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPublicCowBoxWithInstanceComputedProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox public struct Person {
+        @CowBoxNonMutating public var id: String
+        @CowBoxMutating public internal(set) var name: String
+      
+        public var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person {
+          public var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          public internal(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          public var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          public func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPublicCowBoxInitWithInternalWithInstanceComputedProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withInternal) public struct Person {
+        @CowBoxNonMutating public var id: String
+        @CowBoxMutating public internal(set) var name: String
+      
+        public var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person {
+          public var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          public internal(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          public var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          public func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPublicCowBoxInitWithPublicWithInstanceComputedProperty() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) public struct Person {
+        @CowBoxNonMutating public var id: String
+        @CowBoxMutating public internal(set) var name: String
+      
+        public var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person {
+          public var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          public internal(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+        
+          public var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            var name: String
+            init(id: String, name: String) {
+              self.id = id
+              self.name = name
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, name: self.name)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String) {
+            self._storage = _Storage(id: id, name: name)
+          }
+        }
+        
+        extension Person: CowBox {
+          public func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
