@@ -74,7 +74,7 @@ extension EquatableTests {
             self._storage = _Storage(id: id, name: name)
           }
         
-          static func == (lhs: Person, rhs: Person) -> Bool {
+          static func ==(lhs: Person, rhs: Person) -> Bool {
             if lhs.isIdentical(to: rhs) {
               return true
             }
@@ -150,7 +150,7 @@ extension EquatableTests {
             self._storage = _Storage(id: id, name: name)
           }
         
-          static func == (lhs: Person, rhs: Person) -> Bool {
+          static func ==(lhs: Person, rhs: Person) -> Bool {
             if lhs.isIdentical(to: rhs) {
               return true
             }
@@ -226,7 +226,7 @@ extension EquatableTests {
             self._storage = _Storage(id: id, name: name)
           }
         
-          static func == (lhs: Person, rhs: Person) -> Bool {
+          static func ==(lhs: Person, rhs: Person) -> Bool {
             if lhs.isIdentical(to: rhs) {
               return true
             }
@@ -302,7 +302,7 @@ extension EquatableTests {
             self._storage = _Storage(id: id, name: name)
           }
         
-          public static func == (lhs: Person, rhs: Person) -> Bool {
+          public static func ==(lhs: Person, rhs: Person) -> Bool {
             if lhs.isIdentical(to: rhs) {
               return true
             }
@@ -378,7 +378,7 @@ extension EquatableTests {
             self._storage = _Storage(id: id, name: name)
           }
         
-          public static func == (lhs: Person, rhs: Person) -> Bool {
+          public static func ==(lhs: Person, rhs: Person) -> Bool {
             if lhs.isIdentical(to: rhs) {
               return true
             }
@@ -454,7 +454,7 @@ extension EquatableTests {
             self._storage = _Storage(id: id, name: name)
           }
         
-          public static func == (lhs: Person, rhs: Person) -> Bool {
+          public static func ==(lhs: Person, rhs: Person) -> Bool {
             if lhs.isIdentical(to: rhs) {
               return true
             }
@@ -492,7 +492,7 @@ extension EquatableTests {
         @CowBoxNonMutating var id: String
         @CowBoxMutating var name: String
       
-        static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+        static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
       }
       """,
       expandedSource: #"""
@@ -514,7 +514,7 @@ extension EquatableTests {
             }
           }
         
-          static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+          static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -559,7 +559,7 @@ extension EquatableTests {
         @CowBoxNonMutating var id: String
         @CowBoxMutating var name: String
       
-        static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+        static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
       }
       """,
       expandedSource: #"""
@@ -581,7 +581,7 @@ extension EquatableTests {
             }
           }
         
-          static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+          static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -626,7 +626,7 @@ extension EquatableTests {
         @CowBoxNonMutating var id: String
         @CowBoxMutating var name: String
       
-        static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+        static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
       }
       """,
       expandedSource: #"""
@@ -648,7 +648,7 @@ extension EquatableTests {
             }
           }
         
-          static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+          static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -693,7 +693,7 @@ extension EquatableTests {
         @CowBoxNonMutating public var id: String
         @CowBoxMutating public internal(set) var name: String
       
-        public static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+        public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
       }
       """,
       expandedSource: #"""
@@ -715,7 +715,7 @@ extension EquatableTests {
             }
           }
         
-          public static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+          public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -760,7 +760,7 @@ extension EquatableTests {
         @CowBoxNonMutating public var id: String
         @CowBoxMutating public internal(set) var name: String
       
-        public static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+        public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
       }
       """,
       expandedSource: #"""
@@ -782,7 +782,7 @@ extension EquatableTests {
             }
           }
         
-          public static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+          public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -827,7 +827,7 @@ extension EquatableTests {
         @CowBoxNonMutating public var id: String
         @CowBoxMutating public internal(set) var name: String
       
-        public static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+        public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
       }
       """,
       expandedSource: #"""
@@ -849,7 +849,7 @@ extension EquatableTests {
             }
           }
         
-          public static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+          public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
         
           private final class _Storage: @unchecked Sendable {
             let id: String

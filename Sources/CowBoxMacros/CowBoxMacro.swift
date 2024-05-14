@@ -520,14 +520,21 @@ extension CowBoxMacro {
     
     //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceEquatableHashable.cpp#L292-L341
     
-    FunctionDeclSyntax(
+    //  https://github.com/apple/swift-syntax/issues/2615
+#if canImport(SwiftSyntax600)
+    let name = TokenSyntax.binaryOperator("==")
+#else
+    let name = TokenSyntax.identifier("==")
+#endif
+    
+    return FunctionDeclSyntax(
       modifiers: DeclModifierListSyntax {
         if isPublic {
           DeclModifierSyntax(name: .keyword(.public))
         }
         DeclModifierSyntax(name: TokenSyntax(.keyword(.static), presence: .present))
       },
-      name: .binaryOperator("=="),
+      name: name,
       signature: FunctionSignatureSyntax(
         parameterClause: FunctionParameterClauseSyntax {
           "lhs: \(type.trimmed)"
@@ -612,7 +619,17 @@ extension CowBoxMacro {
   ) -> InitializerDeclSyntax {
     //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceCodable.cpp#L1304-L1541
     
-    InitializerDeclSyntax(
+#if canImport(SwiftSyntax600)
+    let effectSpecifiers = FunctionEffectSpecifiersSyntax(
+      throwsClause: ThrowsClauseSyntax(throwsSpecifier: .keyword(.throws))
+    )
+#else
+    let effectSpecifiers = FunctionEffectSpecifiersSyntax(
+      throwsSpecifier: .keyword(.throws)
+    )
+#endif
+    
+    return InitializerDeclSyntax(
       modifiers: DeclModifierListSyntax {
         if isPublic {
           DeclModifierSyntax(name: .keyword(.public))
@@ -622,10 +639,7 @@ extension CowBoxMacro {
         parameterClause: FunctionParameterClauseSyntax {
           "from decoder: Decoder"
         },
-        effectSpecifiers: FunctionEffectSpecifiersSyntax(
-          //  throwsClause: ThrowsClauseSyntax(throwsSpecifier: .keyword(.throws))
-          throwsSpecifier: .keyword(.throws)
-        )
+        effectSpecifiers: effectSpecifiers
       )
     ) {
       "let values = try decoder.container(keyedBy: CodingKeys.self)"
@@ -666,7 +680,17 @@ extension CowBoxMacro {
   ) -> FunctionDeclSyntax {
     //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceCodable.cpp#L790-L928
     
-    FunctionDeclSyntax(
+#if canImport(SwiftSyntax600)
+    let effectSpecifiers = FunctionEffectSpecifiersSyntax(
+      throwsClause: ThrowsClauseSyntax(throwsSpecifier: .keyword(.throws))
+    )
+#else
+    let effectSpecifiers = FunctionEffectSpecifiersSyntax(
+      throwsSpecifier: .keyword(.throws)
+    )
+#endif
+    
+    return FunctionDeclSyntax(
       modifiers: DeclModifierListSyntax {
         if isPublic {
           DeclModifierSyntax(name: .keyword(.public))
@@ -677,10 +701,7 @@ extension CowBoxMacro {
         parameterClause: FunctionParameterClauseSyntax {
           "to encoder: any Encoder"
         },
-        effectSpecifiers: FunctionEffectSpecifiersSyntax(
-          //  throwsClause: ThrowsClauseSyntax(throwsSpecifier: .keyword(.throws))
-          throwsSpecifier: .keyword(.throws)
-        )
+        effectSpecifiers: effectSpecifiers
       )
     ) {
       "var container = encoder.container(keyedBy: CodingKeys.self)"
@@ -971,7 +992,11 @@ extension InitializerDeclSyntax {
     for parameter in self.signature.parameterClause.parameters {
       parameters.append(parameter.firstName.text + ":" + (parameter.type.genericSubstitution(genericParameterClause?.parameters) ?? "" ))
     }
+#if canImport(SwiftSyntax600)
+    let throwsSpecifier = self.signature.effectSpecifiers?.throwsClause?.throwsSpecifier.text ?? ""
+#else
     let throwsSpecifier = self.signature.effectSpecifiers?.throwsSpecifier?.text ?? ""
+#endif
     return SignatureStandin(identifier: self.initKeyword.text, parameters: parameters, throwsSpecifier: throwsSpecifier)
   }
 }

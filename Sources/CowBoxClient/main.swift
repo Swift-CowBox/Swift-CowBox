@@ -26,7 +26,7 @@ import CowBox
 //    @CowBoxNonMutating var id: String
 //    @CowBoxMutating var name: String
 //
-//    static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+//    static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
 //  }
 
 //  WORKAROUND:
@@ -38,7 +38,7 @@ import CowBox
 //  }
 //
 //  extension Person: Equatable {
-//    static func == (lhs: Person, rhs: Person) -> Bool { fatalError() }
+//    static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
 //  }
 
 //  MARK: PROTOCOL IN EXTENSION
