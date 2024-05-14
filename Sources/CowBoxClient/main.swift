@@ -115,14 +115,6 @@ import CowBox
 //    @CowBoxMutating var name = "name"
 //  }
 
-//  MARK: STORED PROPERTIES NOT MANAGED BY COWBOX
-//  Not currently supported.
-
-//  @CowBox struct Person {
-//    let id: String
-//    var name: String
-//  }
-
 //  MARK: LEGACY HASHABLE CONFORMANCE
 //  CowBox does not synthesize `Hashable` conformance respecting the value of a custom `hashValue` variable.
 

@@ -139,15 +139,11 @@ extension CowBoxMacro: MemberMacro {
       throw SimpleDiagnosticMessage.notStruct
     }
     
-    let storageClassVariables = declaration.storageClassVariables
-    let storageClassParameters = declaration.storageClassParameters
+    let variables = declaration.instanceStoredVariables
     
     var expansion = [
       DeclSyntax(
-        self.storageClass(
-          storageClassVariables: storageClassVariables,
-          storageClassParameters: storageClassParameters
-        )
+        self.storageClass(variables: variables)
       ),
       DeclSyntax(
         self.storageVariable()
@@ -156,8 +152,7 @@ extension CowBoxMacro: MemberMacro {
         self.initializer(
           isPublic: declaration.isPublic,
           with: node.initArgument(),
-          storageClassVariables: storageClassVariables,
-          storageClassParameters: storageClassParameters
+          variables: variables
         )
       ),
     ]
@@ -168,8 +163,8 @@ extension CowBoxMacro: MemberMacro {
         DeclSyntax(
           self.descriptionVariable(
             isPublic: declaration.isPublic,
-            with: declaration.name,
-            storageClassParameters: storageClassParameters
+            type: declaration.name,
+            variables: variables
           )
         )
       )
@@ -181,8 +176,8 @@ extension CowBoxMacro: MemberMacro {
         DeclSyntax(
           self.equalFunction(
             isPublic: declaration.isPublic,
-            with: declaration.name,
-            storageClassParameters: storageClassParameters
+            type: declaration.name,
+            variables: variables
           )
         )
       )
@@ -194,7 +189,7 @@ extension CowBoxMacro: MemberMacro {
         DeclSyntax(
           self.hashFunction(
             isPublic: declaration.isPublic,
-            storageClassParameters: storageClassParameters
+            variables: variables
           )
         )
       )
@@ -204,7 +199,7 @@ extension CowBoxMacro: MemberMacro {
        declaration.hasCodingKeys == false {
       expansion.append(
         DeclSyntax(
-          self.codingKeys(storageClassParameters: storageClassParameters)
+          self.codingKeys(variables: variables)
         )
       )
     }
@@ -215,7 +210,7 @@ extension CowBoxMacro: MemberMacro {
         DeclSyntax(
           self.decodeInitializer(
             isPublic: declaration.isPublic,
-            storageClassParameters: storageClassParameters
+            variables: variables
           )
         )
       )
@@ -227,7 +222,7 @@ extension CowBoxMacro: MemberMacro {
         DeclSyntax(
           self.encodeFunction(
             isPublic: declaration.isPublic,
-            storageClassParameters: storageClassParameters
+            variables: variables
           )
         )
       )
@@ -258,6 +253,14 @@ extension CowBoxMacro: ExtensionMacro {
       throw message
     }
     
+    let allCowBox = declaration.instanceStoredVariables.allSatisfy { $0.isCowBox }
+    
+    guard
+      allCowBox
+    else {
+      return []
+    }
+    
     let expansion = [
       self.cowBoxExtension(
         isPublic: declaration.isPublic,
@@ -270,11 +273,11 @@ extension CowBoxMacro: ExtensionMacro {
 }
 
 extension CowBoxMacro {
-  static func storageClass(
-    storageClassVariables: [VariableDeclSyntax],
-    storageClassParameters: [FunctionParameterSyntax]
-  ) -> ClassDeclSyntax {
-    ClassDeclSyntax(
+  static func storageClass(variables: [VariableDeclSyntax]) -> ClassDeclSyntax {
+    let variables = variables.filter { $0.isCowBox }
+    let parameters = variables.compactMap { $0.functionParameter }
+    
+    return ClassDeclSyntax(
       modifiers: DeclModifierListSyntax {
         DeclModifierSyntax(name: TokenSyntax(.keyword(.private), presence: .present))
         DeclModifierSyntax(name: TokenSyntax(.keyword(.final), presence: .present))
@@ -284,22 +287,27 @@ extension CowBoxMacro {
         InheritedTypeSyntax(type: TypeSyntax("@unchecked Sendable"))
       }
     ) {
-      for variable in storageClassVariables {
-        variable
+      for variable in variables {
+        if variable.isCowBoxNonMutating {
+          variable.nonMutating
+        }
+        if variable.isCowBoxMutating {
+          variable.mutating
+        }
       }
-      self.storageClassInitializer(storageClassParameters: storageClassParameters)
-      self.storageClassCopyFunction(storageClassParameters: storageClassParameters)
+      self.storageClassInitializer(parameters: parameters)
+      self.storageClassCopyFunction(parameters: parameters)
     }
   }
 }
 
 extension CowBoxMacro {
-  static func storageClassInitializer(storageClassParameters: [FunctionParameterSyntax]) -> InitializerDeclSyntax {
+  static func storageClassInitializer(parameters: [FunctionParameterSyntax]) -> InitializerDeclSyntax {
     InitializerDeclSyntax(
       signature: FunctionSignatureSyntax(
         parameterClause: FunctionParameterClauseSyntax {
           FunctionParameterListSyntax {
-            for parameter in storageClassParameters {
+            for parameter in parameters {
               FunctionParameterSyntax(
                 firstName: parameter.firstName,
                 type: parameter.type
@@ -309,7 +317,7 @@ extension CowBoxMacro {
         }
       )
     ) {
-      for parameter in storageClassParameters {
+      for parameter in parameters {
         "self.\(parameter.firstName) = \(parameter.firstName)"
       }
     }
@@ -317,7 +325,7 @@ extension CowBoxMacro {
 }
 
 extension CowBoxMacro {
-  static func storageClassCopyFunction(storageClassParameters: [FunctionParameterSyntax]) -> FunctionDeclSyntax {
+  static func storageClassCopyFunction(parameters: [FunctionParameterSyntax]) -> FunctionDeclSyntax {
     FunctionDeclSyntax(
       name: TokenSyntax(.identifier(CowBoxMacro.copyFunctionName), presence: .present),
       signature: FunctionSignatureSyntax(
@@ -335,7 +343,7 @@ extension CowBoxMacro {
         ),
         leftParen: .leftParenToken(),
         arguments: LabeledExprListSyntax {
-          for parameter in storageClassParameters {
+          for parameter in parameters {
             LabeledExprSyntax(
               label: parameter.firstName,
               colon: .colonToken(),
@@ -378,35 +386,57 @@ extension CowBoxMacro {
   static func initializer(
     isPublic: Bool,
     with initArgument: CowBoxInit?,
-    storageClassVariables: [VariableDeclSyntax],
-    storageClassParameters: [FunctionParameterSyntax]
+    variables: [VariableDeclSyntax]
   ) -> InitializerDeclSyntax {
     //  https://github.com/apple/swift-evolution/blob/main/proposals/0242-default-values-memberwise.md
     
-    let parameters: [FunctionParameterSyntax] = Swift.zip(storageClassVariables, storageClassParameters).compactMap { variable, parameter in
-      if variable.bindingSpecifier.tokenKind == .keyword(.let),
-         parameter.defaultValue != nil {
-        return nil
+    let parameters: [FunctionParameterSyntax] = variables.compactMap { variable in
+      if variable.initializer != nil {
+        if variable.isCowBoxNonMutating {
+          return nil
+        }
+        if variable.bindingSpecifier.tokenKind == .keyword(.let) {
+          return nil
+        }
       }
-      return parameter
+      return variable.functionParameter
     }
     
-    let arguments: [LabeledExprSyntax] = Swift.zip(storageClassVariables, storageClassParameters).map { variable, parameter in
-      if variable.bindingSpecifier.tokenKind == .keyword(.let),
-         let value = parameter.defaultValue?.value {
+    let arguments: [LabeledExprSyntax] = variables.compactMap { variable in
+      guard
+        let identifier = variable.identifierPattern?.identifier
+      else {
+        return nil
+      }
+      
+      if variable.isCowBoxNonMutating {
+        if let initializer = variable.initializer  {
+          return LabeledExprSyntax(
+            label: identifier.trimmed,
+            colon: .colonToken(),
+            expression: initializer.value.trimmed
+          )
+        }
         return LabeledExprSyntax(
-          label: parameter.firstName,
+          label: identifier.trimmed,
           colon: .colonToken(),
-          expression: value
+          expression: DeclReferenceExprSyntax(
+            baseName: identifier.trimmed
+          )
         )
       }
-      return LabeledExprSyntax(
-        label: parameter.firstName,
-        colon: .colonToken(),
-        expression: DeclReferenceExprSyntax(
-          baseName: parameter.firstName
+      
+      if variable.isCowBoxMutating {
+        return LabeledExprSyntax(
+          label: identifier.trimmed,
+          colon: .colonToken(),
+          expression: DeclReferenceExprSyntax(
+            baseName: identifier.trimmed
+          )
         )
-      )
+      }
+      
+      return nil
     }
     
     return InitializerDeclSyntax(
@@ -427,6 +457,17 @@ extension CowBoxMacro {
         }
       )
     ) {
+      for variable in variables {
+        if let identifier = variable.identifierPattern?.identifier,
+           variable.isCowBox == false {
+          if variable.initializer != nil,
+             variable.bindingSpecifier.tokenKind == .keyword(.let) {
+            
+          } else {
+            "self.\(identifier.trimmed) = \(identifier.trimmed)"
+          }
+        }
+      }
       InfixOperatorExprSyntax(
         leftOperand: MemberAccessExprSyntax(
           base: DeclReferenceExprSyntax(
@@ -457,19 +498,26 @@ extension CowBoxMacro {
 extension CowBoxMacro {
   static func descriptionVariable(
     isPublic: Bool,
-    with type: some SyntaxProtocol,
-    storageClassParameters: [FunctionParameterSyntax]
+    type: TokenSyntax,
+    variables: [VariableDeclSyntax]
   ) -> VariableDeclSyntax {
     //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/stdlib/public/core/OutputStream.swift#L339-L355
     
     //  https://oleb.net/blog/2016/12/optionals-string-interpolation/
     //  FIXME: OPTIONAL VALUE WARNING
     
-    let parameters = storageClassParameters.map { parameter in
-      CodeBlockItemListSyntax {
-        "string += \"\(parameter.firstName): \\(self.\(parameter.firstName))\""
+    let array: [CodeBlockItemListSyntax] = variables.compactMap { variable in
+      guard
+        let identifier = variable.identifierPattern?.identifier
+      else {
+        return nil
       }
-    }.joined(
+      return CodeBlockItemListSyntax {
+        "string += \"\(identifier.trimmed): \\(self.\(identifier.trimmed))\""
+      }
+    }
+    
+    let items = array.joined(
       separator: CodeBlockItemListSyntax {
         "string += \", \""
       }
@@ -496,8 +544,8 @@ extension CowBoxMacro {
             accessors: .getter(
               CodeBlockItemListSyntax {
                 "var string = \"\(type.trimmed)(\""
-                for parameter in parameters {
-                  parameter
+                for item in items {
+                  item
                 }
                 "string += \")\""
                 "return string"
@@ -513,18 +561,18 @@ extension CowBoxMacro {
 extension CowBoxMacro {
   static func equalFunction(
     isPublic: Bool,
-    with type: some SyntaxProtocol,
-    storageClassParameters: [FunctionParameterSyntax]
+    type: TokenSyntax,
+    variables: [VariableDeclSyntax]
   ) -> FunctionDeclSyntax {
     //  https://github.com/apple/swift-evolution/blob/main/proposals/0185-synthesize-equatable-hashable.md
     
     //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceEquatableHashable.cpp#L292-L341
     
-    //  https://github.com/apple/swift-syntax/issues/2615
 #if canImport(SwiftSyntax600)
-    let name = TokenSyntax.binaryOperator("==")
+    let equal = TokenSyntax.binaryOperator("==")
 #else
-    let name = TokenSyntax.identifier("==")
+    //  https://github.com/apple/swift-syntax/issues/2615
+    let equal = TokenSyntax.identifier("==")
 #endif
     
     return FunctionDeclSyntax(
@@ -534,7 +582,7 @@ extension CowBoxMacro {
         }
         DeclModifierSyntax(name: TokenSyntax(.keyword(.static), presence: .present))
       },
-      name: name,
+      name: equal,
       signature: FunctionSignatureSyntax(
         parameterClause: FunctionParameterClauseSyntax {
           "lhs: \(type.trimmed)"
@@ -545,9 +593,18 @@ extension CowBoxMacro {
         )
       )
     ) {
-      "if lhs.isIdentical(to: rhs) { return true }"
-      for parameter in storageClassParameters {
-        "guard lhs.\(parameter.firstName) == rhs.\(parameter.firstName) else { return false }"
+      for variable in variables {
+        if let identifier = variable.identifierPattern?.identifier,
+           variable.isCowBox == false {
+          "guard lhs.\(identifier.trimmed) == rhs.\(identifier.trimmed) else { return false }"
+        }
+      }
+      "if lhs._storage === rhs._storage { return true }"
+      for variable in variables {
+        if let identifier = variable.identifierPattern?.identifier,
+           variable.isCowBox {
+          "guard lhs.\(identifier.trimmed) == rhs.\(identifier.trimmed) else { return false }"
+        }
       }
       "return true"
     }
@@ -557,7 +614,7 @@ extension CowBoxMacro {
 extension CowBoxMacro {
   static func hashFunction(
     isPublic: Bool,
-    storageClassParameters: [FunctionParameterSyntax]
+    variables: [VariableDeclSyntax]
   ) -> FunctionDeclSyntax {
     //  https://github.com/apple/swift-evolution/blob/main/proposals/0185-synthesize-equatable-hashable.md
     //  https://github.com/apple/swift-evolution/blob/main/proposals/0206-hashable-enhancements.md
@@ -580,15 +637,17 @@ extension CowBoxMacro {
         }
       )
     ) {
-      for parameter in storageClassParameters {
-        "hasher.combine(self.\(parameter.firstName))"
+      for variable in variables {
+        if let identifier = variable.identifierPattern?.identifier {
+          "hasher.combine(self.\(identifier.trimmed))"
+        }
       }
     }
   }
 }
 
 extension CowBoxMacro {
-  static func codingKeys(storageClassParameters: [FunctionParameterSyntax]) -> EnumDeclSyntax {
+  static func codingKeys(variables: [VariableDeclSyntax]) -> EnumDeclSyntax {
     //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceCodable.cpp#L216-L244
     
     EnumDeclSyntax(
@@ -601,12 +660,14 @@ extension CowBoxMacro {
         InheritedTypeSyntax(type: TypeSyntax("CodingKey"))
       }
     ) {
-      for parameter in storageClassParameters {
-        EnumCaseDeclSyntax(
-          elements: EnumCaseElementListSyntax {
-            EnumCaseElementSyntax(name: parameter.firstName)
-          }
-        )
+      for variable in variables {
+        if let identifier = variable.identifierPattern?.identifier {
+          EnumCaseDeclSyntax(
+            elements: EnumCaseElementListSyntax {
+              EnumCaseElementSyntax(name: identifier)
+            }
+          )
+        }
       }
     }
   }
@@ -615,9 +676,36 @@ extension CowBoxMacro {
 extension CowBoxMacro {
   static func decodeInitializer(
     isPublic: Bool,
-    storageClassParameters: [FunctionParameterSyntax]
+    variables: [VariableDeclSyntax]
   ) -> InitializerDeclSyntax {
     //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceCodable.cpp#L1304-L1541
+    
+    let variables: [VariableDeclSyntax] = variables.filter { variable in
+      if variable.initializer != nil {
+        if variable.isCowBoxNonMutating {
+          return false
+        }
+        if variable.bindingSpecifier.tokenKind == .keyword(.let) {
+          return false
+        }
+      }
+      return true
+    }
+    
+    let arguments: [LabeledExprSyntax] = variables.compactMap { variable in
+      guard
+        let identifier = variable.identifierPattern?.identifier
+      else {
+        return nil
+      }
+      return LabeledExprSyntax(
+        label: identifier.trimmed,
+        colon: .colonToken(),
+        expression: DeclReferenceExprSyntax(
+          baseName: identifier.trimmed
+        )
+      )
+    }
     
 #if canImport(SwiftSyntax600)
     let effectSpecifiers = FunctionEffectSpecifiersSyntax(
@@ -643,8 +731,11 @@ extension CowBoxMacro {
       )
     ) {
       "let values = try decoder.container(keyedBy: CodingKeys.self)"
-      for parameter in storageClassParameters {
-        "let \(parameter.firstName) = try values.decode(\(parameter.type).self, forKey: .\(parameter.firstName))"
+      for variable in variables {
+        if let identifier = variable.identifierPattern?.identifier,
+           let type = variable.type {
+          "let \(identifier.trimmed) = try values.decode(\(type).self, forKey: .\(identifier.trimmed))"
+        }
       }
       FunctionCallExprSyntax(
         calledExpression: MemberAccessExprSyntax(
@@ -657,14 +748,8 @@ extension CowBoxMacro {
         ),
         leftParen: .leftParenToken(),
         arguments: LabeledExprListSyntax {
-          for parameter in storageClassParameters {
-            LabeledExprSyntax(
-              label: parameter.firstName,
-              colon: .colonToken(),
-              expression: DeclReferenceExprSyntax(
-                baseName: parameter.firstName
-              )
-            )
+          for argument in arguments {
+            argument
           }
         },
         rightParen: .rightParenToken()
@@ -676,7 +761,7 @@ extension CowBoxMacro {
 extension CowBoxMacro {
   static func encodeFunction(
     isPublic: Bool,
-    storageClassParameters: [FunctionParameterSyntax]
+    variables: [VariableDeclSyntax]
   ) -> FunctionDeclSyntax {
     //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceCodable.cpp#L790-L928
     
@@ -705,8 +790,10 @@ extension CowBoxMacro {
       )
     ) {
       "var container = encoder.container(keyedBy: CodingKeys.self)"
-      for parameter in storageClassParameters {
-        "try container.encode(self.\(parameter.firstName), forKey: .\(parameter.firstName))"
+      for variable in variables {
+        if let identifier = variable.identifierPattern?.identifier {
+          "try container.encode(self.\(identifier.trimmed), forKey: .\(identifier.trimmed))"
+        }
       }
     }
   }
@@ -1004,50 +1091,15 @@ extension InitializerDeclSyntax {
 //  MARK: -
 
 extension StructDeclSyntax {
-  var storageClassVariables: [VariableDeclSyntax] {
-    self.definedVariables.compactMap { variable in
+  var instanceStoredVariables: [VariableDeclSyntax] {
+    self.definedVariables.filter { variable in
       if variable.isComputed == false,
          variable.isInstance,
          let identifier = variable.identifierPattern?.identifier,
          identifier.text != CowBoxMacro.storageVariableName {
-        if variable.hasMacroApplication(CowBoxNonMutatingMacro.macroName) {
-          return variable.nonMutating
-        }
-        if variable.hasMacroApplication(CowBoxMutatingMacro.macroName) {
-          return variable.mutating
-        }
-        return nil
+        return true
       }
-      return nil
-    }
-  }
-}
-
-extension StructDeclSyntax {
-  var storageClassParameters: [FunctionParameterSyntax] {
-    self.definedVariables.compactMap { variable in
-      if variable.isComputed == false,
-         variable.isInstance,
-         let identifier = variable.identifierPattern?.identifier,
-         identifier.text != CowBoxMacro.storageVariableName,
-         let type = variable.type {
-        if variable.hasMacroApplication(CowBoxNonMutatingMacro.macroName) {
-          return FunctionParameterSyntax(
-            firstName: identifier.trimmed,
-            type: type.trimmed,
-            defaultValue: variable.initializer?.trimmed
-          )
-        }
-        if variable.hasMacroApplication(CowBoxMutatingMacro.macroName) {
-          return FunctionParameterSyntax(
-            firstName: identifier.trimmed,
-            type: type.trimmed,
-            defaultValue: variable.initializer?.trimmed
-          )
-        }
-        return nil
-      }
-      return nil
+      return false
     }
   }
 }
@@ -1334,5 +1386,37 @@ extension VariableDeclSyntax {
         )
       }
     )
+  }
+}
+
+extension VariableDeclSyntax {
+  var isCowBoxNonMutating: Bool {
+    self.hasMacroApplication(CowBoxNonMutatingMacro.macroName)
+  }
+}
+
+extension VariableDeclSyntax {
+  var isCowBoxMutating: Bool {
+    self.hasMacroApplication(CowBoxMutatingMacro.macroName)
+  }
+}
+
+extension VariableDeclSyntax {
+  var isCowBox: Bool {
+    self.isCowBoxNonMutating || self.isCowBoxMutating
+  }
+}
+
+extension VariableDeclSyntax {
+  var functionParameter: FunctionParameterSyntax? {
+    if let identifier = self.identifierPattern?.identifier,
+       let type = self.type {
+      return FunctionParameterSyntax(
+        firstName: identifier.trimmed,
+        type: type.trimmed,
+        defaultValue: self.initializer?.trimmed
+      )
+    }
+    return nil
   }
 }
