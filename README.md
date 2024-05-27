@@ -1,4 +1,4 @@
-# Swift-CowBox 0.2.0
+# Swift-CowBox 0.3.0
 
 `Swift-CowBox` is a simple set of Swift Macros for adding easy copy-on-write semantics to Swift Structs.
 
@@ -302,7 +302,6 @@ Thanks!
 
 ## Copyright
 
-```
 Copyright 2024 North Bronson Software
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -316,7 +315,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-```
 
 [^1]: https://developer.apple.com/swift/blog/?id=10
 [^2]: https://www.swift.org/documentation/articles/value-and-reference-types.html
