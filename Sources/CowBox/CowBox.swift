@@ -19,6 +19,8 @@
 public protocol CowBox {
   /// Returns a Boolean value indicating whether two instances are equal by identity.
   ///
+  /// Available when all stored instance properties are `CowBoxMutating` or `CowBoxNonMutating`.
+  ///
   /// - Parameters:
   ///   - other: An instance to compare.
   func isIdentical(to other: Self) -> Bool

@@ -225,15 +225,51 @@ extension CowBoxTests {
 
 extension CowBoxTests {
   func testComplexPersonEquatable() {
-    let p1 = ComplexPerson(id: "id", name: "name", instanceStoredNonMutating: true, instanceStoredMutating: true, instanceStoredMutatingWithDefault: true)
-    var p2 = p1
-    XCTAssertEqual(p1, p2)
+    do {
+      let p1 = ComplexPerson(id: "id", name: "name", instanceStoredNonMutating: true, instanceStoredMutating: true, instanceStoredMutatingWithDefault: true)
+      var p2 = p1
+      XCTAssertEqual(p1, p2)
+      
+      p2.name = "new name"
+      XCTAssertNotEqual(p1, p2)
+      
+      p2.name = "name"
+      XCTAssertEqual(p1, p2)
+    }
+    do {
+      let p1 = ComplexPerson(id: "id", name: "name", instanceStoredNonMutating: true, instanceStoredMutating: true, instanceStoredMutatingWithDefault: true)
+      var p2 = p1
+      XCTAssertEqual(p1, p2)
+      
+      p2.nameWithDefault = "new name"
+      XCTAssertNotEqual(p1, p2)
+      
+      p2.nameWithDefault = "name"
+      XCTAssertEqual(p1, p2)
+    }
+    do {
+      let p1 = ComplexPerson(id: "id", name: "name", instanceStoredNonMutating: true, instanceStoredMutating: true, instanceStoredMutatingWithDefault: true)
+      var p2 = p1
+      XCTAssertEqual(p1, p2)
+      
+      p2.instanceStoredMutating = false
+      XCTAssertNotEqual(p1, p2)
+      
+      p2.instanceStoredMutating = true
+      XCTAssertEqual(p1, p2)
+    }
     
-    p2.name = "new name"
-    XCTAssertNotEqual(p1, p2)
-    
-    p2.name = "name"
-    XCTAssertEqual(p1, p2)
+    do {
+      let p1 = ComplexPerson(id: "id", name: "name", instanceStoredNonMutating: true, instanceStoredMutating: true, instanceStoredMutatingWithDefault: true)
+      var p2 = p1
+      XCTAssertEqual(p1, p2)
+      
+      p2.instanceStoredMutatingWithDefault = false
+      XCTAssertNotEqual(p1, p2)
+      
+      p2.instanceStoredMutatingWithDefault = true
+      XCTAssertEqual(p1, p2)
+    }
   }
 }
 
