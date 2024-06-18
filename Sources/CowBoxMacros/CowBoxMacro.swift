@@ -274,6 +274,8 @@ extension CowBoxMacro: ExtensionMacro {
 
 extension CowBoxMacro {
   static func storageClass(variables: [VariableDeclSyntax]) -> ClassDeclSyntax {
+    //  https://github.com/swiftlang/swift-evolution/blob/main/proposals/0412-strict-concurrency-for-global-variables.md
+    
     let variables = variables.filter { $0.isCowBox }
     let parameters = variables.compactMap { $0.functionParameter }
     
@@ -361,6 +363,8 @@ extension CowBoxMacro {
 
 extension CowBoxMacro {
   static func storageVariable() -> VariableDeclSyntax {
+    //  https://github.com/swiftlang/swift-evolution/blob/main/proposals/0412-strict-concurrency-for-global-variables.md
+    
     VariableDeclSyntax(
       modifiers: DeclModifierListSyntax {
         DeclModifierSyntax(name: .keyword(.private))
@@ -513,7 +517,7 @@ extension CowBoxMacro {
         return nil
       }
       return CodeBlockItemListSyntax {
-        "string += \"\(identifier.trimmed): \\(self.\(identifier.trimmed))\""
+        "string += \"\(identifier.trimmed): \\(String(describing: self.\(identifier.trimmed)))\""
       }
     }
     
