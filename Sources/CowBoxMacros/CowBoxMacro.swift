@@ -52,6 +52,7 @@ import SwiftSyntaxMacros
 
 enum CowBoxInit: String {
   case withInternal
+  case withPackage
   case withPublic
 }
 
@@ -151,6 +152,7 @@ extension CowBoxMacro: MemberMacro {
       DeclSyntax(
         self.initializer(
           isPublic: declaration.isPublic,
+          isPackage: declaration.isPackage,
           with: node.initArgument(),
           variables: variables
         )
@@ -253,10 +255,9 @@ extension CowBoxMacro: ExtensionMacro {
       throw message
     }
     
-    let allCowBox = declaration.instanceStoredVariables.allSatisfy { $0.isCowBox }
-    
+    let isCowBox = declaration.instanceStoredVariables.allSatisfy { $0.isCowBox }
     guard
-      allCowBox
+      isCowBox
     else {
       return []
     }
@@ -264,6 +265,7 @@ extension CowBoxMacro: ExtensionMacro {
     let expansion = [
       self.cowBoxExtension(
         isPublic: declaration.isPublic,
+        isPackage: declaration.isPackage,
         with: type
       ),
     ]
@@ -389,6 +391,7 @@ extension CowBoxMacro {
 extension CowBoxMacro {
   static func initializer(
     isPublic: Bool,
+    isPackage: Bool,
     with initArgument: CowBoxInit?,
     variables: [VariableDeclSyntax]
   ) -> InitializerDeclSyntax {
@@ -449,9 +452,15 @@ extension CowBoxMacro {
           if case .withPublic = initArgument {
             DeclModifierSyntax(name: .keyword(.public))
           }
+          if case .withPackage = initArgument {
+            DeclModifierSyntax(name: .keyword(.package))
+          }
         } else {
           if isPublic {
             DeclModifierSyntax(name: .keyword(.public))
+          }
+          if isPackage {
+            DeclModifierSyntax(name: .keyword(.package))
           }
         }
       },
@@ -806,6 +815,7 @@ extension CowBoxMacro {
 extension CowBoxMacro {
   static func cowBoxExtension(
     isPublic: Bool,
+    isPackage: Bool,
     with type: some TypeSyntaxProtocol
   ) -> ExtensionDeclSyntax {
     ExtensionDeclSyntax(
@@ -816,6 +826,7 @@ extension CowBoxMacro {
     ) {
       self.identicalFunction(
         isPublic: isPublic,
+        isPackage: isPackage,
         with: type
       )
     }
@@ -825,12 +836,16 @@ extension CowBoxMacro {
 extension CowBoxMacro {
   static func identicalFunction(
     isPublic: Bool,
+    isPackage: Bool,
     with type: some TypeSyntaxProtocol
   ) -> FunctionDeclSyntax {
     FunctionDeclSyntax(
       modifiers: DeclModifierListSyntax {
         if isPublic {
           DeclModifierSyntax(name: .keyword(.public))
+        }
+        if isPackage {
+          DeclModifierSyntax(name: .keyword(.package))
         }
       },
       name: "isIdentical",
@@ -1112,6 +1127,14 @@ extension StructDeclSyntax {
   var isPublic: Bool {
     self.modifiers.contains { modifier in
       modifier.name.tokenKind == .keyword(.public)
+    }
+  }
+}
+
+extension StructDeclSyntax {
+  var isPackage: Bool {
+    self.modifiers.contains { modifier in
+      modifier.name.tokenKind == .keyword(.package)
     }
   }
 }

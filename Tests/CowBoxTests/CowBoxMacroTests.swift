@@ -234,6 +234,106 @@ extension CowBoxMacroTests {
 }
 
 extension CowBoxMacroTests {
+  func testCowBoxInitWithPackage() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPackage) struct Person {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating var name: String
+        @CowBoxMutating var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        struct Person {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
   func testCowBoxInitWithPublic() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
@@ -334,6 +434,406 @@ extension CowBoxMacroTests {
 }
 
 extension CowBoxMacroTests {
+  func testPackageCowBox() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox package struct Person {
+        @CowBoxNonMutating package var id: String
+        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
+        @CowBoxMutating package private(set) var name: String
+        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+      
+        package static let typeStoredNonMutating: Bool = false
+        package static var typeStoredMutating: Bool = false
+        package static var typeComputed: Bool { false }
+        package let instanceStoredNonMutating: Bool
+        package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        package var instanceStoredMutating: Bool
+        package var instanceStoredMutatingWithDefault: Bool = false // comment
+        package var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person {
+          package var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          package var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          package private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          package private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          package static let typeStoredNonMutating: Bool = false
+          package static var typeStoredMutating: Bool = false
+          package static var typeComputed: Bool { false }
+          package let instanceStoredNonMutating: Bool
+          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          package var instanceStoredMutating: Bool
+          package var instanceStoredMutatingWithDefault: Bool = false // comment
+          package var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPackageCowBoxInitWithInternal() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withInternal) package struct Person {
+        @CowBoxNonMutating package var id: String
+        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
+        @CowBoxMutating package private(set) var name: String
+        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+      
+        package static let typeStoredNonMutating: Bool = false
+        package static var typeStoredMutating: Bool = false
+        package static var typeComputed: Bool { false }
+        package let instanceStoredNonMutating: Bool
+        package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        package var instanceStoredMutating: Bool
+        package var instanceStoredMutatingWithDefault: Bool = false // comment
+        package var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person {
+          package var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          package var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          package private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          package private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          package static let typeStoredNonMutating: Bool = false
+          package static var typeStoredMutating: Bool = false
+          package static var typeComputed: Bool { false }
+          package let instanceStoredNonMutating: Bool
+          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          package var instanceStoredMutating: Bool
+          package var instanceStoredMutatingWithDefault: Bool = false // comment
+          package var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPackageCowBoxInitWithPackage() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPackage) package struct Person {
+        @CowBoxNonMutating package var id: String
+        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
+        @CowBoxMutating package private(set) var name: String
+        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+      
+        package static let typeStoredNonMutating: Bool = false
+        package static var typeStoredMutating: Bool = false
+        package static var typeComputed: Bool { false }
+        package let instanceStoredNonMutating: Bool
+        package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        package var instanceStoredMutating: Bool
+        package var instanceStoredMutatingWithDefault: Bool = false // comment
+        package var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person {
+          package var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          package var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          package private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          package private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          package static let typeStoredNonMutating: Bool = false
+          package static var typeStoredMutating: Bool = false
+          package static var typeComputed: Bool { false }
+          package let instanceStoredNonMutating: Bool
+          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          package var instanceStoredMutating: Bool
+          package var instanceStoredMutatingWithDefault: Bool = false // comment
+          package var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPackageCowBoxInitWithPublic() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) package struct Person {
+        @CowBoxNonMutating package var id: String
+        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
+        @CowBoxMutating package private(set) var name: String
+        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+      
+        package static let typeStoredNonMutating: Bool = false
+        package static var typeStoredMutating: Bool = false
+        package static var typeComputed: Bool { false }
+        package let instanceStoredNonMutating: Bool
+        package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        package var instanceStoredMutating: Bool
+        package var instanceStoredMutatingWithDefault: Bool = false // comment
+        package var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person {
+          package var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          package var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          package private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          package private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          package static let typeStoredNonMutating: Bool = false
+          package static var typeStoredMutating: Bool = false
+          package static var typeComputed: Bool { false }
+          package let instanceStoredNonMutating: Bool
+          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          package var instanceStoredMutating: Bool
+          package var instanceStoredMutatingWithDefault: Bool = false // comment
+          package var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
   func testPublicCowBox() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
@@ -341,8 +841,8 @@ extension CowBoxMacroTests {
       @CowBox public struct Person {
         @CowBoxNonMutating public var id: String
         @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating public private(set) var name: String
+        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
       
         public static let typeStoredNonMutating: Bool = false
         public static var typeStoredMutating: Bool = false
@@ -366,7 +866,7 @@ extension CowBoxMacroTests {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          public private(set) var name: String {
             get {
               self._storage.name
             }
@@ -377,7 +877,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          public private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -441,8 +941,8 @@ extension CowBoxMacroTests {
       @CowBox(init: .withInternal) public struct Person {
         @CowBoxNonMutating public var id: String
         @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating public private(set) var name: String
+        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
       
         public static let typeStoredNonMutating: Bool = false
         public static var typeStoredMutating: Bool = false
@@ -466,7 +966,7 @@ extension CowBoxMacroTests {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          public private(set) var name: String {
             get {
               self._storage.name
             }
@@ -477,7 +977,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          public private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -534,15 +1034,15 @@ extension CowBoxMacroTests {
 }
 
 extension CowBoxMacroTests {
-  func testPublicCowBoxInitWithPublic() throws {
+  func testPublicCowBoxInitWithPackage() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox(init: .withPublic) public struct Person {
+      @CowBox(init: .withPackage) public struct Person {
         @CowBoxNonMutating public var id: String
         @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating public private(set) var name: String
+        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
       
         public static let typeStoredNonMutating: Bool = false
         public static var typeStoredMutating: Bool = false
@@ -566,7 +1066,7 @@ extension CowBoxMacroTests {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          public private(set) var name: String {
             get {
               self._storage.name
             }
@@ -577,7 +1077,107 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          public private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          public static let typeStoredNonMutating: Bool = false
+          public static var typeStoredMutating: Bool = false
+          public static var typeComputed: Bool { false }
+          public let instanceStoredNonMutating: Bool
+          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          public var instanceStoredMutating: Bool
+          public var instanceStoredMutatingWithDefault: Bool = false // comment
+          public var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPublicCowBoxInitWithPublic() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) public struct Person {
+        @CowBoxNonMutating public var id: String
+        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
+        @CowBoxMutating public private(set) var name: String
+        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+      
+        public static let typeStoredNonMutating: Bool = false
+        public static var typeStoredMutating: Bool = false
+        public static var typeComputed: Bool { false }
+        public let instanceStoredNonMutating: Bool
+        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        public var instanceStoredMutating: Bool
+        public var instanceStoredMutatingWithDefault: Bool = false // comment
+        public var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person {
+          public var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          public var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          public private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          public private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -743,7 +1343,7 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       struct Parent {
-        @CowBox struct Person {
+        @CowBox(init: .withInternal) struct Person {
           @CowBoxNonMutating var id: String
           @CowBoxNonMutating var idWithDefault: String = "id" // comment
           @CowBoxMutating var name: String
@@ -824,6 +1424,110 @@ extension CowBoxMacroTests {
             private var _storage: _Storage
 
             init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+              self.instanceStoredNonMutating = instanceStoredNonMutating
+              self.instanceStoredMutating = instanceStoredMutating
+              self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+              self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+            }
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testNestedCowBoxInitWithPackage() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      struct Parent {
+        @CowBox(init: .withPackage) struct Person {
+          @CowBoxNonMutating var id: String
+          @CowBoxNonMutating var idWithDefault: String = "id" // comment
+          @CowBoxMutating var name: String
+          @CowBoxMutating var nameWithDefault: String = "name" // comment
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        }
+      }
+      """,
+      expandedSource: #"""
+        struct Parent {
+          struct Person {
+            var id: String {
+              get {
+                self._storage.id
+              }
+            }
+            var idWithDefault: String {
+              get {
+                self._storage.idWithDefault
+              }
+            }
+            var name: String {
+              get {
+                self._storage.name
+              }
+              set {
+                if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                  self._storage = self._storage.copy()
+                }
+                self._storage.name = newValue
+              }
+            }
+            var nameWithDefault: String {
+              get {
+                self._storage.nameWithDefault
+              }
+              set {
+                if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                  self._storage = self._storage.copy()
+                }
+                self._storage.nameWithDefault = newValue
+              }
+            }
+          
+            static let typeStoredNonMutating: Bool = false
+            static var typeStoredMutating: Bool = false
+            static var typeComputed: Bool { false }
+            let instanceStoredNonMutating: Bool
+            let instanceStoredNonMutatingWithDefault: Bool = false // comment
+            var instanceStoredMutating: Bool
+            var instanceStoredMutatingWithDefault: Bool = false // comment
+            var instanceComputed: Bool { false }
+
+            private final class _Storage: @unchecked Sendable {
+              let id: String
+              let idWithDefault: String
+              var name: String
+              var nameWithDefault: String
+              init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+                self.id = id
+                self.idWithDefault = idWithDefault
+                self.name = name
+                self.nameWithDefault = nameWithDefault
+              }
+              func copy() -> _Storage {
+                _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+              }
+            }
+
+            private var _storage: _Storage
+
+            package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
               self.instanceStoredNonMutating = instanceStoredNonMutating
               self.instanceStoredMutating = instanceStoredMutating
               self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
@@ -946,6 +1650,422 @@ extension CowBoxMacroTests {
 }
 
 extension CowBoxMacroTests {
+  func testNestedPackageCowBox() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      public struct Parent {
+        @CowBox package struct Person {
+          @CowBoxNonMutating package var id: String
+          @CowBoxNonMutating package var idWithDefault: String = "id" // comment
+          @CowBoxMutating package private(set) var name: String
+          @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+        
+          package static let typeStoredNonMutating: Bool = false
+          package static var typeStoredMutating: Bool = false
+          package static var typeComputed: Bool { false }
+          package let instanceStoredNonMutating: Bool
+          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          package var instanceStoredMutating: Bool
+          package var instanceStoredMutatingWithDefault: Bool = false // comment
+          package var instanceComputed: Bool { false }
+        }
+      }
+      """,
+      expandedSource: #"""
+        public struct Parent {
+          package struct Person {
+            package var id: String {
+              get {
+                self._storage.id
+              }
+            }
+            package var idWithDefault: String {
+              get {
+                self._storage.idWithDefault
+              }
+            }
+            package private(set) var name: String {
+              get {
+                self._storage.name
+              }
+              set {
+                if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                  self._storage = self._storage.copy()
+                }
+                self._storage.name = newValue
+              }
+            }
+            package private(set) var nameWithDefault: String {
+              get {
+                self._storage.nameWithDefault
+              }
+              set {
+                if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                  self._storage = self._storage.copy()
+                }
+                self._storage.nameWithDefault = newValue
+              }
+            }
+          
+            package static let typeStoredNonMutating: Bool = false
+            package static var typeStoredMutating: Bool = false
+            package static var typeComputed: Bool { false }
+            package let instanceStoredNonMutating: Bool
+            package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+            package var instanceStoredMutating: Bool
+            package var instanceStoredMutatingWithDefault: Bool = false // comment
+            package var instanceComputed: Bool { false }
+
+            private final class _Storage: @unchecked Sendable {
+              let id: String
+              let idWithDefault: String
+              var name: String
+              var nameWithDefault: String
+              init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+                self.id = id
+                self.idWithDefault = idWithDefault
+                self.name = name
+                self.nameWithDefault = nameWithDefault
+              }
+              func copy() -> _Storage {
+                _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+              }
+            }
+
+            private var _storage: _Storage
+
+            package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+              self.instanceStoredNonMutating = instanceStoredNonMutating
+              self.instanceStoredMutating = instanceStoredMutating
+              self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+              self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+            }
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testNestedPackageCowBoxInitWithInternal() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      public struct Parent {
+        @CowBox(init: .withInternal) package struct Person {
+          @CowBoxNonMutating package var id: String
+          @CowBoxNonMutating package var idWithDefault: String = "id" // comment
+          @CowBoxMutating package private(set) var name: String
+          @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+        
+          package static let typeStoredNonMutating: Bool = false
+          package static var typeStoredMutating: Bool = false
+          package static var typeComputed: Bool { false }
+          package let instanceStoredNonMutating: Bool
+          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          package var instanceStoredMutating: Bool
+          package var instanceStoredMutatingWithDefault: Bool = false // comment
+          package var instanceComputed: Bool { false }
+        }
+      }
+      """,
+      expandedSource: #"""
+        public struct Parent {
+          package struct Person {
+            package var id: String {
+              get {
+                self._storage.id
+              }
+            }
+            package var idWithDefault: String {
+              get {
+                self._storage.idWithDefault
+              }
+            }
+            package private(set) var name: String {
+              get {
+                self._storage.name
+              }
+              set {
+                if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                  self._storage = self._storage.copy()
+                }
+                self._storage.name = newValue
+              }
+            }
+            package private(set) var nameWithDefault: String {
+              get {
+                self._storage.nameWithDefault
+              }
+              set {
+                if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                  self._storage = self._storage.copy()
+                }
+                self._storage.nameWithDefault = newValue
+              }
+            }
+          
+            package static let typeStoredNonMutating: Bool = false
+            package static var typeStoredMutating: Bool = false
+            package static var typeComputed: Bool { false }
+            package let instanceStoredNonMutating: Bool
+            package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+            package var instanceStoredMutating: Bool
+            package var instanceStoredMutatingWithDefault: Bool = false // comment
+            package var instanceComputed: Bool { false }
+
+            private final class _Storage: @unchecked Sendable {
+              let id: String
+              let idWithDefault: String
+              var name: String
+              var nameWithDefault: String
+              init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+                self.id = id
+                self.idWithDefault = idWithDefault
+                self.name = name
+                self.nameWithDefault = nameWithDefault
+              }
+              func copy() -> _Storage {
+                _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+              }
+            }
+
+            private var _storage: _Storage
+
+            init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+              self.instanceStoredNonMutating = instanceStoredNonMutating
+              self.instanceStoredMutating = instanceStoredMutating
+              self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+              self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+            }
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testNestedPackageCowBoxInitWithPackage() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      public struct Parent {
+        @CowBox(init: .withPackage) package struct Person {
+          @CowBoxNonMutating package var id: String
+          @CowBoxNonMutating package var idWithDefault: String = "id" // comment
+          @CowBoxMutating package private(set) var name: String
+          @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+        
+          package static let typeStoredNonMutating: Bool = false
+          package static var typeStoredMutating: Bool = false
+          package static var typeComputed: Bool { false }
+          package let instanceStoredNonMutating: Bool
+          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          package var instanceStoredMutating: Bool
+          package var instanceStoredMutatingWithDefault: Bool = false // comment
+          package var instanceComputed: Bool { false }
+        }
+      }
+      """,
+      expandedSource: #"""
+        public struct Parent {
+          package struct Person {
+            package var id: String {
+              get {
+                self._storage.id
+              }
+            }
+            package var idWithDefault: String {
+              get {
+                self._storage.idWithDefault
+              }
+            }
+            package private(set) var name: String {
+              get {
+                self._storage.name
+              }
+              set {
+                if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                  self._storage = self._storage.copy()
+                }
+                self._storage.name = newValue
+              }
+            }
+            package private(set) var nameWithDefault: String {
+              get {
+                self._storage.nameWithDefault
+              }
+              set {
+                if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                  self._storage = self._storage.copy()
+                }
+                self._storage.nameWithDefault = newValue
+              }
+            }
+          
+            package static let typeStoredNonMutating: Bool = false
+            package static var typeStoredMutating: Bool = false
+            package static var typeComputed: Bool { false }
+            package let instanceStoredNonMutating: Bool
+            package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+            package var instanceStoredMutating: Bool
+            package var instanceStoredMutatingWithDefault: Bool = false // comment
+            package var instanceComputed: Bool { false }
+
+            private final class _Storage: @unchecked Sendable {
+              let id: String
+              let idWithDefault: String
+              var name: String
+              var nameWithDefault: String
+              init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+                self.id = id
+                self.idWithDefault = idWithDefault
+                self.name = name
+                self.nameWithDefault = nameWithDefault
+              }
+              func copy() -> _Storage {
+                _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+              }
+            }
+
+            private var _storage: _Storage
+
+            package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+              self.instanceStoredNonMutating = instanceStoredNonMutating
+              self.instanceStoredMutating = instanceStoredMutating
+              self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+              self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+            }
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testNestedPackageCowBoxInitWithPublic() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      public struct Parent {
+        @CowBox(init: .withPublic) package struct Person {
+          @CowBoxNonMutating package var id: String
+          @CowBoxNonMutating package var idWithDefault: String = "id" // comment
+          @CowBoxMutating package private(set) var name: String
+          @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+        
+          package static let typeStoredNonMutating: Bool = false
+          package static var typeStoredMutating: Bool = false
+          package static var typeComputed: Bool { false }
+          package let instanceStoredNonMutating: Bool
+          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          package var instanceStoredMutating: Bool
+          package var instanceStoredMutatingWithDefault: Bool = false // comment
+          package var instanceComputed: Bool { false }
+        }
+      }
+      """,
+      expandedSource: #"""
+        public struct Parent {
+          package struct Person {
+            package var id: String {
+              get {
+                self._storage.id
+              }
+            }
+            package var idWithDefault: String {
+              get {
+                self._storage.idWithDefault
+              }
+            }
+            package private(set) var name: String {
+              get {
+                self._storage.name
+              }
+              set {
+                if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                  self._storage = self._storage.copy()
+                }
+                self._storage.name = newValue
+              }
+            }
+            package private(set) var nameWithDefault: String {
+              get {
+                self._storage.nameWithDefault
+              }
+              set {
+                if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                  self._storage = self._storage.copy()
+                }
+                self._storage.nameWithDefault = newValue
+              }
+            }
+          
+            package static let typeStoredNonMutating: Bool = false
+            package static var typeStoredMutating: Bool = false
+            package static var typeComputed: Bool { false }
+            package let instanceStoredNonMutating: Bool
+            package let instanceStoredNonMutatingWithDefault: Bool = false // comment
+            package var instanceStoredMutating: Bool
+            package var instanceStoredMutatingWithDefault: Bool = false // comment
+            package var instanceComputed: Bool { false }
+
+            private final class _Storage: @unchecked Sendable {
+              let id: String
+              let idWithDefault: String
+              var name: String
+              var nameWithDefault: String
+              init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+                self.id = id
+                self.idWithDefault = idWithDefault
+                self.name = name
+                self.nameWithDefault = nameWithDefault
+              }
+              func copy() -> _Storage {
+                _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+              }
+            }
+
+            private var _storage: _Storage
+
+            public init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+              self.instanceStoredNonMutating = instanceStoredNonMutating
+              self.instanceStoredMutating = instanceStoredMutating
+              self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+              self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+            }
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
   func testNestedPublicCowBox() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
@@ -954,8 +2074,8 @@ extension CowBoxMacroTests {
         @CowBox public struct Person {
           @CowBoxNonMutating public var id: String
           @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-          @CowBoxMutating public internal(set) var name: String
-          @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+          @CowBoxMutating public private(set) var name: String
+          @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
         
           public static let typeStoredNonMutating: Bool = false
           public static var typeStoredMutating: Bool = false
@@ -981,7 +2101,7 @@ extension CowBoxMacroTests {
                 self._storage.idWithDefault
               }
             }
-            public internal(set) var name: String {
+            public private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -992,7 +2112,7 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            public internal(set) var nameWithDefault: String {
+            public private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -1058,8 +2178,8 @@ extension CowBoxMacroTests {
         @CowBox(init: .withInternal) public struct Person {
           @CowBoxNonMutating public var id: String
           @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-          @CowBoxMutating public internal(set) var name: String
-          @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+          @CowBoxMutating public private(set) var name: String
+          @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
         
           public static let typeStoredNonMutating: Bool = false
           public static var typeStoredMutating: Bool = false
@@ -1085,7 +2205,7 @@ extension CowBoxMacroTests {
                 self._storage.idWithDefault
               }
             }
-            public internal(set) var name: String {
+            public private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -1096,7 +2216,7 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            public internal(set) var nameWithDefault: String {
+            public private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -1154,16 +2274,16 @@ extension CowBoxMacroTests {
 }
 
 extension CowBoxMacroTests {
-  func testNestedPublicCowBoxInitWithPublic() throws {
+  func testNestedPublicCowBoxInitWithPackage() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
       public struct Parent {
-        @CowBox(init: .withPublic) public struct Person {
+        @CowBox(init: .withPackage) public struct Person {
           @CowBoxNonMutating public var id: String
           @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-          @CowBoxMutating public internal(set) var name: String
-          @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+          @CowBoxMutating public private(set) var name: String
+          @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
         
           public static let typeStoredNonMutating: Bool = false
           public static var typeStoredMutating: Bool = false
@@ -1189,7 +2309,7 @@ extension CowBoxMacroTests {
                 self._storage.idWithDefault
               }
             }
-            public internal(set) var name: String {
+            public private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -1200,7 +2320,111 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            public internal(set) var nameWithDefault: String {
+            public private(set) var nameWithDefault: String {
+              get {
+                self._storage.nameWithDefault
+              }
+              set {
+                if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                  self._storage = self._storage.copy()
+                }
+                self._storage.nameWithDefault = newValue
+              }
+            }
+          
+            public static let typeStoredNonMutating: Bool = false
+            public static var typeStoredMutating: Bool = false
+            public static var typeComputed: Bool { false }
+            public let instanceStoredNonMutating: Bool
+            public let instanceStoredNonMutatingWithDefault: Bool = false // comment
+            public var instanceStoredMutating: Bool
+            public var instanceStoredMutatingWithDefault: Bool = false // comment
+            public var instanceComputed: Bool { false }
+
+            private final class _Storage: @unchecked Sendable {
+              let id: String
+              let idWithDefault: String
+              var name: String
+              var nameWithDefault: String
+              init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+                self.id = id
+                self.idWithDefault = idWithDefault
+                self.name = name
+                self.nameWithDefault = nameWithDefault
+              }
+              func copy() -> _Storage {
+                _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+              }
+            }
+
+            private var _storage: _Storage
+
+            package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+              self.instanceStoredNonMutating = instanceStoredNonMutating
+              self.instanceStoredMutating = instanceStoredMutating
+              self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+              self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+            }
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testNestedPublicCowBoxInitWithPublic() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      public struct Parent {
+        @CowBox(init: .withPublic) public struct Person {
+          @CowBoxNonMutating public var id: String
+          @CowBoxNonMutating public var idWithDefault: String = "id" // comment
+          @CowBoxMutating public private(set) var name: String
+          @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+        
+          public static let typeStoredNonMutating: Bool = false
+          public static var typeStoredMutating: Bool = false
+          public static var typeComputed: Bool { false }
+          public let instanceStoredNonMutating: Bool
+          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          public var instanceStoredMutating: Bool
+          public var instanceStoredMutatingWithDefault: Bool = false // comment
+          public var instanceComputed: Bool { false }
+        }
+      }
+      """,
+      expandedSource: #"""
+        public struct Parent {
+          public struct Person {
+            public var id: String {
+              get {
+                self._storage.id
+              }
+            }
+            public var idWithDefault: String {
+              get {
+                self._storage.idWithDefault
+              }
+            }
+            public private(set) var name: String {
+              get {
+                self._storage.name
+              }
+              set {
+                if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                  self._storage = self._storage.copy()
+                }
+                self._storage.name = newValue
+              }
+            }
+            public private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -1428,6 +2652,91 @@ extension CowBoxMacroTests {
 }
 
 extension CowBoxMacroTests {
+  func testCowBoxInitWithPackageExtension() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPackage) struct Person {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating var name: String
+        @CowBoxMutating var nameWithDefault: String = "name" // comment
+      }
+      """,
+      expandedSource: #"""
+        struct Person {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name") {
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        }
+        
+        extension Person: CowBox {
+          func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
   func testCowBoxInitWithPublicExtension() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
@@ -1513,6 +2822,346 @@ extension CowBoxMacroTests {
 }
 
 extension CowBoxMacroTests {
+  func testPackageCowBoxExtension() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox package struct Person {
+        @CowBoxNonMutating package var id: String
+        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
+        @CowBoxMutating package private(set) var name: String
+        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+      }
+      """,
+      expandedSource: #"""
+        package struct Person {
+          package var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          package var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          package private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          package private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name") {
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        }
+        
+        extension Person: CowBox {
+          package func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPackageCowBoxInitWithInternalExtension() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withInternal) package struct Person {
+        @CowBoxNonMutating package var id: String
+        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
+        @CowBoxMutating package private(set) var name: String
+        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+      }
+      """,
+      expandedSource: #"""
+        package struct Person {
+          package var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          package var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          package private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          package private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String, nameWithDefault: String = "name") {
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        }
+        
+        extension Person: CowBox {
+          package func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPackageCowBoxInitWithPackageExtension() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPackage) package struct Person {
+        @CowBoxNonMutating package var id: String
+        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
+        @CowBoxMutating package private(set) var name: String
+        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+      }
+      """,
+      expandedSource: #"""
+        package struct Person {
+          package var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          package var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          package private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          package private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name") {
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        }
+        
+        extension Person: CowBox {
+          package func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPackageCowBoxInitWithPublicExtension() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) package struct Person {
+        @CowBoxNonMutating package var id: String
+        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
+        @CowBoxMutating package private(set) var name: String
+        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+      }
+      """,
+      expandedSource: #"""
+        package struct Person {
+          package var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          package var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          package private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          package private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String, nameWithDefault: String = "name") {
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        }
+        
+        extension Person: CowBox {
+          package func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
   func testPublicCowBoxExtension() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
@@ -1520,8 +3169,8 @@ extension CowBoxMacroTests {
       @CowBox public struct Person {
         @CowBoxNonMutating public var id: String
         @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating public private(set) var name: String
+        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
@@ -1536,7 +3185,7 @@ extension CowBoxMacroTests {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          public private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1547,7 +3196,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          public private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1605,8 +3254,8 @@ extension CowBoxMacroTests {
       @CowBox(init: .withInternal) public struct Person {
         @CowBoxNonMutating public var id: String
         @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating public private(set) var name: String
+        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
@@ -1621,7 +3270,7 @@ extension CowBoxMacroTests {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          public private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1632,7 +3281,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          public private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1683,15 +3332,15 @@ extension CowBoxMacroTests {
 }
 
 extension CowBoxMacroTests {
-  func testPublicCowBoxInitWithPublicExtension() throws {
+  func testPublicCowBoxInitWithPackageExtension() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox(init: .withPublic) public struct Person {
+      @CowBox(init: .withPackage) public struct Person {
         @CowBoxNonMutating public var id: String
         @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating public private(set) var name: String
+        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
@@ -1706,7 +3355,7 @@ extension CowBoxMacroTests {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          public private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1717,7 +3366,92 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          public private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name") {
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        }
+        
+        extension Person: CowBox {
+          public func isIdentical(to other: Person) -> Bool {
+            self._storage === other._storage
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testPublicCowBoxInitWithPublicExtension() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) public struct Person {
+        @CowBoxNonMutating public var id: String
+        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
+        @CowBoxMutating public private(set) var name: String
+        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+      }
+      """,
+      expandedSource: #"""
+        public struct Person {
+          public var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          public var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          public private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          public private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
