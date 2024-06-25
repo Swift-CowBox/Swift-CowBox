@@ -35,8 +35,8 @@ extension HashableTests {
       @CowBox struct Person: Hashable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -60,7 +60,7 @@ extension HashableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -71,7 +71,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -177,8 +177,8 @@ extension HashableTests {
       @CowBox(init: .withInternal) struct Person: Hashable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -202,7 +202,7 @@ extension HashableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -213,7 +213,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -312,15 +312,15 @@ extension HashableTests {
 }
 
 extension HashableTests {
-  func testCowBoxInitWithPublicHashable() throws {
+  func testCowBoxInitWithPackageHashable() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox(init: .withPublic) struct Person: Hashable {
+      @CowBox(init: .withPackage) struct Person: Hashable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -344,7 +344,7 @@ extension HashableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -355,7 +355,149 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          static func ==(lhs: Person, rhs: Person) -> Bool {
+            guard lhs.instanceStoredNonMutating == rhs.instanceStoredNonMutating else {
+              return false
+            }
+            guard lhs.instanceStoredNonMutatingWithDefault == rhs.instanceStoredNonMutatingWithDefault else {
+              return false
+            }
+            guard lhs.instanceStoredMutating == rhs.instanceStoredMutating else {
+              return false
+            }
+            guard lhs.instanceStoredMutatingWithDefault == rhs.instanceStoredMutatingWithDefault else {
+              return false
+            }
+            if lhs._storage === rhs._storage {
+              return true
+            }
+            guard lhs.id == rhs.id else {
+              return false
+            }
+            guard lhs.idWithDefault == rhs.idWithDefault else {
+              return false
+            }
+            guard lhs.name == rhs.name else {
+              return false
+            }
+            guard lhs.nameWithDefault == rhs.nameWithDefault else {
+              return false
+            }
+            return true
+          }
+        
+          func hash(into hasher: inout Hasher) {
+            hasher.combine(self.id)
+            hasher.combine(self.idWithDefault)
+            hasher.combine(self.name)
+            hasher.combine(self.nameWithDefault)
+            hasher.combine(self.instanceStoredNonMutating)
+            hasher.combine(self.instanceStoredNonMutatingWithDefault)
+            hasher.combine(self.instanceStoredMutating)
+            hasher.combine(self.instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testCowBoxInitWithPublicHashable() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -454,39 +596,39 @@ extension HashableTests {
 }
 
 extension HashableTests {
-  func testPublicCowBoxHashable() throws {
+  func testPackageCowBoxHashable() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox public struct Person: Hashable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+      @CowBox package struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       }
       """,
       expandedSource: #"""
-        public struct Person: Hashable {
-          public var id: String {
+        package struct Person: Hashable {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -497,7 +639,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -509,14 +651,582 @@ extension HashableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package static func ==(lhs: Person, rhs: Person) -> Bool {
+            guard lhs.instanceStoredNonMutating == rhs.instanceStoredNonMutating else {
+              return false
+            }
+            guard lhs.instanceStoredNonMutatingWithDefault == rhs.instanceStoredNonMutatingWithDefault else {
+              return false
+            }
+            guard lhs.instanceStoredMutating == rhs.instanceStoredMutating else {
+              return false
+            }
+            guard lhs.instanceStoredMutatingWithDefault == rhs.instanceStoredMutatingWithDefault else {
+              return false
+            }
+            if lhs._storage === rhs._storage {
+              return true
+            }
+            guard lhs.id == rhs.id else {
+              return false
+            }
+            guard lhs.idWithDefault == rhs.idWithDefault else {
+              return false
+            }
+            guard lhs.name == rhs.name else {
+              return false
+            }
+            guard lhs.nameWithDefault == rhs.nameWithDefault else {
+              return false
+            }
+            return true
+          }
+        
+          package func hash(into hasher: inout Hasher) {
+            hasher.combine(self.id)
+            hasher.combine(self.idWithDefault)
+            hasher.combine(self.name)
+            hasher.combine(self.nameWithDefault)
+            hasher.combine(self.instanceStoredNonMutating)
+            hasher.combine(self.instanceStoredNonMutatingWithDefault)
+            hasher.combine(self.instanceStoredMutating)
+            hasher.combine(self.instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPackageCowBoxInitWithInternalHashable() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withInternal) package struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package static func ==(lhs: Person, rhs: Person) -> Bool {
+            guard lhs.instanceStoredNonMutating == rhs.instanceStoredNonMutating else {
+              return false
+            }
+            guard lhs.instanceStoredNonMutatingWithDefault == rhs.instanceStoredNonMutatingWithDefault else {
+              return false
+            }
+            guard lhs.instanceStoredMutating == rhs.instanceStoredMutating else {
+              return false
+            }
+            guard lhs.instanceStoredMutatingWithDefault == rhs.instanceStoredMutatingWithDefault else {
+              return false
+            }
+            if lhs._storage === rhs._storage {
+              return true
+            }
+            guard lhs.id == rhs.id else {
+              return false
+            }
+            guard lhs.idWithDefault == rhs.idWithDefault else {
+              return false
+            }
+            guard lhs.name == rhs.name else {
+              return false
+            }
+            guard lhs.nameWithDefault == rhs.nameWithDefault else {
+              return false
+            }
+            return true
+          }
+        
+          package func hash(into hasher: inout Hasher) {
+            hasher.combine(self.id)
+            hasher.combine(self.idWithDefault)
+            hasher.combine(self.name)
+            hasher.combine(self.nameWithDefault)
+            hasher.combine(self.instanceStoredNonMutating)
+            hasher.combine(self.instanceStoredNonMutatingWithDefault)
+            hasher.combine(self.instanceStoredMutating)
+            hasher.combine(self.instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPackageCowBoxInitWithPackageHashable() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPackage) package struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package static func ==(lhs: Person, rhs: Person) -> Bool {
+            guard lhs.instanceStoredNonMutating == rhs.instanceStoredNonMutating else {
+              return false
+            }
+            guard lhs.instanceStoredNonMutatingWithDefault == rhs.instanceStoredNonMutatingWithDefault else {
+              return false
+            }
+            guard lhs.instanceStoredMutating == rhs.instanceStoredMutating else {
+              return false
+            }
+            guard lhs.instanceStoredMutatingWithDefault == rhs.instanceStoredMutatingWithDefault else {
+              return false
+            }
+            if lhs._storage === rhs._storage {
+              return true
+            }
+            guard lhs.id == rhs.id else {
+              return false
+            }
+            guard lhs.idWithDefault == rhs.idWithDefault else {
+              return false
+            }
+            guard lhs.name == rhs.name else {
+              return false
+            }
+            guard lhs.nameWithDefault == rhs.nameWithDefault else {
+              return false
+            }
+            return true
+          }
+        
+          package func hash(into hasher: inout Hasher) {
+            hasher.combine(self.id)
+            hasher.combine(self.idWithDefault)
+            hasher.combine(self.name)
+            hasher.combine(self.nameWithDefault)
+            hasher.combine(self.instanceStoredNonMutating)
+            hasher.combine(self.instanceStoredNonMutatingWithDefault)
+            hasher.combine(self.instanceStoredMutating)
+            hasher.combine(self.instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPackageCowBoxInitWithPublicHashable() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) package struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package static func ==(lhs: Person, rhs: Person) -> Bool {
+            guard lhs.instanceStoredNonMutating == rhs.instanceStoredNonMutating else {
+              return false
+            }
+            guard lhs.instanceStoredNonMutatingWithDefault == rhs.instanceStoredNonMutatingWithDefault else {
+              return false
+            }
+            guard lhs.instanceStoredMutating == rhs.instanceStoredMutating else {
+              return false
+            }
+            guard lhs.instanceStoredMutatingWithDefault == rhs.instanceStoredMutatingWithDefault else {
+              return false
+            }
+            if lhs._storage === rhs._storage {
+              return true
+            }
+            guard lhs.id == rhs.id else {
+              return false
+            }
+            guard lhs.idWithDefault == rhs.idWithDefault else {
+              return false
+            }
+            guard lhs.name == rhs.name else {
+              return false
+            }
+            guard lhs.nameWithDefault == rhs.nameWithDefault else {
+              return false
+            }
+            return true
+          }
+        
+          package func hash(into hasher: inout Hasher) {
+            hasher.combine(self.id)
+            hasher.combine(self.idWithDefault)
+            hasher.combine(self.name)
+            hasher.combine(self.nameWithDefault)
+            hasher.combine(self.instanceStoredNonMutating)
+            hasher.combine(self.instanceStoredNonMutatingWithDefault)
+            hasher.combine(self.instanceStoredMutating)
+            hasher.combine(self.instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPublicCowBoxHashable() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox public struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -601,34 +1311,34 @@ extension HashableTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withInternal) public struct Person: Hashable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       }
       """,
       expandedSource: #"""
         public struct Person: Hashable {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -639,7 +1349,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -651,14 +1361,14 @@ extension HashableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -738,39 +1448,39 @@ extension HashableTests {
 }
 
 extension HashableTests {
-  func testPublicCowBoxInitWithPublicHashable() throws {
+  func testPublicCowBoxInitWithPackageHashable() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox(init: .withPublic) public struct Person: Hashable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+      @CowBox(init: .withPackage) public struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       }
       """,
       expandedSource: #"""
         public struct Person: Hashable {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -781,7 +1491,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -793,14 +1503,156 @@ extension HashableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          public static func ==(lhs: Person, rhs: Person) -> Bool {
+            guard lhs.instanceStoredNonMutating == rhs.instanceStoredNonMutating else {
+              return false
+            }
+            guard lhs.instanceStoredNonMutatingWithDefault == rhs.instanceStoredNonMutatingWithDefault else {
+              return false
+            }
+            guard lhs.instanceStoredMutating == rhs.instanceStoredMutating else {
+              return false
+            }
+            guard lhs.instanceStoredMutatingWithDefault == rhs.instanceStoredMutatingWithDefault else {
+              return false
+            }
+            if lhs._storage === rhs._storage {
+              return true
+            }
+            guard lhs.id == rhs.id else {
+              return false
+            }
+            guard lhs.idWithDefault == rhs.idWithDefault else {
+              return false
+            }
+            guard lhs.name == rhs.name else {
+              return false
+            }
+            guard lhs.nameWithDefault == rhs.nameWithDefault else {
+              return false
+            }
+            return true
+          }
+        
+          public func hash(into hasher: inout Hasher) {
+            hasher.combine(self.id)
+            hasher.combine(self.idWithDefault)
+            hasher.combine(self.name)
+            hasher.combine(self.nameWithDefault)
+            hasher.combine(self.instanceStoredNonMutating)
+            hasher.combine(self.instanceStoredNonMutatingWithDefault)
+            hasher.combine(self.instanceStoredMutating)
+            hasher.combine(self.instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPublicCowBoxInitWithPublicHashable() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) public struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -887,8 +1739,8 @@ extension HashableTests {
       @CowBox struct Person: Hashable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -914,7 +1766,7 @@ extension HashableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -925,7 +1777,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1002,8 +1854,8 @@ extension HashableTests {
       @CowBox(init: .withInternal) struct Person: Hashable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -1029,7 +1881,7 @@ extension HashableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1040,7 +1892,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1110,15 +1962,15 @@ extension HashableTests {
 }
 
 extension HashableTests {
-  func testCowBoxInitWithPublicHashableWithEqualFunction() throws {
+  func testCowBoxInitWithPackageHashableWithEqualFunction() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox(init: .withPublic) struct Person: Hashable {
+      @CowBox(init: .withPackage) struct Person: Hashable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -1144,7 +1996,7 @@ extension HashableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1155,7 +2007,122 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          func hash(into hasher: inout Hasher) {
+            hasher.combine(self.id)
+            hasher.combine(self.idWithDefault)
+            hasher.combine(self.name)
+            hasher.combine(self.nameWithDefault)
+            hasher.combine(self.instanceStoredNonMutating)
+            hasher.combine(self.instanceStoredNonMutatingWithDefault)
+            hasher.combine(self.instanceStoredMutating)
+            hasher.combine(self.instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testCowBoxInitWithPublicHashableWithEqualFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1225,41 +2192,41 @@ extension HashableTests {
 }
 
 extension HashableTests {
-  func testPublicCowBoxHashableWithEqualFunction() throws {
+  func testPackageCowBoxHashableWithEqualFunction() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox public struct Person: Hashable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+      @CowBox package struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       
-        public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
+        package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
       }
       """,
       expandedSource: #"""
-        public struct Person: Hashable {
-          public var id: String {
+        package struct Person: Hashable {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1270,7 +2237,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1282,14 +2249,474 @@ extension HashableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package func hash(into hasher: inout Hasher) {
+            hasher.combine(self.id)
+            hasher.combine(self.idWithDefault)
+            hasher.combine(self.name)
+            hasher.combine(self.nameWithDefault)
+            hasher.combine(self.instanceStoredNonMutating)
+            hasher.combine(self.instanceStoredNonMutatingWithDefault)
+            hasher.combine(self.instanceStoredMutating)
+            hasher.combine(self.instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPackageCowBoxInitWithInternalHashableWithEqualFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withInternal) package struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package func hash(into hasher: inout Hasher) {
+            hasher.combine(self.id)
+            hasher.combine(self.idWithDefault)
+            hasher.combine(self.name)
+            hasher.combine(self.nameWithDefault)
+            hasher.combine(self.instanceStoredNonMutating)
+            hasher.combine(self.instanceStoredNonMutatingWithDefault)
+            hasher.combine(self.instanceStoredMutating)
+            hasher.combine(self.instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPackageCowBoxInitWithPackageHashableWithEqualFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPackage) package struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package func hash(into hasher: inout Hasher) {
+            hasher.combine(self.id)
+            hasher.combine(self.idWithDefault)
+            hasher.combine(self.name)
+            hasher.combine(self.nameWithDefault)
+            hasher.combine(self.instanceStoredNonMutating)
+            hasher.combine(self.instanceStoredNonMutatingWithDefault)
+            hasher.combine(self.instanceStoredMutating)
+            hasher.combine(self.instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPackageCowBoxInitWithPublicHashableWithEqualFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) package struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package func hash(into hasher: inout Hasher) {
+            hasher.combine(self.id)
+            hasher.combine(self.idWithDefault)
+            hasher.combine(self.name)
+            hasher.combine(self.nameWithDefault)
+            hasher.combine(self.instanceStoredNonMutating)
+            hasher.combine(self.instanceStoredNonMutatingWithDefault)
+            hasher.combine(self.instanceStoredMutating)
+            hasher.combine(self.instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPublicCowBoxHashableWithEqualFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox public struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
         
@@ -1345,36 +2772,36 @@ extension HashableTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withInternal) public struct Person: Hashable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       
         public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
       }
       """,
       expandedSource: #"""
         public struct Person: Hashable {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1385,7 +2812,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1397,14 +2824,14 @@ extension HashableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
         
@@ -1455,41 +2882,41 @@ extension HashableTests {
 }
 
 extension HashableTests {
-  func testPublicCowBoxInitWithPublicHashableWithEqualFunction() throws {
+  func testPublicCowBoxInitWithPackageHashableWithEqualFunction() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox(init: .withPublic) public struct Person: Hashable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+      @CowBox(init: .withPackage) public struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       
         public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
       }
       """,
       expandedSource: #"""
         public struct Person: Hashable {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1500,7 +2927,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1512,14 +2939,129 @@ extension HashableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          public func hash(into hasher: inout Hasher) {
+            hasher.combine(self.id)
+            hasher.combine(self.idWithDefault)
+            hasher.combine(self.name)
+            hasher.combine(self.nameWithDefault)
+            hasher.combine(self.instanceStoredNonMutating)
+            hasher.combine(self.instanceStoredNonMutatingWithDefault)
+            hasher.combine(self.instanceStoredMutating)
+            hasher.combine(self.instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPublicCowBoxInitWithPublicHashableWithEqualFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) public struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
         
@@ -1577,8 +3119,8 @@ extension HashableTests {
       @CowBox struct Person: Hashable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -1604,7 +3146,7 @@ extension HashableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1615,7 +3157,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1712,8 +3254,8 @@ extension HashableTests {
       @CowBox(init: .withInternal) struct Person: Hashable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -1739,7 +3281,7 @@ extension HashableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1750,7 +3292,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1840,15 +3382,15 @@ extension HashableTests {
 }
 
 extension HashableTests {
-  func testCowBoxInitWithPublicHashableWithHashFunction() throws {
+  func testCowBoxInitWithPackageHashableWithHashFunction() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox(init: .withPublic) struct Person: Hashable {
+      @CowBox(init: .withPackage) struct Person: Hashable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -1874,7 +3416,7 @@ extension HashableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1885,7 +3427,142 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          func hash(into hasher: inout Hasher) { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          static func ==(lhs: Person, rhs: Person) -> Bool {
+            guard lhs.instanceStoredNonMutating == rhs.instanceStoredNonMutating else {
+              return false
+            }
+            guard lhs.instanceStoredNonMutatingWithDefault == rhs.instanceStoredNonMutatingWithDefault else {
+              return false
+            }
+            guard lhs.instanceStoredMutating == rhs.instanceStoredMutating else {
+              return false
+            }
+            guard lhs.instanceStoredMutatingWithDefault == rhs.instanceStoredMutatingWithDefault else {
+              return false
+            }
+            if lhs._storage === rhs._storage {
+              return true
+            }
+            guard lhs.id == rhs.id else {
+              return false
+            }
+            guard lhs.idWithDefault == rhs.idWithDefault else {
+              return false
+            }
+            guard lhs.name == rhs.name else {
+              return false
+            }
+            guard lhs.nameWithDefault == rhs.nameWithDefault else {
+              return false
+            }
+            return true
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testCowBoxInitWithPublicHashableWithHashFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        func hash(into hasher: inout Hasher) { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1975,41 +3652,41 @@ extension HashableTests {
 }
 
 extension HashableTests {
-  func testPublicCowBoxHashableWithHashFunction() throws {
+  func testPackageCowBoxHashableWithHashFunction() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox public struct Person: Hashable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+      @CowBox package struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       
-        public func hash(into hasher: inout Hasher) { fatalError() }
+        package func hash(into hasher: inout Hasher) { fatalError() }
       }
       """,
       expandedSource: #"""
-        public struct Person: Hashable {
-          public var id: String {
+        package struct Person: Hashable {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -2020,7 +3697,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -2032,14 +3709,554 @@ extension HashableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          package func hash(into hasher: inout Hasher) { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package static func ==(lhs: Person, rhs: Person) -> Bool {
+            guard lhs.instanceStoredNonMutating == rhs.instanceStoredNonMutating else {
+              return false
+            }
+            guard lhs.instanceStoredNonMutatingWithDefault == rhs.instanceStoredNonMutatingWithDefault else {
+              return false
+            }
+            guard lhs.instanceStoredMutating == rhs.instanceStoredMutating else {
+              return false
+            }
+            guard lhs.instanceStoredMutatingWithDefault == rhs.instanceStoredMutatingWithDefault else {
+              return false
+            }
+            if lhs._storage === rhs._storage {
+              return true
+            }
+            guard lhs.id == rhs.id else {
+              return false
+            }
+            guard lhs.idWithDefault == rhs.idWithDefault else {
+              return false
+            }
+            guard lhs.name == rhs.name else {
+              return false
+            }
+            guard lhs.nameWithDefault == rhs.nameWithDefault else {
+              return false
+            }
+            return true
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPackageCowBoxInitWithInternalHashableWithHashFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withInternal) package struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        package func hash(into hasher: inout Hasher) { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          package func hash(into hasher: inout Hasher) { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package static func ==(lhs: Person, rhs: Person) -> Bool {
+            guard lhs.instanceStoredNonMutating == rhs.instanceStoredNonMutating else {
+              return false
+            }
+            guard lhs.instanceStoredNonMutatingWithDefault == rhs.instanceStoredNonMutatingWithDefault else {
+              return false
+            }
+            guard lhs.instanceStoredMutating == rhs.instanceStoredMutating else {
+              return false
+            }
+            guard lhs.instanceStoredMutatingWithDefault == rhs.instanceStoredMutatingWithDefault else {
+              return false
+            }
+            if lhs._storage === rhs._storage {
+              return true
+            }
+            guard lhs.id == rhs.id else {
+              return false
+            }
+            guard lhs.idWithDefault == rhs.idWithDefault else {
+              return false
+            }
+            guard lhs.name == rhs.name else {
+              return false
+            }
+            guard lhs.nameWithDefault == rhs.nameWithDefault else {
+              return false
+            }
+            return true
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPackageCowBoxInitWithPackageHashableWithHashFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPackage) package struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        package func hash(into hasher: inout Hasher) { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          package func hash(into hasher: inout Hasher) { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package static func ==(lhs: Person, rhs: Person) -> Bool {
+            guard lhs.instanceStoredNonMutating == rhs.instanceStoredNonMutating else {
+              return false
+            }
+            guard lhs.instanceStoredNonMutatingWithDefault == rhs.instanceStoredNonMutatingWithDefault else {
+              return false
+            }
+            guard lhs.instanceStoredMutating == rhs.instanceStoredMutating else {
+              return false
+            }
+            guard lhs.instanceStoredMutatingWithDefault == rhs.instanceStoredMutatingWithDefault else {
+              return false
+            }
+            if lhs._storage === rhs._storage {
+              return true
+            }
+            guard lhs.id == rhs.id else {
+              return false
+            }
+            guard lhs.idWithDefault == rhs.idWithDefault else {
+              return false
+            }
+            guard lhs.name == rhs.name else {
+              return false
+            }
+            guard lhs.nameWithDefault == rhs.nameWithDefault else {
+              return false
+            }
+            return true
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPackageCowBoxInitWithPublicHashableWithHashFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPackage) package struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        package func hash(into hasher: inout Hasher) { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          package func hash(into hasher: inout Hasher) { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package static func ==(lhs: Person, rhs: Person) -> Bool {
+            guard lhs.instanceStoredNonMutating == rhs.instanceStoredNonMutating else {
+              return false
+            }
+            guard lhs.instanceStoredNonMutatingWithDefault == rhs.instanceStoredNonMutatingWithDefault else {
+              return false
+            }
+            guard lhs.instanceStoredMutating == rhs.instanceStoredMutating else {
+              return false
+            }
+            guard lhs.instanceStoredMutatingWithDefault == rhs.instanceStoredMutatingWithDefault else {
+              return false
+            }
+            if lhs._storage === rhs._storage {
+              return true
+            }
+            guard lhs.id == rhs.id else {
+              return false
+            }
+            guard lhs.idWithDefault == rhs.idWithDefault else {
+              return false
+            }
+            guard lhs.name == rhs.name else {
+              return false
+            }
+            guard lhs.nameWithDefault == rhs.nameWithDefault else {
+              return false
+            }
+            return true
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPublicCowBoxHashableWithHashFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox public struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        public func hash(into hasher: inout Hasher) { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           public func hash(into hasher: inout Hasher) { fatalError() }
         
@@ -2115,36 +4332,36 @@ extension HashableTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withInternal) public struct Person: Hashable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       
         public func hash(into hasher: inout Hasher) { fatalError() }
       }
       """,
       expandedSource: #"""
         public struct Person: Hashable {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -2155,7 +4372,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -2167,14 +4384,14 @@ extension HashableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           public func hash(into hasher: inout Hasher) { fatalError() }
         
@@ -2245,41 +4462,41 @@ extension HashableTests {
 }
 
 extension HashableTests {
-  func testPublicCowBoxInitWithPublicHashableWithHashFunction() throws {
+  func testPublicCowBoxInitWithPackageHashableWithHashFunction() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox(init: .withPublic) public struct Person: Hashable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+      @CowBox(init: .withPackage) public struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       
         public func hash(into hasher: inout Hasher) { fatalError() }
       }
       """,
       expandedSource: #"""
         public struct Person: Hashable {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -2290,7 +4507,7 @@ extension HashableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -2302,14 +4519,149 @@ extension HashableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          public func hash(into hasher: inout Hasher) { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          public static func ==(lhs: Person, rhs: Person) -> Bool {
+            guard lhs.instanceStoredNonMutating == rhs.instanceStoredNonMutating else {
+              return false
+            }
+            guard lhs.instanceStoredNonMutatingWithDefault == rhs.instanceStoredNonMutatingWithDefault else {
+              return false
+            }
+            guard lhs.instanceStoredMutating == rhs.instanceStoredMutating else {
+              return false
+            }
+            guard lhs.instanceStoredMutatingWithDefault == rhs.instanceStoredMutatingWithDefault else {
+              return false
+            }
+            if lhs._storage === rhs._storage {
+              return true
+            }
+            guard lhs.id == rhs.id else {
+              return false
+            }
+            guard lhs.idWithDefault == rhs.idWithDefault else {
+              return false
+            }
+            guard lhs.name == rhs.name else {
+              return false
+            }
+            guard lhs.nameWithDefault == rhs.nameWithDefault else {
+              return false
+            }
+            return true
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension HashableTests {
+  func testPublicCowBoxInitWithPublicHashableWithHashFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) public struct Person: Hashable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        public func hash(into hasher: inout Hasher) { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person: Hashable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           public func hash(into hasher: inout Hasher) { fatalError() }
         

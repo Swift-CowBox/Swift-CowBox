@@ -14,16 +14,15 @@
 //  limitations under the License.
 //
 
+import CowBox
 import XCTest
 
-@testable import CowBox
-
-@CowBox struct Person: CustomStringConvertible, Hashable, Codable {
+@CowBox struct Person: CustomStringConvertible, Hashable, Codable, Sendable {
   @CowBoxNonMutating var id: String
   @CowBoxMutating var name: String
 }
 
-@CowBox struct ComplexPerson: CustomStringConvertible, Hashable, Codable {
+@CowBox struct ComplexPerson: CustomStringConvertible, Hashable, Codable, Sendable {
   @CowBoxNonMutating var id: String
   @CowBoxNonMutating var idWithDefault: String = "id" // comment
   @CowBoxMutating var name: String
