@@ -14,9 +14,8 @@
 //  limitations under the License.
 //
 
+import CowBox
 import XCTest
-
-@testable import CowBox
 
 @CowBox struct Person: CustomStringConvertible, Hashable, Codable {
   @CowBoxNonMutating var id: String

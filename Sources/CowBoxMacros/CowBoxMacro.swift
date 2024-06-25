@@ -179,6 +179,7 @@ extension CowBoxMacro: MemberMacro {
         DeclSyntax(
           self.equalFunction(
             isPublic: declaration.isPublic,
+            isPackage: declaration.isPackage,
             type: declaration.name,
             variables: variables
           )
@@ -579,6 +580,7 @@ extension CowBoxMacro {
 extension CowBoxMacro {
   static func equalFunction(
     isPublic: Bool,
+    isPackage: Bool,
     type: TokenSyntax,
     variables: [VariableDeclSyntax]
   ) -> FunctionDeclSyntax {
@@ -597,6 +599,9 @@ extension CowBoxMacro {
       modifiers: DeclModifierListSyntax {
         if isPublic {
           DeclModifierSyntax(name: .keyword(.public))
+        }
+        if isPackage {
+          DeclModifierSyntax(name: .keyword(.package))
         }
         DeclModifierSyntax(name: TokenSyntax(.keyword(.static), presence: .present))
       },
