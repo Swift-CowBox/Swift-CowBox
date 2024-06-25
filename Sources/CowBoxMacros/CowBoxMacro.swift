@@ -371,6 +371,10 @@ extension CowBoxMacro {
     
     VariableDeclSyntax(
       modifiers: DeclModifierListSyntax {
+//        DeclModifierSyntax(
+//          name: .keyword(.nonisolated),
+//          detail: DeclModifierDetailSyntax(detail: .keyword(.unsafe))
+//        )
         DeclModifierSyntax(name: .keyword(.private))
       },
       bindingSpecifier: TokenSyntax(.keyword(.var), presence: .present),
