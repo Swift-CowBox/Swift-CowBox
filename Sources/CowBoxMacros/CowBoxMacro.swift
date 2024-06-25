@@ -165,6 +165,7 @@ extension CowBoxMacro: MemberMacro {
         DeclSyntax(
           self.descriptionVariable(
             isPublic: declaration.isPublic,
+            isPackage: declaration.isPackage,
             type: declaration.name,
             variables: variables
           )
@@ -511,6 +512,7 @@ extension CowBoxMacro {
 extension CowBoxMacro {
   static func descriptionVariable(
     isPublic: Bool,
+    isPackage: Bool,
     type: TokenSyntax,
     variables: [VariableDeclSyntax]
   ) -> VariableDeclSyntax {
@@ -540,6 +542,9 @@ extension CowBoxMacro {
       modifiers: DeclModifierListSyntax {
         if isPublic {
           DeclModifierSyntax(name: .keyword(.public))
+        }
+        if isPackage {
+          DeclModifierSyntax(name: .keyword(.package))
         }
       },
       bindingSpecifier: TokenSyntax(.keyword(.var), presence: .present),

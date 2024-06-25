@@ -41,8 +41,8 @@ extension CowBoxMacroTests {
       @CowBox struct Person {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -66,7 +66,7 @@ extension CowBoxMacroTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -77,7 +77,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -141,8 +141,8 @@ extension CowBoxMacroTests {
       @CowBox(init: .withInternal) struct Person {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -166,7 +166,7 @@ extension CowBoxMacroTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -177,7 +177,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -241,8 +241,8 @@ extension CowBoxMacroTests {
       @CowBox(init: .withPackage) struct Person {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -266,7 +266,7 @@ extension CowBoxMacroTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -277,7 +277,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -341,8 +341,8 @@ extension CowBoxMacroTests {
       @CowBox(init: .withPublic) struct Person {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -366,7 +366,7 @@ extension CowBoxMacroTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -377,7 +377,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -439,34 +439,34 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox package struct Person {
-        @CowBoxNonMutating package var id: String
-        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
-        @CowBoxMutating package private(set) var name: String
-        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        package static let typeStoredNonMutating: Bool = false
-        package static var typeStoredMutating: Bool = false
-        package static var typeComputed: Bool { false }
-        package let instanceStoredNonMutating: Bool
-        package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        package var instanceStoredMutating: Bool
-        package var instanceStoredMutatingWithDefault: Bool = false // comment
-        package var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       }
       """,
       expandedSource: #"""
         package struct Person {
-          package var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          package var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          package private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -477,7 +477,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          package private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -489,14 +489,14 @@ extension CowBoxMacroTests {
             }
           }
         
-          package static let typeStoredNonMutating: Bool = false
-          package static var typeStoredMutating: Bool = false
-          package static var typeComputed: Bool { false }
-          package let instanceStoredNonMutating: Bool
-          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          package var instanceStoredMutating: Bool
-          package var instanceStoredMutatingWithDefault: Bool = false // comment
-          package var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -539,34 +539,34 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withInternal) package struct Person {
-        @CowBoxNonMutating package var id: String
-        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
-        @CowBoxMutating package private(set) var name: String
-        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        package static let typeStoredNonMutating: Bool = false
-        package static var typeStoredMutating: Bool = false
-        package static var typeComputed: Bool { false }
-        package let instanceStoredNonMutating: Bool
-        package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        package var instanceStoredMutating: Bool
-        package var instanceStoredMutatingWithDefault: Bool = false // comment
-        package var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       }
       """,
       expandedSource: #"""
         package struct Person {
-          package var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          package var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          package private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -577,7 +577,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          package private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -589,14 +589,14 @@ extension CowBoxMacroTests {
             }
           }
         
-          package static let typeStoredNonMutating: Bool = false
-          package static var typeStoredMutating: Bool = false
-          package static var typeComputed: Bool { false }
-          package let instanceStoredNonMutating: Bool
-          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          package var instanceStoredMutating: Bool
-          package var instanceStoredMutatingWithDefault: Bool = false // comment
-          package var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -639,34 +639,34 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withPackage) package struct Person {
-        @CowBoxNonMutating package var id: String
-        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
-        @CowBoxMutating package private(set) var name: String
-        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        package static let typeStoredNonMutating: Bool = false
-        package static var typeStoredMutating: Bool = false
-        package static var typeComputed: Bool { false }
-        package let instanceStoredNonMutating: Bool
-        package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        package var instanceStoredMutating: Bool
-        package var instanceStoredMutatingWithDefault: Bool = false // comment
-        package var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       }
       """,
       expandedSource: #"""
         package struct Person {
-          package var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          package var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          package private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -677,7 +677,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          package private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -689,14 +689,14 @@ extension CowBoxMacroTests {
             }
           }
         
-          package static let typeStoredNonMutating: Bool = false
-          package static var typeStoredMutating: Bool = false
-          package static var typeComputed: Bool { false }
-          package let instanceStoredNonMutating: Bool
-          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          package var instanceStoredMutating: Bool
-          package var instanceStoredMutatingWithDefault: Bool = false // comment
-          package var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -739,34 +739,34 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withPublic) package struct Person {
-        @CowBoxNonMutating package var id: String
-        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
-        @CowBoxMutating package private(set) var name: String
-        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        package static let typeStoredNonMutating: Bool = false
-        package static var typeStoredMutating: Bool = false
-        package static var typeComputed: Bool { false }
-        package let instanceStoredNonMutating: Bool
-        package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        package var instanceStoredMutating: Bool
-        package var instanceStoredMutatingWithDefault: Bool = false // comment
-        package var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       }
       """,
       expandedSource: #"""
         package struct Person {
-          package var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          package var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          package private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -777,7 +777,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          package private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -789,14 +789,14 @@ extension CowBoxMacroTests {
             }
           }
         
-          package static let typeStoredNonMutating: Bool = false
-          package static var typeStoredMutating: Bool = false
-          package static var typeComputed: Bool { false }
-          package let instanceStoredNonMutating: Bool
-          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          package var instanceStoredMutating: Bool
-          package var instanceStoredMutatingWithDefault: Bool = false // comment
-          package var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -839,34 +839,34 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox public struct Person {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public private(set) var name: String
-        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       }
       """,
       expandedSource: #"""
         public struct Person {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -877,7 +877,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          public private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -889,14 +889,14 @@ extension CowBoxMacroTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -939,34 +939,34 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withInternal) public struct Person {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public private(set) var name: String
-        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       }
       """,
       expandedSource: #"""
         public struct Person {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -977,7 +977,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          public private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -989,14 +989,14 @@ extension CowBoxMacroTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -1039,34 +1039,34 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withPackage) public struct Person {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public private(set) var name: String
-        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       }
       """,
       expandedSource: #"""
         public struct Person {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1077,7 +1077,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          public private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1089,14 +1089,14 @@ extension CowBoxMacroTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -1139,34 +1139,34 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withPublic) public struct Person {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public private(set) var name: String
-        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       }
       """,
       expandedSource: #"""
         public struct Person {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1177,7 +1177,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          public private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1189,14 +1189,14 @@ extension CowBoxMacroTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -1242,8 +1242,8 @@ extension CowBoxMacroTests {
         @CowBox struct Person {
           @CowBoxNonMutating var id: String
           @CowBoxNonMutating var idWithDefault: String = "id" // comment
-          @CowBoxMutating var name: String
-          @CowBoxMutating var nameWithDefault: String = "name" // comment
+          @CowBoxMutating private(set) var name: String
+          @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
         
           static let typeStoredNonMutating: Bool = false
           static var typeStoredMutating: Bool = false
@@ -1269,7 +1269,7 @@ extension CowBoxMacroTests {
                 self._storage.idWithDefault
               }
             }
-            var name: String {
+            private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -1280,7 +1280,7 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            var nameWithDefault: String {
+            private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -1346,8 +1346,8 @@ extension CowBoxMacroTests {
         @CowBox(init: .withInternal) struct Person {
           @CowBoxNonMutating var id: String
           @CowBoxNonMutating var idWithDefault: String = "id" // comment
-          @CowBoxMutating var name: String
-          @CowBoxMutating var nameWithDefault: String = "name" // comment
+          @CowBoxMutating private(set) var name: String
+          @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
         
           static let typeStoredNonMutating: Bool = false
           static var typeStoredMutating: Bool = false
@@ -1373,7 +1373,7 @@ extension CowBoxMacroTests {
                 self._storage.idWithDefault
               }
             }
-            var name: String {
+            private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -1384,7 +1384,7 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            var nameWithDefault: String {
+            private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -1450,8 +1450,8 @@ extension CowBoxMacroTests {
         @CowBox(init: .withPackage) struct Person {
           @CowBoxNonMutating var id: String
           @CowBoxNonMutating var idWithDefault: String = "id" // comment
-          @CowBoxMutating var name: String
-          @CowBoxMutating var nameWithDefault: String = "name" // comment
+          @CowBoxMutating private(set) var name: String
+          @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
         
           static let typeStoredNonMutating: Bool = false
           static var typeStoredMutating: Bool = false
@@ -1477,7 +1477,7 @@ extension CowBoxMacroTests {
                 self._storage.idWithDefault
               }
             }
-            var name: String {
+            private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -1488,7 +1488,7 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            var nameWithDefault: String {
+            private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -1554,8 +1554,8 @@ extension CowBoxMacroTests {
         @CowBox(init: .withPublic) struct Person {
           @CowBoxNonMutating var id: String
           @CowBoxNonMutating var idWithDefault: String = "id" // comment
-          @CowBoxMutating var name: String
-          @CowBoxMutating var nameWithDefault: String = "name" // comment
+          @CowBoxMutating private(set) var name: String
+          @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
         
           static let typeStoredNonMutating: Bool = false
           static var typeStoredMutating: Bool = false
@@ -1581,7 +1581,7 @@ extension CowBoxMacroTests {
                 self._storage.idWithDefault
               }
             }
-            var name: String {
+            private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -1592,7 +1592,7 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            var nameWithDefault: String {
+            private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -1656,36 +1656,36 @@ extension CowBoxMacroTests {
       """
       public struct Parent {
         @CowBox package struct Person {
-          @CowBoxNonMutating package var id: String
-          @CowBoxNonMutating package var idWithDefault: String = "id" // comment
-          @CowBoxMutating package private(set) var name: String
-          @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+          @CowBoxNonMutating var id: String
+          @CowBoxNonMutating var idWithDefault: String = "id" // comment
+          @CowBoxMutating private(set) var name: String
+          @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
         
-          package static let typeStoredNonMutating: Bool = false
-          package static var typeStoredMutating: Bool = false
-          package static var typeComputed: Bool { false }
-          package let instanceStoredNonMutating: Bool
-          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          package var instanceStoredMutating: Bool
-          package var instanceStoredMutatingWithDefault: Bool = false // comment
-          package var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         }
       }
       """,
       expandedSource: #"""
         public struct Parent {
           package struct Person {
-            package var id: String {
+            var id: String {
               get {
                 self._storage.id
               }
             }
-            package var idWithDefault: String {
+            var idWithDefault: String {
               get {
                 self._storage.idWithDefault
               }
             }
-            package private(set) var name: String {
+            private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -1696,7 +1696,7 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            package private(set) var nameWithDefault: String {
+            private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -1708,14 +1708,14 @@ extension CowBoxMacroTests {
               }
             }
           
-            package static let typeStoredNonMutating: Bool = false
-            package static var typeStoredMutating: Bool = false
-            package static var typeComputed: Bool { false }
-            package let instanceStoredNonMutating: Bool
-            package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-            package var instanceStoredMutating: Bool
-            package var instanceStoredMutatingWithDefault: Bool = false // comment
-            package var instanceComputed: Bool { false }
+            static let typeStoredNonMutating: Bool = false
+            static var typeStoredMutating: Bool = false
+            static var typeComputed: Bool { false }
+            let instanceStoredNonMutating: Bool
+            let instanceStoredNonMutatingWithDefault: Bool = false // comment
+            var instanceStoredMutating: Bool
+            var instanceStoredMutatingWithDefault: Bool = false // comment
+            var instanceComputed: Bool { false }
 
             private final class _Storage: @unchecked Sendable {
               let id: String
@@ -1760,36 +1760,36 @@ extension CowBoxMacroTests {
       """
       public struct Parent {
         @CowBox(init: .withInternal) package struct Person {
-          @CowBoxNonMutating package var id: String
-          @CowBoxNonMutating package var idWithDefault: String = "id" // comment
-          @CowBoxMutating package private(set) var name: String
-          @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+          @CowBoxNonMutating var id: String
+          @CowBoxNonMutating var idWithDefault: String = "id" // comment
+          @CowBoxMutating private(set) var name: String
+          @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
         
-          package static let typeStoredNonMutating: Bool = false
-          package static var typeStoredMutating: Bool = false
-          package static var typeComputed: Bool { false }
-          package let instanceStoredNonMutating: Bool
-          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          package var instanceStoredMutating: Bool
-          package var instanceStoredMutatingWithDefault: Bool = false // comment
-          package var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         }
       }
       """,
       expandedSource: #"""
         public struct Parent {
           package struct Person {
-            package var id: String {
+            var id: String {
               get {
                 self._storage.id
               }
             }
-            package var idWithDefault: String {
+            var idWithDefault: String {
               get {
                 self._storage.idWithDefault
               }
             }
-            package private(set) var name: String {
+            private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -1800,7 +1800,7 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            package private(set) var nameWithDefault: String {
+            private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -1812,14 +1812,14 @@ extension CowBoxMacroTests {
               }
             }
           
-            package static let typeStoredNonMutating: Bool = false
-            package static var typeStoredMutating: Bool = false
-            package static var typeComputed: Bool { false }
-            package let instanceStoredNonMutating: Bool
-            package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-            package var instanceStoredMutating: Bool
-            package var instanceStoredMutatingWithDefault: Bool = false // comment
-            package var instanceComputed: Bool { false }
+            static let typeStoredNonMutating: Bool = false
+            static var typeStoredMutating: Bool = false
+            static var typeComputed: Bool { false }
+            let instanceStoredNonMutating: Bool
+            let instanceStoredNonMutatingWithDefault: Bool = false // comment
+            var instanceStoredMutating: Bool
+            var instanceStoredMutatingWithDefault: Bool = false // comment
+            var instanceComputed: Bool { false }
 
             private final class _Storage: @unchecked Sendable {
               let id: String
@@ -1864,36 +1864,36 @@ extension CowBoxMacroTests {
       """
       public struct Parent {
         @CowBox(init: .withPackage) package struct Person {
-          @CowBoxNonMutating package var id: String
-          @CowBoxNonMutating package var idWithDefault: String = "id" // comment
-          @CowBoxMutating package private(set) var name: String
-          @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+          @CowBoxNonMutating var id: String
+          @CowBoxNonMutating var idWithDefault: String = "id" // comment
+          @CowBoxMutating private(set) var name: String
+          @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
         
-          package static let typeStoredNonMutating: Bool = false
-          package static var typeStoredMutating: Bool = false
-          package static var typeComputed: Bool { false }
-          package let instanceStoredNonMutating: Bool
-          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          package var instanceStoredMutating: Bool
-          package var instanceStoredMutatingWithDefault: Bool = false // comment
-          package var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         }
       }
       """,
       expandedSource: #"""
         public struct Parent {
           package struct Person {
-            package var id: String {
+            var id: String {
               get {
                 self._storage.id
               }
             }
-            package var idWithDefault: String {
+            var idWithDefault: String {
               get {
                 self._storage.idWithDefault
               }
             }
-            package private(set) var name: String {
+            private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -1904,7 +1904,7 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            package private(set) var nameWithDefault: String {
+            private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -1916,14 +1916,14 @@ extension CowBoxMacroTests {
               }
             }
           
-            package static let typeStoredNonMutating: Bool = false
-            package static var typeStoredMutating: Bool = false
-            package static var typeComputed: Bool { false }
-            package let instanceStoredNonMutating: Bool
-            package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-            package var instanceStoredMutating: Bool
-            package var instanceStoredMutatingWithDefault: Bool = false // comment
-            package var instanceComputed: Bool { false }
+            static let typeStoredNonMutating: Bool = false
+            static var typeStoredMutating: Bool = false
+            static var typeComputed: Bool { false }
+            let instanceStoredNonMutating: Bool
+            let instanceStoredNonMutatingWithDefault: Bool = false // comment
+            var instanceStoredMutating: Bool
+            var instanceStoredMutatingWithDefault: Bool = false // comment
+            var instanceComputed: Bool { false }
 
             private final class _Storage: @unchecked Sendable {
               let id: String
@@ -1968,36 +1968,36 @@ extension CowBoxMacroTests {
       """
       public struct Parent {
         @CowBox(init: .withPublic) package struct Person {
-          @CowBoxNonMutating package var id: String
-          @CowBoxNonMutating package var idWithDefault: String = "id" // comment
-          @CowBoxMutating package private(set) var name: String
-          @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+          @CowBoxNonMutating var id: String
+          @CowBoxNonMutating var idWithDefault: String = "id" // comment
+          @CowBoxMutating private(set) var name: String
+          @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
         
-          package static let typeStoredNonMutating: Bool = false
-          package static var typeStoredMutating: Bool = false
-          package static var typeComputed: Bool { false }
-          package let instanceStoredNonMutating: Bool
-          package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          package var instanceStoredMutating: Bool
-          package var instanceStoredMutatingWithDefault: Bool = false // comment
-          package var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         }
       }
       """,
       expandedSource: #"""
         public struct Parent {
           package struct Person {
-            package var id: String {
+            var id: String {
               get {
                 self._storage.id
               }
             }
-            package var idWithDefault: String {
+            var idWithDefault: String {
               get {
                 self._storage.idWithDefault
               }
             }
-            package private(set) var name: String {
+            private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -2008,7 +2008,7 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            package private(set) var nameWithDefault: String {
+            private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -2020,14 +2020,14 @@ extension CowBoxMacroTests {
               }
             }
           
-            package static let typeStoredNonMutating: Bool = false
-            package static var typeStoredMutating: Bool = false
-            package static var typeComputed: Bool { false }
-            package let instanceStoredNonMutating: Bool
-            package let instanceStoredNonMutatingWithDefault: Bool = false // comment
-            package var instanceStoredMutating: Bool
-            package var instanceStoredMutatingWithDefault: Bool = false // comment
-            package var instanceComputed: Bool { false }
+            static let typeStoredNonMutating: Bool = false
+            static var typeStoredMutating: Bool = false
+            static var typeComputed: Bool { false }
+            let instanceStoredNonMutating: Bool
+            let instanceStoredNonMutatingWithDefault: Bool = false // comment
+            var instanceStoredMutating: Bool
+            var instanceStoredMutatingWithDefault: Bool = false // comment
+            var instanceComputed: Bool { false }
 
             private final class _Storage: @unchecked Sendable {
               let id: String
@@ -2072,36 +2072,36 @@ extension CowBoxMacroTests {
       """
       public struct Parent {
         @CowBox public struct Person {
-          @CowBoxNonMutating public var id: String
-          @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-          @CowBoxMutating public private(set) var name: String
-          @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+          @CowBoxNonMutating var id: String
+          @CowBoxNonMutating var idWithDefault: String = "id" // comment
+          @CowBoxMutating private(set) var name: String
+          @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         }
       }
       """,
       expandedSource: #"""
         public struct Parent {
           public struct Person {
-            public var id: String {
+            var id: String {
               get {
                 self._storage.id
               }
             }
-            public var idWithDefault: String {
+            var idWithDefault: String {
               get {
                 self._storage.idWithDefault
               }
             }
-            public private(set) var name: String {
+            private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -2112,7 +2112,7 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            public private(set) var nameWithDefault: String {
+            private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -2124,14 +2124,14 @@ extension CowBoxMacroTests {
               }
             }
           
-            public static let typeStoredNonMutating: Bool = false
-            public static var typeStoredMutating: Bool = false
-            public static var typeComputed: Bool { false }
-            public let instanceStoredNonMutating: Bool
-            public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-            public var instanceStoredMutating: Bool
-            public var instanceStoredMutatingWithDefault: Bool = false // comment
-            public var instanceComputed: Bool { false }
+            static let typeStoredNonMutating: Bool = false
+            static var typeStoredMutating: Bool = false
+            static var typeComputed: Bool { false }
+            let instanceStoredNonMutating: Bool
+            let instanceStoredNonMutatingWithDefault: Bool = false // comment
+            var instanceStoredMutating: Bool
+            var instanceStoredMutatingWithDefault: Bool = false // comment
+            var instanceComputed: Bool { false }
 
             private final class _Storage: @unchecked Sendable {
               let id: String
@@ -2176,36 +2176,36 @@ extension CowBoxMacroTests {
       """
       public struct Parent {
         @CowBox(init: .withInternal) public struct Person {
-          @CowBoxNonMutating public var id: String
-          @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-          @CowBoxMutating public private(set) var name: String
-          @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+          @CowBoxNonMutating var id: String
+          @CowBoxNonMutating var idWithDefault: String = "id" // comment
+          @CowBoxMutating private(set) var name: String
+          @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         }
       }
       """,
       expandedSource: #"""
         public struct Parent {
           public struct Person {
-            public var id: String {
+            var id: String {
               get {
                 self._storage.id
               }
             }
-            public var idWithDefault: String {
+            var idWithDefault: String {
               get {
                 self._storage.idWithDefault
               }
             }
-            public private(set) var name: String {
+            private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -2216,7 +2216,7 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            public private(set) var nameWithDefault: String {
+            private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -2228,14 +2228,14 @@ extension CowBoxMacroTests {
               }
             }
           
-            public static let typeStoredNonMutating: Bool = false
-            public static var typeStoredMutating: Bool = false
-            public static var typeComputed: Bool { false }
-            public let instanceStoredNonMutating: Bool
-            public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-            public var instanceStoredMutating: Bool
-            public var instanceStoredMutatingWithDefault: Bool = false // comment
-            public var instanceComputed: Bool { false }
+            static let typeStoredNonMutating: Bool = false
+            static var typeStoredMutating: Bool = false
+            static var typeComputed: Bool { false }
+            let instanceStoredNonMutating: Bool
+            let instanceStoredNonMutatingWithDefault: Bool = false // comment
+            var instanceStoredMutating: Bool
+            var instanceStoredMutatingWithDefault: Bool = false // comment
+            var instanceComputed: Bool { false }
 
             private final class _Storage: @unchecked Sendable {
               let id: String
@@ -2280,36 +2280,36 @@ extension CowBoxMacroTests {
       """
       public struct Parent {
         @CowBox(init: .withPackage) public struct Person {
-          @CowBoxNonMutating public var id: String
-          @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-          @CowBoxMutating public private(set) var name: String
-          @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+          @CowBoxNonMutating var id: String
+          @CowBoxNonMutating var idWithDefault: String = "id" // comment
+          @CowBoxMutating private(set) var name: String
+          @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         }
       }
       """,
       expandedSource: #"""
         public struct Parent {
           public struct Person {
-            public var id: String {
+            var id: String {
               get {
                 self._storage.id
               }
             }
-            public var idWithDefault: String {
+            var idWithDefault: String {
               get {
                 self._storage.idWithDefault
               }
             }
-            public private(set) var name: String {
+            private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -2320,7 +2320,7 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            public private(set) var nameWithDefault: String {
+            private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -2332,14 +2332,14 @@ extension CowBoxMacroTests {
               }
             }
           
-            public static let typeStoredNonMutating: Bool = false
-            public static var typeStoredMutating: Bool = false
-            public static var typeComputed: Bool { false }
-            public let instanceStoredNonMutating: Bool
-            public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-            public var instanceStoredMutating: Bool
-            public var instanceStoredMutatingWithDefault: Bool = false // comment
-            public var instanceComputed: Bool { false }
+            static let typeStoredNonMutating: Bool = false
+            static var typeStoredMutating: Bool = false
+            static var typeComputed: Bool { false }
+            let instanceStoredNonMutating: Bool
+            let instanceStoredNonMutatingWithDefault: Bool = false // comment
+            var instanceStoredMutating: Bool
+            var instanceStoredMutatingWithDefault: Bool = false // comment
+            var instanceComputed: Bool { false }
 
             private final class _Storage: @unchecked Sendable {
               let id: String
@@ -2384,36 +2384,36 @@ extension CowBoxMacroTests {
       """
       public struct Parent {
         @CowBox(init: .withPublic) public struct Person {
-          @CowBoxNonMutating public var id: String
-          @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-          @CowBoxMutating public private(set) var name: String
-          @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+          @CowBoxNonMutating var id: String
+          @CowBoxNonMutating var idWithDefault: String = "id" // comment
+          @CowBoxMutating private(set) var name: String
+          @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         }
       }
       """,
       expandedSource: #"""
         public struct Parent {
           public struct Person {
-            public var id: String {
+            var id: String {
               get {
                 self._storage.id
               }
             }
-            public var idWithDefault: String {
+            var idWithDefault: String {
               get {
                 self._storage.idWithDefault
               }
             }
-            public private(set) var name: String {
+            private(set) var name: String {
               get {
                 self._storage.name
               }
@@ -2424,7 +2424,7 @@ extension CowBoxMacroTests {
                 self._storage.name = newValue
               }
             }
-            public private(set) var nameWithDefault: String {
+            private(set) var nameWithDefault: String {
               get {
                 self._storage.nameWithDefault
               }
@@ -2436,14 +2436,14 @@ extension CowBoxMacroTests {
               }
             }
           
-            public static let typeStoredNonMutating: Bool = false
-            public static var typeStoredMutating: Bool = false
-            public static var typeComputed: Bool { false }
-            public let instanceStoredNonMutating: Bool
-            public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-            public var instanceStoredMutating: Bool
-            public var instanceStoredMutatingWithDefault: Bool = false // comment
-            public var instanceComputed: Bool { false }
+            static let typeStoredNonMutating: Bool = false
+            static var typeStoredMutating: Bool = false
+            static var typeComputed: Bool { false }
+            let instanceStoredNonMutating: Bool
+            let instanceStoredNonMutatingWithDefault: Bool = false // comment
+            var instanceStoredMutating: Bool
+            var instanceStoredMutatingWithDefault: Bool = false // comment
+            var instanceComputed: Bool { false }
 
             private final class _Storage: @unchecked Sendable {
               let id: String
@@ -2489,8 +2489,8 @@ extension CowBoxMacroTests {
       @CowBox struct Person {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
@@ -2505,7 +2505,7 @@ extension CowBoxMacroTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -2516,7 +2516,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -2574,8 +2574,8 @@ extension CowBoxMacroTests {
       @CowBox(init: .withInternal) struct Person {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
@@ -2590,7 +2590,7 @@ extension CowBoxMacroTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -2601,7 +2601,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -2659,8 +2659,8 @@ extension CowBoxMacroTests {
       @CowBox(init: .withPackage) struct Person {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
@@ -2675,7 +2675,7 @@ extension CowBoxMacroTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -2686,7 +2686,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -2744,8 +2744,8 @@ extension CowBoxMacroTests {
       @CowBox(init: .withPublic) struct Person {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
@@ -2760,7 +2760,7 @@ extension CowBoxMacroTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -2771,7 +2771,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -2827,25 +2827,25 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox package struct Person {
-        @CowBoxNonMutating package var id: String
-        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
-        @CowBoxMutating package private(set) var name: String
-        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
         package struct Person {
-          package var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          package var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          package private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -2856,7 +2856,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          package private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -2912,25 +2912,25 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withInternal) package struct Person {
-        @CowBoxNonMutating package var id: String
-        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
-        @CowBoxMutating package private(set) var name: String
-        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
         package struct Person {
-          package var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          package var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          package private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -2941,7 +2941,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          package private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -2997,25 +2997,25 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withPackage) package struct Person {
-        @CowBoxNonMutating package var id: String
-        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
-        @CowBoxMutating package private(set) var name: String
-        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
         package struct Person {
-          package var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          package var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          package private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -3026,7 +3026,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          package private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -3082,25 +3082,25 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withPublic) package struct Person {
-        @CowBoxNonMutating package var id: String
-        @CowBoxNonMutating package var idWithDefault: String = "id" // comment
-        @CowBoxMutating package private(set) var name: String
-        @CowBoxMutating package private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
         package struct Person {
-          package var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          package var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          package private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -3111,7 +3111,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          package private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -3167,25 +3167,25 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox public struct Person {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public private(set) var name: String
-        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
         public struct Person {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -3196,7 +3196,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          public private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -3252,25 +3252,25 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withInternal) public struct Person {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public private(set) var name: String
-        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
         public struct Person {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -3281,7 +3281,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          public private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -3337,25 +3337,25 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withPackage) public struct Person {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public private(set) var name: String
-        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
         public struct Person {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -3366,7 +3366,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          public private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -3422,25 +3422,25 @@ extension CowBoxMacroTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withPublic) public struct Person {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public private(set) var name: String
-        @CowBoxMutating public private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       }
       """,
       expandedSource: #"""
         public struct Person {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public private(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -3451,7 +3451,7 @@ extension CowBoxMacroTests {
               self._storage.name = newValue
             }
           }
-          public private(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
