@@ -193,6 +193,7 @@ extension CowBoxMacro: MemberMacro {
         DeclSyntax(
           self.hashFunction(
             isPublic: declaration.isPublic,
+            isPackage: declaration.isPackage,
             variables: variables
           )
         )
@@ -641,6 +642,7 @@ extension CowBoxMacro {
 extension CowBoxMacro {
   static func hashFunction(
     isPublic: Bool,
+    isPackage: Bool,
     variables: [VariableDeclSyntax]
   ) -> FunctionDeclSyntax {
     //  https://github.com/apple/swift-evolution/blob/main/proposals/0185-synthesize-equatable-hashable.md
@@ -655,6 +657,9 @@ extension CowBoxMacro {
       modifiers: DeclModifierListSyntax {
         if isPublic {
           DeclModifierSyntax(name: .keyword(.public))
+        }
+        if isPackage {
+          DeclModifierSyntax(name: .keyword(.package))
         }
       },
       name: TokenSyntax(.identifier("hash"), presence: .present),
