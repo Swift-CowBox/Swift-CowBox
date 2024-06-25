@@ -136,3 +136,15 @@ import CowBox
 //  extension Person: Hashable {
 //    var hashValue: Int { 1 }
 //  }
+
+//  MARK: CUSTOM CODING KEYS WITH OMITTED PROPERTIES
+//  Not currently supported.
+
+//  @CowBox struct Person: Codable {
+//    @CowBoxNonMutating var id: String = "id"
+//    @CowBoxMutating var name: String = "name"
+//
+//    private enum CodingKeys: String, CodingKey {
+//      case name
+//    }
+//  }

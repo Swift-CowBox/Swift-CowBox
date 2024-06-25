@@ -757,7 +757,7 @@ extension CowBoxMacro {
       },
       signature: FunctionSignatureSyntax(
         parameterClause: FunctionParameterClauseSyntax {
-          "from decoder: Decoder"
+          "from decoder: any Decoder"
         },
         effectSpecifiers: effectSpecifiers
       )
@@ -1095,7 +1095,7 @@ extension InitializerDeclSyntax {
 extension InitializerDeclSyntax {
   var isDecodeInitializer: Bool {
     guard
-      let initializer = (try? InitializerDeclSyntax("init(from decoder: Decoder) throws") { })
+      let initializer = (try? InitializerDeclSyntax("init(from decoder: any Decoder) throws") { })
     else {
       //  TODO: THROW ERROR
       fatalError()

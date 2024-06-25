@@ -128,7 +128,7 @@ extension DecodableTests {
             case instanceStoredMutatingWithDefault
           }
         
-          init(from decoder: Decoder) throws {
+          init(from decoder: any Decoder) throws {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             let id = try values.decode(String.self, forKey: .id)
             let name = try values.decode(String.self, forKey: .name)
@@ -250,7 +250,7 @@ extension DecodableTests {
             case instanceStoredMutatingWithDefault
           }
         
-          init(from decoder: Decoder) throws {
+          init(from decoder: any Decoder) throws {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             let id = try values.decode(String.self, forKey: .id)
             let name = try values.decode(String.self, forKey: .name)
@@ -372,7 +372,7 @@ extension DecodableTests {
             case instanceStoredMutatingWithDefault
           }
         
-          init(from decoder: Decoder) throws {
+          init(from decoder: any Decoder) throws {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             let id = try values.decode(String.self, forKey: .id)
             let name = try values.decode(String.self, forKey: .name)
@@ -494,7 +494,7 @@ extension DecodableTests {
             case instanceStoredMutatingWithDefault
           }
         
-          public init(from decoder: Decoder) throws {
+          public init(from decoder: any Decoder) throws {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             let id = try values.decode(String.self, forKey: .id)
             let name = try values.decode(String.self, forKey: .name)
@@ -616,7 +616,7 @@ extension DecodableTests {
             case instanceStoredMutatingWithDefault
           }
         
-          public init(from decoder: Decoder) throws {
+          public init(from decoder: any Decoder) throws {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             let id = try values.decode(String.self, forKey: .id)
             let name = try values.decode(String.self, forKey: .name)
@@ -738,7 +738,7 @@ extension DecodableTests {
             case instanceStoredMutatingWithDefault
           }
         
-          public init(from decoder: Decoder) throws {
+          public init(from decoder: any Decoder) throws {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             let id = try values.decode(String.self, forKey: .id)
             let name = try values.decode(String.self, forKey: .name)
@@ -779,7 +779,7 @@ extension DecodableTests {
         var instanceStoredMutatingWithDefault: Bool = false // comment
         var instanceComputed: Bool { false }
       
-        init(from decoder: Decoder) throws { fatalError() }
+        init(from decoder: any Decoder) throws { fatalError() }
       }
       """,
       expandedSource: #"""
@@ -826,7 +826,7 @@ extension DecodableTests {
           var instanceStoredMutatingWithDefault: Bool = false // comment
           var instanceComputed: Bool { false }
         
-          init(from decoder: Decoder) throws { fatalError() }
+          init(from decoder: any Decoder) throws { fatalError() }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -894,7 +894,7 @@ extension DecodableTests {
         var instanceStoredMutatingWithDefault: Bool = false // comment
         var instanceComputed: Bool { false }
       
-        init(from decoder: Decoder) throws { fatalError() }
+        init(from decoder: any Decoder) throws { fatalError() }
       }
       """,
       expandedSource: #"""
@@ -941,7 +941,7 @@ extension DecodableTests {
           var instanceStoredMutatingWithDefault: Bool = false // comment
           var instanceComputed: Bool { false }
         
-          init(from decoder: Decoder) throws { fatalError() }
+          init(from decoder: any Decoder) throws { fatalError() }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -1009,7 +1009,7 @@ extension DecodableTests {
         var instanceStoredMutatingWithDefault: Bool = false // comment
         var instanceComputed: Bool { false }
       
-        init(from decoder: Decoder) throws { fatalError() }
+        init(from decoder: any Decoder) throws { fatalError() }
       }
       """,
       expandedSource: #"""
@@ -1056,7 +1056,7 @@ extension DecodableTests {
           var instanceStoredMutatingWithDefault: Bool = false // comment
           var instanceComputed: Bool { false }
         
-          init(from decoder: Decoder) throws { fatalError() }
+          init(from decoder: any Decoder) throws { fatalError() }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -1124,7 +1124,7 @@ extension DecodableTests {
         public var instanceStoredMutatingWithDefault: Bool = false // comment
         public var instanceComputed: Bool { false }
       
-        public init(from decoder: Decoder) throws { fatalError() }
+        public init(from decoder: any Decoder) throws { fatalError() }
       }
       """,
       expandedSource: #"""
@@ -1171,7 +1171,7 @@ extension DecodableTests {
           public var instanceStoredMutatingWithDefault: Bool = false // comment
           public var instanceComputed: Bool { false }
         
-          public init(from decoder: Decoder) throws { fatalError() }
+          public init(from decoder: any Decoder) throws { fatalError() }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -1239,7 +1239,7 @@ extension DecodableTests {
         public var instanceStoredMutatingWithDefault: Bool = false // comment
         public var instanceComputed: Bool { false }
       
-        public init(from decoder: Decoder) throws { fatalError() }
+        public init(from decoder: any Decoder) throws { fatalError() }
       }
       """,
       expandedSource: #"""
@@ -1286,7 +1286,7 @@ extension DecodableTests {
           public var instanceStoredMutatingWithDefault: Bool = false // comment
           public var instanceComputed: Bool { false }
         
-          public init(from decoder: Decoder) throws { fatalError() }
+          public init(from decoder: any Decoder) throws { fatalError() }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -1354,7 +1354,7 @@ extension DecodableTests {
         public var instanceStoredMutatingWithDefault: Bool = false // comment
         public var instanceComputed: Bool { false }
       
-        public init(from decoder: Decoder) throws { fatalError() }
+        public init(from decoder: any Decoder) throws { fatalError() }
       }
       """,
       expandedSource: #"""
@@ -1401,7 +1401,7 @@ extension DecodableTests {
           public var instanceStoredMutatingWithDefault: Bool = false // comment
           public var instanceComputed: Bool { false }
         
-          public init(from decoder: Decoder) throws { fatalError() }
+          public init(from decoder: any Decoder) throws { fatalError() }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -1543,7 +1543,7 @@ extension DecodableTests {
             self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
           }
         
-          init(from decoder: Decoder) throws {
+          init(from decoder: any Decoder) throws {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             let id = try values.decode(String.self, forKey: .id)
             let name = try values.decode(String.self, forKey: .name)
@@ -1658,7 +1658,7 @@ extension DecodableTests {
             self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
           }
         
-          init(from decoder: Decoder) throws {
+          init(from decoder: any Decoder) throws {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             let id = try values.decode(String.self, forKey: .id)
             let name = try values.decode(String.self, forKey: .name)
@@ -1773,7 +1773,7 @@ extension DecodableTests {
             self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
           }
         
-          init(from decoder: Decoder) throws {
+          init(from decoder: any Decoder) throws {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             let id = try values.decode(String.self, forKey: .id)
             let name = try values.decode(String.self, forKey: .name)
@@ -1888,7 +1888,7 @@ extension DecodableTests {
             self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
           }
         
-          public init(from decoder: Decoder) throws {
+          public init(from decoder: any Decoder) throws {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             let id = try values.decode(String.self, forKey: .id)
             let name = try values.decode(String.self, forKey: .name)
@@ -2003,7 +2003,7 @@ extension DecodableTests {
             self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
           }
         
-          public init(from decoder: Decoder) throws {
+          public init(from decoder: any Decoder) throws {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             let id = try values.decode(String.self, forKey: .id)
             let name = try values.decode(String.self, forKey: .name)
@@ -2118,7 +2118,7 @@ extension DecodableTests {
             self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
           }
         
-          public init(from decoder: Decoder) throws {
+          public init(from decoder: any Decoder) throws {
             let values = try decoder.container(keyedBy: CodingKeys.self)
             let id = try values.decode(String.self, forKey: .id)
             let name = try values.decode(String.self, forKey: .name)
