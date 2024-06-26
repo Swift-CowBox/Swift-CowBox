@@ -215,6 +215,7 @@ extension CowBoxMacro: MemberMacro {
         DeclSyntax(
           self.decodeInitializer(
             isPublic: declaration.isPublic,
+            isPackage: declaration.isPackage,
             variables: variables
           )
         )
@@ -708,6 +709,7 @@ extension CowBoxMacro {
 extension CowBoxMacro {
   static func decodeInitializer(
     isPublic: Bool,
+    isPackage: Bool,
     variables: [VariableDeclSyntax]
   ) -> InitializerDeclSyntax {
     //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceCodable.cpp#L1304-L1541
@@ -753,6 +755,9 @@ extension CowBoxMacro {
       modifiers: DeclModifierListSyntax {
         if isPublic {
           DeclModifierSyntax(name: .keyword(.public))
+        }
+        if isPackage {
+          DeclModifierSyntax(name: .keyword(.package))
         }
       },
       signature: FunctionSignatureSyntax(
