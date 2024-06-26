@@ -35,8 +35,8 @@ extension EncodableTests {
       @CowBox struct Person: Encodable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -60,7 +60,7 @@ extension EncodableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -71,7 +71,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -158,8 +158,8 @@ extension EncodableTests {
       @CowBox(init: .withInternal) struct Person: Encodable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -183,7 +183,7 @@ extension EncodableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -194,7 +194,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -274,15 +274,15 @@ extension EncodableTests {
 }
 
 extension EncodableTests {
-  func testCowBoxInitWithPublicEncodable() throws {
+  func testCowBoxInitWithPackageEncodable() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox(init: .withPublic) struct Person: Encodable {
+      @CowBox(init: .withPackage) struct Person: Encodable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -306,7 +306,7 @@ extension EncodableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -317,7 +317,130 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          private enum CodingKeys: String, CodingKey {
+            case id
+            case idWithDefault
+            case name
+            case nameWithDefault
+            case instanceStoredNonMutating
+            case instanceStoredNonMutatingWithDefault
+            case instanceStoredMutating
+            case instanceStoredMutatingWithDefault
+          }
+        
+          func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.id, forKey: .id)
+            try container.encode(self.idWithDefault, forKey: .idWithDefault)
+            try container.encode(self.name, forKey: .name)
+            try container.encode(self.nameWithDefault, forKey: .nameWithDefault)
+            try container.encode(self.instanceStoredNonMutating, forKey: .instanceStoredNonMutating)
+            try container.encode(self.instanceStoredNonMutatingWithDefault, forKey: .instanceStoredNonMutatingWithDefault)
+            try container.encode(self.instanceStoredMutating, forKey: .instanceStoredMutating)
+            try container.encode(self.instanceStoredMutatingWithDefault, forKey: .instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testCowBoxInitWithPublicEncodable() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -397,39 +520,39 @@ extension EncodableTests {
 }
 
 extension EncodableTests {
-  func testPublicCowBoxEncodable() throws {
+  func testPackageCowBoxEncodable() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox public struct Person: Encodable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+      @CowBox package struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       }
       """,
       expandedSource: #"""
-        public struct Person: Encodable {
-          public var id: String {
+        package struct Person: Encodable {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -440,7 +563,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -452,14 +575,506 @@ extension EncodableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          private enum CodingKeys: String, CodingKey {
+            case id
+            case idWithDefault
+            case name
+            case nameWithDefault
+            case instanceStoredNonMutating
+            case instanceStoredNonMutatingWithDefault
+            case instanceStoredMutating
+            case instanceStoredMutatingWithDefault
+          }
+        
+          package func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.id, forKey: .id)
+            try container.encode(self.idWithDefault, forKey: .idWithDefault)
+            try container.encode(self.name, forKey: .name)
+            try container.encode(self.nameWithDefault, forKey: .nameWithDefault)
+            try container.encode(self.instanceStoredNonMutating, forKey: .instanceStoredNonMutating)
+            try container.encode(self.instanceStoredNonMutatingWithDefault, forKey: .instanceStoredNonMutatingWithDefault)
+            try container.encode(self.instanceStoredMutating, forKey: .instanceStoredMutating)
+            try container.encode(self.instanceStoredMutatingWithDefault, forKey: .instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPackageCowBoxInitWithInternalEncodable() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withInternal) package struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          private enum CodingKeys: String, CodingKey {
+            case id
+            case idWithDefault
+            case name
+            case nameWithDefault
+            case instanceStoredNonMutating
+            case instanceStoredNonMutatingWithDefault
+            case instanceStoredMutating
+            case instanceStoredMutatingWithDefault
+          }
+        
+          package func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.id, forKey: .id)
+            try container.encode(self.idWithDefault, forKey: .idWithDefault)
+            try container.encode(self.name, forKey: .name)
+            try container.encode(self.nameWithDefault, forKey: .nameWithDefault)
+            try container.encode(self.instanceStoredNonMutating, forKey: .instanceStoredNonMutating)
+            try container.encode(self.instanceStoredNonMutatingWithDefault, forKey: .instanceStoredNonMutatingWithDefault)
+            try container.encode(self.instanceStoredMutating, forKey: .instanceStoredMutating)
+            try container.encode(self.instanceStoredMutatingWithDefault, forKey: .instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPackageCowBoxInitWithPackageEncodable() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPackage) package struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          private enum CodingKeys: String, CodingKey {
+            case id
+            case idWithDefault
+            case name
+            case nameWithDefault
+            case instanceStoredNonMutating
+            case instanceStoredNonMutatingWithDefault
+            case instanceStoredMutating
+            case instanceStoredMutatingWithDefault
+          }
+        
+          package func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.id, forKey: .id)
+            try container.encode(self.idWithDefault, forKey: .idWithDefault)
+            try container.encode(self.name, forKey: .name)
+            try container.encode(self.nameWithDefault, forKey: .nameWithDefault)
+            try container.encode(self.instanceStoredNonMutating, forKey: .instanceStoredNonMutating)
+            try container.encode(self.instanceStoredNonMutatingWithDefault, forKey: .instanceStoredNonMutatingWithDefault)
+            try container.encode(self.instanceStoredMutating, forKey: .instanceStoredMutating)
+            try container.encode(self.instanceStoredMutatingWithDefault, forKey: .instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPackageCowBoxInitWithPublicEncodable() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) package struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          private enum CodingKeys: String, CodingKey {
+            case id
+            case idWithDefault
+            case name
+            case nameWithDefault
+            case instanceStoredNonMutating
+            case instanceStoredNonMutatingWithDefault
+            case instanceStoredMutating
+            case instanceStoredMutatingWithDefault
+          }
+        
+          package func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.id, forKey: .id)
+            try container.encode(self.idWithDefault, forKey: .idWithDefault)
+            try container.encode(self.name, forKey: .name)
+            try container.encode(self.nameWithDefault, forKey: .nameWithDefault)
+            try container.encode(self.instanceStoredNonMutating, forKey: .instanceStoredNonMutating)
+            try container.encode(self.instanceStoredNonMutatingWithDefault, forKey: .instanceStoredNonMutatingWithDefault)
+            try container.encode(self.instanceStoredMutating, forKey: .instanceStoredMutating)
+            try container.encode(self.instanceStoredMutatingWithDefault, forKey: .instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPublicCowBoxEncodable() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox public struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -525,34 +1140,34 @@ extension EncodableTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withInternal) public struct Person: Encodable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       }
       """,
       expandedSource: #"""
         public struct Person: Encodable {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -563,7 +1178,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -575,14 +1190,14 @@ extension EncodableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -643,39 +1258,39 @@ extension EncodableTests {
 }
 
 extension EncodableTests {
-  func testPublicCowBoxInitWithPublicEncodable() throws {
+  func testPublicCowBoxInitWithPackageEncodable() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox(init: .withPublic) public struct Person: Encodable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+      @CowBox(init: .withPackage) public struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       }
       """,
       expandedSource: #"""
         public struct Person: Encodable {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -686,7 +1301,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -698,14 +1313,137 @@ extension EncodableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          private enum CodingKeys: String, CodingKey {
+            case id
+            case idWithDefault
+            case name
+            case nameWithDefault
+            case instanceStoredNonMutating
+            case instanceStoredNonMutatingWithDefault
+            case instanceStoredMutating
+            case instanceStoredMutatingWithDefault
+          }
+        
+          public func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.id, forKey: .id)
+            try container.encode(self.idWithDefault, forKey: .idWithDefault)
+            try container.encode(self.name, forKey: .name)
+            try container.encode(self.nameWithDefault, forKey: .nameWithDefault)
+            try container.encode(self.instanceStoredNonMutating, forKey: .instanceStoredNonMutating)
+            try container.encode(self.instanceStoredNonMutatingWithDefault, forKey: .instanceStoredNonMutatingWithDefault)
+            try container.encode(self.instanceStoredMutating, forKey: .instanceStoredMutating)
+            try container.encode(self.instanceStoredMutatingWithDefault, forKey: .instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPublicCowBoxInitWithPublicEncodable() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) public struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
             let id: String
@@ -773,8 +1511,8 @@ extension EncodableTests {
       @CowBox struct Person: Encodable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -800,7 +1538,7 @@ extension EncodableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -811,7 +1549,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -888,8 +1626,8 @@ extension EncodableTests {
       @CowBox(init: .withInternal) struct Person: Encodable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -915,7 +1653,7 @@ extension EncodableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -926,7 +1664,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -996,15 +1734,15 @@ extension EncodableTests {
 }
 
 extension EncodableTests {
-  func testCowBoxInitWithPublicEncodableWithEncodeFunction() throws {
+  func testCowBoxInitWithPackageEncodableWithEncodeFunction() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox(init: .withPublic) struct Person: Encodable {
+      @CowBox(init: .withPackage) struct Person: Encodable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -1030,7 +1768,7 @@ extension EncodableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1041,7 +1779,122 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          func encode(to encoder: any Encoder) throws { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          private enum CodingKeys: String, CodingKey {
+            case id
+            case idWithDefault
+            case name
+            case nameWithDefault
+            case instanceStoredNonMutating
+            case instanceStoredNonMutatingWithDefault
+            case instanceStoredMutating
+            case instanceStoredMutatingWithDefault
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testCowBoxInitWithPublicEncodableWithEncodeFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        func encode(to encoder: any Encoder) throws { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1111,41 +1964,41 @@ extension EncodableTests {
 }
 
 extension EncodableTests {
-  func testPublicCowBoxEncodableWithEncodeFunction() throws {
+  func testPackageCowBoxEncodableWithEncodeFunction() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox public struct Person: Encodable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+      @CowBox package struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       
-        public func encode(to encoder: any Encoder) throws { fatalError() }
+        package func encode(to encoder: any Encoder) throws { fatalError() }
       }
       """,
       expandedSource: #"""
-        public struct Person: Encodable {
-          public var id: String {
+        package struct Person: Encodable {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1156,7 +2009,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1168,14 +2021,474 @@ extension EncodableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          package func encode(to encoder: any Encoder) throws { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          private enum CodingKeys: String, CodingKey {
+            case id
+            case idWithDefault
+            case name
+            case nameWithDefault
+            case instanceStoredNonMutating
+            case instanceStoredNonMutatingWithDefault
+            case instanceStoredMutating
+            case instanceStoredMutatingWithDefault
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPackageCowBoxInitWithInternalEncodableWithEncodeFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withInternal) package struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        package func encode(to encoder: any Encoder) throws { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          package func encode(to encoder: any Encoder) throws { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          private enum CodingKeys: String, CodingKey {
+            case id
+            case idWithDefault
+            case name
+            case nameWithDefault
+            case instanceStoredNonMutating
+            case instanceStoredNonMutatingWithDefault
+            case instanceStoredMutating
+            case instanceStoredMutatingWithDefault
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPackageCowBoxInitWithPackageEncodableWithEncodeFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPackage) package struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        package func encode(to encoder: any Encoder) throws { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          package func encode(to encoder: any Encoder) throws { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          private enum CodingKeys: String, CodingKey {
+            case id
+            case idWithDefault
+            case name
+            case nameWithDefault
+            case instanceStoredNonMutating
+            case instanceStoredNonMutatingWithDefault
+            case instanceStoredMutating
+            case instanceStoredMutatingWithDefault
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPackageCowBoxInitWithPublicEncodableWithEncodeFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) package struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        package func encode(to encoder: any Encoder) throws { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          package func encode(to encoder: any Encoder) throws { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          private enum CodingKeys: String, CodingKey {
+            case id
+            case idWithDefault
+            case name
+            case nameWithDefault
+            case instanceStoredNonMutating
+            case instanceStoredNonMutatingWithDefault
+            case instanceStoredMutating
+            case instanceStoredMutatingWithDefault
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPublicCowBoxEncodableWithEncodeFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox public struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        public func encode(to encoder: any Encoder) throws { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           public func encode(to encoder: any Encoder) throws { fatalError() }
         
@@ -1231,36 +2544,36 @@ extension EncodableTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withInternal) public struct Person: Encodable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       
         public func encode(to encoder: any Encoder) throws { fatalError() }
       }
       """,
       expandedSource: #"""
         public struct Person: Encodable {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1271,7 +2584,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1283,14 +2596,14 @@ extension EncodableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           public func encode(to encoder: any Encoder) throws { fatalError() }
         
@@ -1341,41 +2654,41 @@ extension EncodableTests {
 }
 
 extension EncodableTests {
-  func testPublicCowBoxInitWithPublicEncodableWithEncodeFunction() throws {
+  func testPublicCowBoxInitWithPackageEncodableWithEncodeFunction() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox(init: .withPublic) public struct Person: Encodable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+      @CowBox(init: .withPackage) public struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       
         public func encode(to encoder: any Encoder) throws { fatalError() }
       }
       """,
       expandedSource: #"""
         public struct Person: Encodable {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1386,7 +2699,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1398,14 +2711,129 @@ extension EncodableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          public func encode(to encoder: any Encoder) throws { fatalError() }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          private enum CodingKeys: String, CodingKey {
+            case id
+            case idWithDefault
+            case name
+            case nameWithDefault
+            case instanceStoredNonMutating
+            case instanceStoredNonMutatingWithDefault
+            case instanceStoredMutating
+            case instanceStoredMutatingWithDefault
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPublicCowBoxInitWithPublicEncodableWithEncodeFunction() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) public struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        public func encode(to encoder: any Encoder) throws { fatalError() }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           public func encode(to encoder: any Encoder) throws { fatalError() }
         
@@ -1463,8 +2891,8 @@ extension EncodableTests {
       @CowBox struct Person: Encodable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -1490,7 +2918,7 @@ extension EncodableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1501,7 +2929,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1579,8 +3007,8 @@ extension EncodableTests {
       @CowBox(init: .withInternal) struct Person: Encodable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -1606,7 +3034,7 @@ extension EncodableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1617,7 +3045,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1688,15 +3116,15 @@ extension EncodableTests {
 }
 
 extension EncodableTests {
-  func testCowBoxInitWithPublicEncodableWithKeys() throws {
+  func testCowBoxInitWithPackageEncodableWithKeys() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox(init: .withPublic) struct Person: Encodable {
+      @CowBox(init: .withPackage) struct Person: Encodable {
         @CowBoxNonMutating var id: String
         @CowBoxNonMutating var idWithDefault: String = "id" // comment
-        @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
@@ -1722,7 +3150,7 @@ extension EncodableTests {
               self._storage.idWithDefault
             }
           }
-          var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1733,7 +3161,123 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private enum CodingKeys: String, CodingKey { }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.id, forKey: .id)
+            try container.encode(self.idWithDefault, forKey: .idWithDefault)
+            try container.encode(self.name, forKey: .name)
+            try container.encode(self.nameWithDefault, forKey: .nameWithDefault)
+            try container.encode(self.instanceStoredNonMutating, forKey: .instanceStoredNonMutating)
+            try container.encode(self.instanceStoredNonMutatingWithDefault, forKey: .instanceStoredNonMutatingWithDefault)
+            try container.encode(self.instanceStoredMutating, forKey: .instanceStoredMutating)
+            try container.encode(self.instanceStoredMutatingWithDefault, forKey: .instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testCowBoxInitWithPublicEncodableWithKeys() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        private enum CodingKeys: String, CodingKey { }
+      }
+      """,
+      expandedSource: #"""
+        struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1804,41 +3348,41 @@ extension EncodableTests {
 }
 
 extension EncodableTests {
-  func testPublicCowBoxEncodableWithKeys() throws {
+  func testPackageCowBoxEncodableWithKeys() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox public struct Person: Encodable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+      @CowBox package struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
       }
       """,
       expandedSource: #"""
-        public struct Person: Encodable {
-          public var id: String {
+        package struct Person: Encodable {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1849,7 +3393,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1861,14 +3405,478 @@ extension EncodableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private enum CodingKeys: String, CodingKey { }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.id, forKey: .id)
+            try container.encode(self.idWithDefault, forKey: .idWithDefault)
+            try container.encode(self.name, forKey: .name)
+            try container.encode(self.nameWithDefault, forKey: .nameWithDefault)
+            try container.encode(self.instanceStoredNonMutating, forKey: .instanceStoredNonMutating)
+            try container.encode(self.instanceStoredNonMutatingWithDefault, forKey: .instanceStoredNonMutatingWithDefault)
+            try container.encode(self.instanceStoredMutating, forKey: .instanceStoredMutating)
+            try container.encode(self.instanceStoredMutatingWithDefault, forKey: .instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPackageCowBoxInitWithInternalEncodableWithKeys() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withInternal) package struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        private enum CodingKeys: String, CodingKey { }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private enum CodingKeys: String, CodingKey { }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.id, forKey: .id)
+            try container.encode(self.idWithDefault, forKey: .idWithDefault)
+            try container.encode(self.name, forKey: .name)
+            try container.encode(self.nameWithDefault, forKey: .nameWithDefault)
+            try container.encode(self.instanceStoredNonMutating, forKey: .instanceStoredNonMutating)
+            try container.encode(self.instanceStoredNonMutatingWithDefault, forKey: .instanceStoredNonMutatingWithDefault)
+            try container.encode(self.instanceStoredMutating, forKey: .instanceStoredMutating)
+            try container.encode(self.instanceStoredMutatingWithDefault, forKey: .instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPackageCowBoxInitWithPackageEncodableWithKeys() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPackage) package struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        private enum CodingKeys: String, CodingKey { }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private enum CodingKeys: String, CodingKey { }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.id, forKey: .id)
+            try container.encode(self.idWithDefault, forKey: .idWithDefault)
+            try container.encode(self.name, forKey: .name)
+            try container.encode(self.nameWithDefault, forKey: .nameWithDefault)
+            try container.encode(self.instanceStoredNonMutating, forKey: .instanceStoredNonMutating)
+            try container.encode(self.instanceStoredNonMutatingWithDefault, forKey: .instanceStoredNonMutatingWithDefault)
+            try container.encode(self.instanceStoredMutating, forKey: .instanceStoredMutating)
+            try container.encode(self.instanceStoredMutatingWithDefault, forKey: .instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPackageCowBoxInitWithPublicEncodableWithKeys() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) package struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        private enum CodingKeys: String, CodingKey { }
+      }
+      """,
+      expandedSource: #"""
+        package struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private enum CodingKeys: String, CodingKey { }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          public init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          package func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.id, forKey: .id)
+            try container.encode(self.idWithDefault, forKey: .idWithDefault)
+            try container.encode(self.name, forKey: .name)
+            try container.encode(self.nameWithDefault, forKey: .nameWithDefault)
+            try container.encode(self.instanceStoredNonMutating, forKey: .instanceStoredNonMutating)
+            try container.encode(self.instanceStoredNonMutatingWithDefault, forKey: .instanceStoredNonMutatingWithDefault)
+            try container.encode(self.instanceStoredMutating, forKey: .instanceStoredMutating)
+            try container.encode(self.instanceStoredMutatingWithDefault, forKey: .instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPublicCowBoxEncodableWithKeys() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox public struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        private enum CodingKeys: String, CodingKey { }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
         
@@ -1925,36 +3933,36 @@ extension EncodableTests {
     assertMacroExpansion(
       """
       @CowBox(init: .withInternal) public struct Person: Encodable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
       }
       """,
       expandedSource: #"""
         public struct Person: Encodable {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -1965,7 +3973,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -1977,14 +3985,14 @@ extension EncodableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
         
@@ -2036,41 +4044,41 @@ extension EncodableTests {
 }
 
 extension EncodableTests {
-  func testPublicCowBoxInitWithPublicEncodableWithKeys() throws {
+  func testPublicCowBoxInitWithPackageEncodableWithKeys() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
       """
-      @CowBox(init: .withPublic) public struct Person: Encodable {
-        @CowBoxNonMutating public var id: String
-        @CowBoxNonMutating public var idWithDefault: String = "id" // comment
-        @CowBoxMutating public internal(set) var name: String
-        @CowBoxMutating public internal(set) var nameWithDefault: String = "name" // comment
+      @CowBox(init: .withPackage) public struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
       
-        public static let typeStoredNonMutating: Bool = false
-        public static var typeStoredMutating: Bool = false
-        public static var typeComputed: Bool { false }
-        public let instanceStoredNonMutating: Bool
-        public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-        public var instanceStoredMutating: Bool
-        public var instanceStoredMutatingWithDefault: Bool = false // comment
-        public var instanceComputed: Bool { false }
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
       }
       """,
       expandedSource: #"""
         public struct Person: Encodable {
-          public var id: String {
+          var id: String {
             get {
               self._storage.id
             }
           }
-          public var idWithDefault: String {
+          var idWithDefault: String {
             get {
               self._storage.idWithDefault
             }
           }
-          public internal(set) var name: String {
+          private(set) var name: String {
             get {
               self._storage.name
             }
@@ -2081,7 +4089,7 @@ extension EncodableTests {
               self._storage.name = newValue
             }
           }
-          public internal(set) var nameWithDefault: String {
+          private(set) var nameWithDefault: String {
             get {
               self._storage.nameWithDefault
             }
@@ -2093,14 +4101,130 @@ extension EncodableTests {
             }
           }
         
-          public static let typeStoredNonMutating: Bool = false
-          public static var typeStoredMutating: Bool = false
-          public static var typeComputed: Bool { false }
-          public let instanceStoredNonMutating: Bool
-          public let instanceStoredNonMutatingWithDefault: Bool = false // comment
-          public var instanceStoredMutating: Bool
-          public var instanceStoredMutatingWithDefault: Bool = false // comment
-          public var instanceComputed: Bool { false }
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
+        
+          private enum CodingKeys: String, CodingKey { }
+        
+          private final class _Storage: @unchecked Sendable {
+            let id: String
+            let idWithDefault: String
+            var name: String
+            var nameWithDefault: String
+            init(id: String, idWithDefault: String, name: String, nameWithDefault: String) {
+              self.id = id
+              self.idWithDefault = idWithDefault
+              self.name = name
+              self.nameWithDefault = nameWithDefault
+            }
+            func copy() -> _Storage {
+              _Storage(id: self.id, idWithDefault: self.idWithDefault, name: self.name, nameWithDefault: self.nameWithDefault)
+            }
+          }
+        
+          private var _storage: _Storage
+        
+          package init(id: String, name: String, nameWithDefault: String = "name", instanceStoredNonMutating: Bool, instanceStoredMutating: Bool, instanceStoredMutatingWithDefault: Bool = false) {
+            self.instanceStoredNonMutating = instanceStoredNonMutating
+            self.instanceStoredMutating = instanceStoredMutating
+            self.instanceStoredMutatingWithDefault = instanceStoredMutatingWithDefault
+            self._storage = _Storage(id: id, idWithDefault: "id", name: name, nameWithDefault: nameWithDefault)
+          }
+        
+          public func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.id, forKey: .id)
+            try container.encode(self.idWithDefault, forKey: .idWithDefault)
+            try container.encode(self.name, forKey: .name)
+            try container.encode(self.nameWithDefault, forKey: .nameWithDefault)
+            try container.encode(self.instanceStoredNonMutating, forKey: .instanceStoredNonMutating)
+            try container.encode(self.instanceStoredNonMutatingWithDefault, forKey: .instanceStoredNonMutatingWithDefault)
+            try container.encode(self.instanceStoredMutating, forKey: .instanceStoredMutating)
+            try container.encode(self.instanceStoredMutatingWithDefault, forKey: .instanceStoredMutatingWithDefault)
+          }
+        }
+        """#,
+      macros: testMacros,
+      indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension EncodableTests {
+  func testPublicCowBoxInitWithPublicEncodableWithKeys() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+      """
+      @CowBox(init: .withPublic) public struct Person: Encodable {
+        @CowBoxNonMutating var id: String
+        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxMutating private(set) var name: String
+        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+      
+        static let typeStoredNonMutating: Bool = false
+        static var typeStoredMutating: Bool = false
+        static var typeComputed: Bool { false }
+        let instanceStoredNonMutating: Bool
+        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutating: Bool
+        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceComputed: Bool { false }
+      
+        private enum CodingKeys: String, CodingKey { }
+      }
+      """,
+      expandedSource: #"""
+        public struct Person: Encodable {
+          var id: String {
+            get {
+              self._storage.id
+            }
+          }
+          var idWithDefault: String {
+            get {
+              self._storage.idWithDefault
+            }
+          }
+          private(set) var name: String {
+            get {
+              self._storage.name
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.name = newValue
+            }
+          }
+          private(set) var nameWithDefault: String {
+            get {
+              self._storage.nameWithDefault
+            }
+            set {
+              if Swift.isKnownUniquelyReferenced(&self._storage) == false {
+                self._storage = self._storage.copy()
+              }
+              self._storage.nameWithDefault = newValue
+            }
+          }
+        
+          static let typeStoredNonMutating: Bool = false
+          static var typeStoredMutating: Bool = false
+          static var typeComputed: Bool { false }
+          let instanceStoredNonMutating: Bool
+          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutating: Bool
+          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
         
