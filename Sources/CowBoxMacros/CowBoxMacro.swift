@@ -50,6 +50,11 @@ import SwiftSyntaxMacros
   ]
 }
 
+enum CowBoxAccessControl: String {
+  case isPackage
+  case isPublic
+}
+
 enum CowBoxInit: String {
   case withInternal
   case withPackage
@@ -151,9 +156,8 @@ extension CowBoxMacro: MemberMacro {
       ),
       DeclSyntax(
         self.initializer(
-          isPublic: declaration.isPublic,
-          isPackage: declaration.isPackage,
-          with: node.initArgument(),
+          accessControl: declaration.accessControl,
+          initArgument: node.initArgument,
           variables: variables
         )
       ),
@@ -164,8 +168,7 @@ extension CowBoxMacro: MemberMacro {
       expansion.append(
         DeclSyntax(
           self.descriptionVariable(
-            isPublic: declaration.isPublic,
-            isPackage: declaration.isPackage,
+            accessControl: declaration.accessControl,
             type: declaration.name,
             variables: variables
           )
@@ -178,8 +181,7 @@ extension CowBoxMacro: MemberMacro {
       expansion.append(
         DeclSyntax(
           self.equalFunction(
-            isPublic: declaration.isPublic,
-            isPackage: declaration.isPackage,
+            accessControl: declaration.accessControl,
             type: declaration.name,
             variables: variables
           )
@@ -192,8 +194,7 @@ extension CowBoxMacro: MemberMacro {
       expansion.append(
         DeclSyntax(
           self.hashFunction(
-            isPublic: declaration.isPublic,
-            isPackage: declaration.isPackage,
+            accessControl: declaration.accessControl,
             variables: variables
           )
         )
@@ -214,8 +215,7 @@ extension CowBoxMacro: MemberMacro {
       expansion.append(
         DeclSyntax(
           self.decodeInitializer(
-            isPublic: declaration.isPublic,
-            isPackage: declaration.isPackage,
+            accessControl: declaration.accessControl,
             variables: variables
           )
         )
@@ -227,8 +227,7 @@ extension CowBoxMacro: MemberMacro {
       expansion.append(
         DeclSyntax(
           self.encodeFunction(
-            isPublic: declaration.isPublic,
-            isPackage: declaration.isPackage,
+            accessControl: declaration.accessControl,
             variables: variables
           )
         )
@@ -269,8 +268,7 @@ extension CowBoxMacro: ExtensionMacro {
     
     let expansion = [
       self.cowBoxExtension(
-        isPublic: declaration.isPublic,
-        isPackage: declaration.isPackage,
+        accessControl: declaration.accessControl,
         with: type
       ),
     ]
@@ -399,9 +397,8 @@ extension CowBoxMacro {
 
 extension CowBoxMacro {
   static func initializer(
-    isPublic: Bool,
-    isPackage: Bool,
-    with initArgument: CowBoxInit?,
+    accessControl: CowBoxAccessControl?,
+    initArgument: CowBoxInit?,
     variables: [VariableDeclSyntax]
   ) -> InitializerDeclSyntax {
     //  https://github.com/apple/swift-evolution/blob/main/proposals/0242-default-values-memberwise.md
@@ -458,18 +455,18 @@ extension CowBoxMacro {
     return InitializerDeclSyntax(
       modifiers: DeclModifierListSyntax {
         if let initArgument = initArgument {
-          if case .withPublic = initArgument {
-            DeclModifierSyntax(name: .keyword(.public))
-          }
           if case .withPackage = initArgument {
             DeclModifierSyntax(name: .keyword(.package))
           }
-        } else {
-          if isPublic {
+          if case .withPublic = initArgument {
             DeclModifierSyntax(name: .keyword(.public))
           }
-          if isPackage {
+        } else {
+          if case .isPackage = accessControl {
             DeclModifierSyntax(name: .keyword(.package))
+          }
+          if case .isPublic = accessControl {
+            DeclModifierSyntax(name: .keyword(.public))
           }
         }
       },
@@ -519,8 +516,7 @@ extension CowBoxMacro {
 
 extension CowBoxMacro {
   static func descriptionVariable(
-    isPublic: Bool,
-    isPackage: Bool,
+    accessControl: CowBoxAccessControl?,
     type: TokenSyntax,
     variables: [VariableDeclSyntax]
   ) -> VariableDeclSyntax {
@@ -548,11 +544,11 @@ extension CowBoxMacro {
     
     return VariableDeclSyntax(
       modifiers: DeclModifierListSyntax {
-        if isPublic {
-          DeclModifierSyntax(name: .keyword(.public))
-        }
-        if isPackage {
+        if case .isPackage = accessControl {
           DeclModifierSyntax(name: .keyword(.package))
+        }
+        if case .isPublic = accessControl {
+          DeclModifierSyntax(name: .keyword(.public))
         }
       },
       bindingSpecifier: TokenSyntax(.keyword(.var), presence: .present),
@@ -586,8 +582,7 @@ extension CowBoxMacro {
 
 extension CowBoxMacro {
   static func equalFunction(
-    isPublic: Bool,
-    isPackage: Bool,
+    accessControl: CowBoxAccessControl?,
     type: TokenSyntax,
     variables: [VariableDeclSyntax]
   ) -> FunctionDeclSyntax {
@@ -604,11 +599,11 @@ extension CowBoxMacro {
     
     return FunctionDeclSyntax(
       modifiers: DeclModifierListSyntax {
-        if isPublic {
-          DeclModifierSyntax(name: .keyword(.public))
-        }
-        if isPackage {
+        if case .isPackage = accessControl {
           DeclModifierSyntax(name: .keyword(.package))
+        }
+        if case .isPublic = accessControl {
+          DeclModifierSyntax(name: .keyword(.public))
         }
         DeclModifierSyntax(name: TokenSyntax(.keyword(.static), presence: .present))
       },
@@ -643,8 +638,7 @@ extension CowBoxMacro {
 
 extension CowBoxMacro {
   static func hashFunction(
-    isPublic: Bool,
-    isPackage: Bool,
+    accessControl: CowBoxAccessControl?,
     variables: [VariableDeclSyntax]
   ) -> FunctionDeclSyntax {
     //  https://github.com/apple/swift-evolution/blob/main/proposals/0185-synthesize-equatable-hashable.md
@@ -657,11 +651,11 @@ extension CowBoxMacro {
     
     FunctionDeclSyntax(
       modifiers: DeclModifierListSyntax {
-        if isPublic {
-          DeclModifierSyntax(name: .keyword(.public))
-        }
-        if isPackage {
+        if case .isPackage = accessControl {
           DeclModifierSyntax(name: .keyword(.package))
+        }
+        if case .isPublic = accessControl {
+          DeclModifierSyntax(name: .keyword(.public))
         }
       },
       name: TokenSyntax(.identifier("hash"), presence: .present),
@@ -709,8 +703,7 @@ extension CowBoxMacro {
 
 extension CowBoxMacro {
   static func decodeInitializer(
-    isPublic: Bool,
-    isPackage: Bool,
+    accessControl: CowBoxAccessControl?,
     variables: [VariableDeclSyntax]
   ) -> InitializerDeclSyntax {
     //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceCodable.cpp#L1304-L1541
@@ -754,11 +747,11 @@ extension CowBoxMacro {
     
     return InitializerDeclSyntax(
       modifiers: DeclModifierListSyntax {
-        if isPublic {
-          DeclModifierSyntax(name: .keyword(.public))
-        }
-        if isPackage {
+        if case .isPackage = accessControl {
           DeclModifierSyntax(name: .keyword(.package))
+        }
+        if case .isPublic = accessControl {
+          DeclModifierSyntax(name: .keyword(.public))
         }
       },
       signature: FunctionSignatureSyntax(
@@ -798,8 +791,7 @@ extension CowBoxMacro {
 
 extension CowBoxMacro {
   static func encodeFunction(
-    isPublic: Bool,
-    isPackage: Bool,
+    accessControl: CowBoxAccessControl?,
     variables: [VariableDeclSyntax]
   ) -> FunctionDeclSyntax {
     //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/lib/Sema/DerivedConformanceCodable.cpp#L790-L928
@@ -816,11 +808,11 @@ extension CowBoxMacro {
     
     return FunctionDeclSyntax(
       modifiers: DeclModifierListSyntax {
-        if isPublic {
-          DeclModifierSyntax(name: .keyword(.public))
-        }
-        if isPackage {
+        if case .isPackage = accessControl {
           DeclModifierSyntax(name: .keyword(.package))
+        }
+        if case .isPublic = accessControl {
+          DeclModifierSyntax(name: .keyword(.public))
         }
       },
       name: TokenSyntax(.identifier("encode"), presence: .present),
@@ -843,8 +835,7 @@ extension CowBoxMacro {
 
 extension CowBoxMacro {
   static func cowBoxExtension(
-    isPublic: Bool,
-    isPackage: Bool,
+    accessControl: CowBoxAccessControl?,
     with type: some TypeSyntaxProtocol
   ) -> ExtensionDeclSyntax {
     ExtensionDeclSyntax(
@@ -854,8 +845,7 @@ extension CowBoxMacro {
       }
     ) {
       self.identicalFunction(
-        isPublic: isPublic,
-        isPackage: isPackage,
+        accessControl: accessControl,
         with: type
       )
     }
@@ -864,17 +854,16 @@ extension CowBoxMacro {
 
 extension CowBoxMacro {
   static func identicalFunction(
-    isPublic: Bool,
-    isPackage: Bool,
+    accessControl: CowBoxAccessControl?,
     with type: some TypeSyntaxProtocol
   ) -> FunctionDeclSyntax {
     FunctionDeclSyntax(
       modifiers: DeclModifierListSyntax {
-        if isPublic {
-          DeclModifierSyntax(name: .keyword(.public))
-        }
-        if isPackage {
+        if case .isPackage = accessControl {
           DeclModifierSyntax(name: .keyword(.package))
+        }
+        if case .isPublic = accessControl {
+          DeclModifierSyntax(name: .keyword(.public))
         }
       },
       name: "isIdentical",
@@ -1028,7 +1017,7 @@ extension CowBoxNonMutatingMacro: AccessorMacro {
 //  MARK: -
 
 extension AttributeSyntax {
-  func initArgument() -> CowBoxInit? {
+  var initArgument: CowBoxInit? {
     //  https://forums.swift.org/t/strategies-for-passing-an-enum-value-as-a-macro-parameter-and-reading-during-expansion/71333/
     
     if case let .argumentList(arguments) = self.arguments,
@@ -1165,6 +1154,18 @@ extension StructDeclSyntax {
     self.modifiers.contains { modifier in
       modifier.name.tokenKind == .keyword(.package)
     }
+  }
+}
+
+extension StructDeclSyntax {
+  var accessControl: CowBoxAccessControl? {
+    if self.isPackage {
+      return CowBoxAccessControl.isPackage
+    }
+    if self.isPublic {
+      return CowBoxAccessControl.isPublic
+    }
+    return nil
   }
 }
 
