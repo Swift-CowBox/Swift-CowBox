@@ -522,9 +522,6 @@ extension CowBoxMacro {
   ) -> VariableDeclSyntax {
     //  https://github.com/apple/swift/blob/swift-5.10-RELEASE/stdlib/public/core/OutputStream.swift#L339-L355
     
-    //  https://oleb.net/blog/2016/12/optionals-string-interpolation/
-    //  FIXME: OPTIONAL VALUE WARNING
-    
     let array: [CodeBlockItemListSyntax] = variables.compactMap { variable in
       guard
         let identifier = variable.identifierPattern?.identifier
