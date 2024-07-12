@@ -1,4 +1,4 @@
-# Swift-CowBox 0.3.0
+# Swift-CowBox 0.4.0
 
 `Swift-CowBox` is a simple set of Swift Macros for adding easy copy-on-write semantics to Swift Structs.
 
