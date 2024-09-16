@@ -1,4 +1,4 @@
-# Swift-CowBox 0.4.0
+# Swift-CowBox 1.0.0
 
 `Swift-CowBox` is a simple set of Swift Macros for adding easy copy-on-write semantics to Swift Structs.
 
@@ -8,14 +8,14 @@ Since the early days of Swift, most engineers have had an important choice to ma
 
 ```swift
 //  Here is a Person Struct.
-public struct Person {
-  public let id: String
-  public var name: String
+struct Person {
+  let id: String
+  var name: String
 }
 //  Here is a Person Class.
-public class Person {
-  public let id: String
-  public var name: String
+class Person {
+  let id: String
+  var name: String
 }
 ```
 
@@ -35,14 +35,14 @@ Writing our own copy-on-write data structures has always been an option, but mea
 
 ## Requirements
 
-`Swift-CowBox` builds from Swift 5.9.2 (and up) and `Swift-Syntax` 509.0.0 (up to 600.0.0). There are no explicit platform requirements (other than what is required from `Swift-Syntax`). Please file a GitHub issue if you encounter any compatibility issues while building or deploying.
+`Swift-CowBox` builds from Swift 5.10 (and up) and `Swift-Syntax` 510.0.0 (up to 601.0.0). There are no explicit platform requirements (other than what is required from `Swift-Syntax`). Please file a GitHub issue if you encounter any compatibility issues while building or deploying.
 
 ## Usage
 
 Start by importing the `Swift-CowBox` package as a dependency. Here is an example from Swift Package Manager:
 
 ```swift
-// swift-tools-version: 5.9.2
+// swift-tools-version: 5.10
 
 import PackageDescription
 
@@ -58,7 +58,7 @@ let package = Package(
   dependencies: [
     .package(
       url: "https://github.com/swift-cowbox/swift-cowbox.git",
-      from: "0.1.0"
+      from: "1.0.0"
     )
   ],
   targets: [
