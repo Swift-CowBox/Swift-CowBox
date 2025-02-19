@@ -24,17 +24,17 @@ import XCTest
 
 @CowBox struct ComplexPerson: CustomStringConvertible, Hashable, Codable, Sendable {
   @CowBoxNonMutating var id: String
-  @CowBoxNonMutating var idWithDefault: String = "id" // comment
+  @CowBoxNonMutating var idWithDefault: String = "id"
   @CowBoxMutating var name: String
-  @CowBoxMutating var nameWithDefault: String = "name" // comment
+  @CowBoxMutating var nameWithDefault: String = "name"
   
   static let typeStoredNonMutating: Bool = false
   static var typeStoredMutating: Bool = false
   static var typeComputed: Bool { false }
   let instanceStoredNonMutating: Bool
-  let instanceStoredNonMutatingWithDefault: Bool = false // comment
+  let instanceStoredNonMutatingWithDefault: Bool = false
   var instanceStoredMutating: Bool
-  var instanceStoredMutatingWithDefault: Bool = false // comment
+  var instanceStoredMutatingWithDefault: Bool = false
   var instanceComputed: Bool { false }
 }
 

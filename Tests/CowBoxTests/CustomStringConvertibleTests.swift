@@ -34,17 +34,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -87,9 +87,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -155,17 +155,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withInternal) struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -208,9 +208,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -276,17 +276,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withPackage) struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -329,9 +329,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -397,17 +397,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withPublic) struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -450,9 +450,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -518,17 +518,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox package struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -571,9 +571,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -639,17 +639,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withInternal) package struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -692,9 +692,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -760,17 +760,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withPackage) package struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -813,9 +813,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -881,17 +881,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withPublic) package struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -934,9 +934,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1002,17 +1002,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox public struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1055,9 +1055,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1123,17 +1123,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withInternal) public struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1176,9 +1176,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1244,17 +1244,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withPackage) public struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1297,9 +1297,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1365,17 +1365,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withPublic) public struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1418,9 +1418,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1486,17 +1486,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         var description: String { fatalError() }
@@ -1541,9 +1541,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           var description: String { fatalError() }
@@ -1590,17 +1590,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withInternal) struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         var description: String { fatalError() }
@@ -1645,9 +1645,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           var description: String { fatalError() }
@@ -1694,17 +1694,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withPackage) struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         var description: String { fatalError() }
@@ -1749,9 +1749,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           var description: String { fatalError() }
@@ -1798,17 +1798,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withPublic) struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         var description: String { fatalError() }
@@ -1853,9 +1853,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           var description: String { fatalError() }
@@ -1902,17 +1902,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox package struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package var description: String { fatalError() }
@@ -1957,9 +1957,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package var description: String { fatalError() }
@@ -2006,17 +2006,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withInternal) package struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package var description: String { fatalError() }
@@ -2061,9 +2061,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package var description: String { fatalError() }
@@ -2110,17 +2110,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withPackage) package struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package var description: String { fatalError() }
@@ -2165,9 +2165,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package var description: String { fatalError() }
@@ -2214,17 +2214,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withPublic) package struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating var name: String
-        @CowBoxMutating var nameWithDefault: String = "name" // comment
+        @CowBoxMutating var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package var description: String { fatalError() }
@@ -2269,9 +2269,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package var description: String { fatalError() }
@@ -2318,17 +2318,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox public struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         var description: String { fatalError() }
@@ -2373,9 +2373,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           var description: String { fatalError() }
@@ -2422,17 +2422,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withInternal) public struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         var description: String { fatalError() }
@@ -2477,9 +2477,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           var description: String { fatalError() }
@@ -2526,17 +2526,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withPackage) public struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         var description: String { fatalError() }
@@ -2581,9 +2581,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           var description: String { fatalError() }
@@ -2630,17 +2630,17 @@ extension CustomStringConvertibleTests {
       """
       @CowBox(init: .withPublic) public struct Person: CustomStringConvertible {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         var description: String { fatalError() }
@@ -2685,9 +2685,9 @@ extension CustomStringConvertibleTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           var description: String { fatalError() }

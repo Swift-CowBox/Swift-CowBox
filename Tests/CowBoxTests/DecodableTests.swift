@@ -34,17 +34,17 @@ extension DecodableTests {
       """
       @CowBox struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -87,9 +87,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -156,17 +156,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withInternal) struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -209,9 +209,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -278,17 +278,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPackage) struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -331,9 +331,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -400,17 +400,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPublic) struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -453,9 +453,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -522,17 +522,17 @@ extension DecodableTests {
       """
       @CowBox package struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -575,9 +575,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -644,17 +644,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withInternal) package struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -697,9 +697,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -766,17 +766,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPackage) package struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -819,9 +819,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -888,17 +888,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPublic) package struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -941,9 +941,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1010,17 +1010,17 @@ extension DecodableTests {
       """
       @CowBox public struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1063,9 +1063,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1132,17 +1132,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withInternal) public struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1185,9 +1185,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1254,17 +1254,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPackage) public struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1307,9 +1307,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1376,17 +1376,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPublic) public struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1429,9 +1429,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1498,17 +1498,17 @@ extension DecodableTests {
       """
       @CowBox struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         init(from decoder: any Decoder) throws { fatalError() }
@@ -1553,9 +1553,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           init(from decoder: any Decoder) throws { fatalError() }
@@ -1613,17 +1613,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withInternal) struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         init(from decoder: any Decoder) throws { fatalError() }
@@ -1668,9 +1668,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           init(from decoder: any Decoder) throws { fatalError() }
@@ -1728,17 +1728,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPackage) struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         init(from decoder: any Decoder) throws { fatalError() }
@@ -1783,9 +1783,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           init(from decoder: any Decoder) throws { fatalError() }
@@ -1843,17 +1843,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPublic) struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         init(from decoder: any Decoder) throws { fatalError() }
@@ -1898,9 +1898,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           init(from decoder: any Decoder) throws { fatalError() }
@@ -1958,17 +1958,17 @@ extension DecodableTests {
       """
       @CowBox package struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package init(from decoder: any Decoder) throws { fatalError() }
@@ -2013,9 +2013,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package init(from decoder: any Decoder) throws { fatalError() }
@@ -2073,17 +2073,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withInternal) package struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package init(from decoder: any Decoder) throws { fatalError() }
@@ -2128,9 +2128,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package init(from decoder: any Decoder) throws { fatalError() }
@@ -2188,17 +2188,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPackage) package struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package init(from decoder: any Decoder) throws { fatalError() }
@@ -2243,9 +2243,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package init(from decoder: any Decoder) throws { fatalError() }
@@ -2303,17 +2303,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPublic) package struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package init(from decoder: any Decoder) throws { fatalError() }
@@ -2358,9 +2358,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package init(from decoder: any Decoder) throws { fatalError() }
@@ -2418,17 +2418,17 @@ extension DecodableTests {
       """
       @CowBox public struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public init(from decoder: any Decoder) throws { fatalError() }
@@ -2473,9 +2473,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public init(from decoder: any Decoder) throws { fatalError() }
@@ -2533,17 +2533,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withInternal) public struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public init(from decoder: any Decoder) throws { fatalError() }
@@ -2588,9 +2588,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public init(from decoder: any Decoder) throws { fatalError() }
@@ -2648,17 +2648,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPackage) public struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public init(from decoder: any Decoder) throws { fatalError() }
@@ -2703,9 +2703,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public init(from decoder: any Decoder) throws { fatalError() }
@@ -2763,17 +2763,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPublic) public struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public init(from decoder: any Decoder) throws { fatalError() }
@@ -2818,9 +2818,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public init(from decoder: any Decoder) throws { fatalError() }
@@ -2878,17 +2878,17 @@ extension DecodableTests {
       """
       @CowBox struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -2933,9 +2933,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -2993,17 +2993,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withInternal) struct Person: Decodable  {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -3048,9 +3048,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -3108,17 +3108,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPackage) struct Person: Decodable  {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -3163,9 +3163,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -3223,17 +3223,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPublic) struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -3278,9 +3278,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -3338,17 +3338,17 @@ extension DecodableTests {
       """
       @CowBox package struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -3393,9 +3393,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -3453,17 +3453,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withInternal) package struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -3508,9 +3508,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -3568,17 +3568,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPackage) package struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -3623,9 +3623,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -3683,17 +3683,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPublic) package struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -3738,9 +3738,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -3798,17 +3798,17 @@ extension DecodableTests {
       """
       @CowBox public struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -3853,9 +3853,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -3913,17 +3913,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withInternal) public struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -3968,9 +3968,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -4028,17 +4028,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPackage) public struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -4083,9 +4083,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -4143,17 +4143,17 @@ extension DecodableTests {
       """
       @CowBox(init: .withPublic) public struct Person: Decodable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -4198,9 +4198,9 @@ extension DecodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }

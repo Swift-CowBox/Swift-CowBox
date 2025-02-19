@@ -34,17 +34,17 @@ extension CodableTests {
       """
       @CowBox struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -87,9 +87,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -168,17 +168,17 @@ extension CodableTests {
       """
       @CowBox(init: .withInternal) struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -221,9 +221,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -302,17 +302,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPackage) struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -355,9 +355,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -436,17 +436,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPublic) struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -489,9 +489,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -570,17 +570,17 @@ extension CodableTests {
       """
       @CowBox package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -623,9 +623,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -704,17 +704,17 @@ extension CodableTests {
       """
       @CowBox(init: .withInternal) package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -757,9 +757,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -838,17 +838,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPackage) package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -891,9 +891,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -972,17 +972,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPublic) package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1025,9 +1025,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1106,17 +1106,17 @@ extension CodableTests {
       """
       @CowBox public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1159,9 +1159,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1240,17 +1240,17 @@ extension CodableTests {
       """
       @CowBox(init: .withInternal) public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1293,9 +1293,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1374,17 +1374,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPackage) public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1427,9 +1427,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1508,17 +1508,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPublic) public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1561,9 +1561,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1642,17 +1642,17 @@ extension CodableTests {
       """
       @CowBox struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         init(from decoder: any Decoder) throws { fatalError() }
@@ -1697,9 +1697,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           init(from decoder: any Decoder) throws { fatalError() }
@@ -1769,17 +1769,17 @@ extension CodableTests {
       """
       @CowBox(init: .withInternal) struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         init(from decoder: any Decoder) throws { fatalError() }
@@ -1824,9 +1824,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           init(from decoder: any Decoder) throws { fatalError() }
@@ -1896,17 +1896,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPackage) struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         init(from decoder: any Decoder) throws { fatalError() }
@@ -1951,9 +1951,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           init(from decoder: any Decoder) throws { fatalError() }
@@ -2023,17 +2023,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPublic) struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         init(from decoder: any Decoder) throws { fatalError() }
@@ -2078,9 +2078,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           init(from decoder: any Decoder) throws { fatalError() }
@@ -2150,17 +2150,17 @@ extension CodableTests {
       """
       @CowBox package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package init(from decoder: any Decoder) throws { fatalError() }
@@ -2205,9 +2205,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package init(from decoder: any Decoder) throws { fatalError() }
@@ -2277,17 +2277,17 @@ extension CodableTests {
       """
       @CowBox(init: .withInternal) package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package init(from decoder: any Decoder) throws { fatalError() }
@@ -2332,9 +2332,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package init(from decoder: any Decoder) throws { fatalError() }
@@ -2404,17 +2404,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPackage) package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package init(from decoder: any Decoder) throws { fatalError() }
@@ -2459,9 +2459,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package init(from decoder: any Decoder) throws { fatalError() }
@@ -2531,17 +2531,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPublic) package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package init(from decoder: any Decoder) throws { fatalError() }
@@ -2586,9 +2586,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package init(from decoder: any Decoder) throws { fatalError() }
@@ -2658,17 +2658,17 @@ extension CodableTests {
       """
       @CowBox public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public init(from decoder: any Decoder) throws { fatalError() }
@@ -2713,9 +2713,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public init(from decoder: any Decoder) throws { fatalError() }
@@ -2785,17 +2785,17 @@ extension CodableTests {
       """
       @CowBox(init: .withInternal) public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public init(from decoder: any Decoder) throws { fatalError() }
@@ -2840,9 +2840,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public init(from decoder: any Decoder) throws { fatalError() }
@@ -2912,17 +2912,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPackage) public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public init(from decoder: any Decoder) throws { fatalError() }
@@ -2967,9 +2967,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public init(from decoder: any Decoder) throws { fatalError() }
@@ -3039,17 +3039,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPublic) public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public init(from decoder: any Decoder) throws { fatalError() }
@@ -3094,9 +3094,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public init(from decoder: any Decoder) throws { fatalError() }
@@ -3166,17 +3166,17 @@ extension CodableTests {
       """
       @CowBox struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         func encode(to encoder: any Encoder) throws { fatalError() }
@@ -3221,9 +3221,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           func encode(to encoder: any Encoder) throws { fatalError() }
@@ -3292,17 +3292,17 @@ extension CodableTests {
       """
       @CowBox(init: .withInternal) struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         func encode(to encoder: any Encoder) throws { fatalError() }
@@ -3347,9 +3347,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           func encode(to encoder: any Encoder) throws { fatalError() }
@@ -3418,17 +3418,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPackage) struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         func encode(to encoder: any Encoder) throws { fatalError() }
@@ -3473,9 +3473,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           func encode(to encoder: any Encoder) throws { fatalError() }
@@ -3544,17 +3544,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPublic) struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         func encode(to encoder: any Encoder) throws { fatalError() }
@@ -3599,9 +3599,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           func encode(to encoder: any Encoder) throws { fatalError() }
@@ -3670,17 +3670,17 @@ extension CodableTests {
       """
       @CowBox package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package func encode(to encoder: any Encoder) throws { fatalError() }
@@ -3725,9 +3725,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package func encode(to encoder: any Encoder) throws { fatalError() }
@@ -3796,17 +3796,17 @@ extension CodableTests {
       """
       @CowBox(init: .withInternal) package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package func encode(to encoder: any Encoder) throws { fatalError() }
@@ -3851,9 +3851,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package func encode(to encoder: any Encoder) throws { fatalError() }
@@ -3922,17 +3922,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPackage) package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package func encode(to encoder: any Encoder) throws { fatalError() }
@@ -3977,9 +3977,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package func encode(to encoder: any Encoder) throws { fatalError() }
@@ -4048,17 +4048,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPublic) package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package func encode(to encoder: any Encoder) throws { fatalError() }
@@ -4103,9 +4103,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package func encode(to encoder: any Encoder) throws { fatalError() }
@@ -4174,17 +4174,17 @@ extension CodableTests {
       """
       @CowBox public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public func encode(to encoder: any Encoder) throws { fatalError() }
@@ -4229,9 +4229,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public func encode(to encoder: any Encoder) throws { fatalError() }
@@ -4300,17 +4300,17 @@ extension CodableTests {
       """
       @CowBox(init: .withInternal) public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public func encode(to encoder: any Encoder) throws { fatalError() }
@@ -4355,9 +4355,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public func encode(to encoder: any Encoder) throws { fatalError() }
@@ -4426,17 +4426,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPackage) public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public func encode(to encoder: any Encoder) throws { fatalError() }
@@ -4481,9 +4481,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public func encode(to encoder: any Encoder) throws { fatalError() }
@@ -4552,17 +4552,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPublic) public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public func encode(to encoder: any Encoder) throws { fatalError() }
@@ -4607,9 +4607,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public func encode(to encoder: any Encoder) throws { fatalError() }
@@ -4678,17 +4678,17 @@ extension CodableTests {
       """
       @CowBox struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -4733,9 +4733,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -4805,17 +4805,17 @@ extension CodableTests {
       """
       @CowBox(init: .withInternal) struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -4860,9 +4860,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -4932,17 +4932,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPackage) struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -4987,9 +4987,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -5059,17 +5059,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPublic) struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -5114,9 +5114,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -5186,17 +5186,17 @@ extension CodableTests {
       """
       @CowBox package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -5241,9 +5241,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -5313,17 +5313,17 @@ extension CodableTests {
       """
       @CowBox(init: .withInternal) package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -5368,9 +5368,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -5440,17 +5440,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPackage) package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -5495,9 +5495,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -5567,17 +5567,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPublic) package struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -5622,9 +5622,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -5694,17 +5694,17 @@ extension CodableTests {
       """
       @CowBox public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -5749,9 +5749,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -5821,17 +5821,17 @@ extension CodableTests {
       """
       @CowBox(init: .withInternal) public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -5876,9 +5876,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -5948,17 +5948,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPackage) public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -6003,9 +6003,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }
@@ -6075,17 +6075,17 @@ extension CodableTests {
       """
       @CowBox(init: .withPublic) public struct Person: Codable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         private enum CodingKeys: String, CodingKey { }
@@ -6130,9 +6130,9 @@ extension CodableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private enum CodingKeys: String, CodingKey { }

@@ -34,17 +34,17 @@ extension HashableTests {
       """
       @CowBox struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -87,9 +87,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -176,17 +176,17 @@ extension HashableTests {
       """
       @CowBox(init: .withInternal) struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -229,9 +229,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -318,17 +318,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPackage) struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -371,9 +371,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -460,17 +460,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPublic) struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -513,9 +513,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -602,17 +602,17 @@ extension HashableTests {
       """
       @CowBox package struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -655,9 +655,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -744,17 +744,17 @@ extension HashableTests {
       """
       @CowBox(init: .withInternal) package struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -797,9 +797,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -886,17 +886,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPackage) package struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -939,9 +939,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1028,17 +1028,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPublic) package struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1081,9 +1081,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1170,17 +1170,17 @@ extension HashableTests {
       """
       @CowBox public struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1223,9 +1223,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1312,17 +1312,17 @@ extension HashableTests {
       """
       @CowBox(init: .withInternal) public struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1365,9 +1365,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1454,17 +1454,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPackage) public struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1507,9 +1507,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1596,17 +1596,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPublic) public struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       }
       """,
@@ -1649,9 +1649,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           private final class _Storage: @unchecked Sendable {
@@ -1738,17 +1738,17 @@ extension HashableTests {
       """
       @CowBox struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -1793,9 +1793,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -1853,17 +1853,17 @@ extension HashableTests {
       """
       @CowBox(init: .withInternal) struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -1908,9 +1908,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -1968,17 +1968,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPackage) struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2023,9 +2023,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2083,17 +2083,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPublic) struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2138,9 +2138,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2198,17 +2198,17 @@ extension HashableTests {
       """
       @CowBox package struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2253,9 +2253,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2313,17 +2313,17 @@ extension HashableTests {
       """
       @CowBox(init: .withInternal) package struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2368,9 +2368,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2428,17 +2428,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPackage) package struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2483,9 +2483,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2543,17 +2543,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPublic) package struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2598,9 +2598,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2658,17 +2658,17 @@ extension HashableTests {
       """
       @CowBox public struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2713,9 +2713,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2773,17 +2773,17 @@ extension HashableTests {
       """
       @CowBox(init: .withInternal) public struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2828,9 +2828,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2888,17 +2888,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPackage) public struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -2943,9 +2943,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -3003,17 +3003,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPublic) public struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -3058,9 +3058,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public static func ==(lhs: Person, rhs: Person) -> Bool { fatalError() }
@@ -3118,17 +3118,17 @@ extension HashableTests {
       """
       @CowBox struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         func hash(into hasher: inout Hasher) { fatalError() }
@@ -3173,9 +3173,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           func hash(into hasher: inout Hasher) { fatalError() }
@@ -3253,17 +3253,17 @@ extension HashableTests {
       """
       @CowBox(init: .withInternal) struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         func hash(into hasher: inout Hasher) { fatalError() }
@@ -3308,9 +3308,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           func hash(into hasher: inout Hasher) { fatalError() }
@@ -3388,17 +3388,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPackage) struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         func hash(into hasher: inout Hasher) { fatalError() }
@@ -3443,9 +3443,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           func hash(into hasher: inout Hasher) { fatalError() }
@@ -3523,17 +3523,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPublic) struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         func hash(into hasher: inout Hasher) { fatalError() }
@@ -3578,9 +3578,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           func hash(into hasher: inout Hasher) { fatalError() }
@@ -3658,17 +3658,17 @@ extension HashableTests {
       """
       @CowBox package struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package func hash(into hasher: inout Hasher) { fatalError() }
@@ -3713,9 +3713,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package func hash(into hasher: inout Hasher) { fatalError() }
@@ -3793,17 +3793,17 @@ extension HashableTests {
       """
       @CowBox(init: .withInternal) package struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package func hash(into hasher: inout Hasher) { fatalError() }
@@ -3848,9 +3848,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package func hash(into hasher: inout Hasher) { fatalError() }
@@ -3928,17 +3928,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPackage) package struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package func hash(into hasher: inout Hasher) { fatalError() }
@@ -3983,9 +3983,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package func hash(into hasher: inout Hasher) { fatalError() }
@@ -4063,17 +4063,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPackage) package struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         package func hash(into hasher: inout Hasher) { fatalError() }
@@ -4118,9 +4118,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           package func hash(into hasher: inout Hasher) { fatalError() }
@@ -4198,17 +4198,17 @@ extension HashableTests {
       """
       @CowBox public struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public func hash(into hasher: inout Hasher) { fatalError() }
@@ -4253,9 +4253,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public func hash(into hasher: inout Hasher) { fatalError() }
@@ -4333,17 +4333,17 @@ extension HashableTests {
       """
       @CowBox(init: .withInternal) public struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public func hash(into hasher: inout Hasher) { fatalError() }
@@ -4388,9 +4388,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public func hash(into hasher: inout Hasher) { fatalError() }
@@ -4468,17 +4468,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPackage) public struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public func hash(into hasher: inout Hasher) { fatalError() }
@@ -4523,9 +4523,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public func hash(into hasher: inout Hasher) { fatalError() }
@@ -4603,17 +4603,17 @@ extension HashableTests {
       """
       @CowBox(init: .withPublic) public struct Person: Hashable {
         @CowBoxNonMutating var id: String
-        @CowBoxNonMutating var idWithDefault: String = "id" // comment
+        @CowBoxNonMutating var idWithDefault: String = "id"
         @CowBoxMutating private(set) var name: String
-        @CowBoxMutating private(set) var nameWithDefault: String = "name" // comment
+        @CowBoxMutating private(set) var nameWithDefault: String = "name"
       
         static let typeStoredNonMutating: Bool = false
         static var typeStoredMutating: Bool = false
         static var typeComputed: Bool { false }
         let instanceStoredNonMutating: Bool
-        let instanceStoredNonMutatingWithDefault: Bool = false // comment
+        let instanceStoredNonMutatingWithDefault: Bool = false
         var instanceStoredMutating: Bool
-        var instanceStoredMutatingWithDefault: Bool = false // comment
+        var instanceStoredMutatingWithDefault: Bool = false
         var instanceComputed: Bool { false }
       
         public func hash(into hasher: inout Hasher) { fatalError() }
@@ -4658,9 +4658,9 @@ extension HashableTests {
           static var typeStoredMutating: Bool = false
           static var typeComputed: Bool { false }
           let instanceStoredNonMutating: Bool
-          let instanceStoredNonMutatingWithDefault: Bool = false // comment
+          let instanceStoredNonMutatingWithDefault: Bool = false
           var instanceStoredMutating: Bool
-          var instanceStoredMutatingWithDefault: Bool = false // comment
+          var instanceStoredMutatingWithDefault: Bool = false
           var instanceComputed: Bool { false }
         
           public func hash(into hasher: inout Hasher) { fatalError() }
