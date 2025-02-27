@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -euox pipefail
 
 main() {
   toolchains="Xcode_15.4 Xcode_16 Xcode_16.1 Xcode_16.2 Xcode_16.3_beta"
@@ -10,10 +10,11 @@ main() {
     sudo xcode-select --switch /Applications/${toolchain}.app
     for version in $versions; do
       swift --version
+      swift package reset
       swift package resolve
       swift package resolve --version "$version" swift-syntax
+      swift build
       swift test
-      swift package reset
     done
   done
   
