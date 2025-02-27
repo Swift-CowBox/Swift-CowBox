@@ -3,11 +3,11 @@
 set -eu
 
 main() {
-  toolchains="swift-5.10-RELEASE swift-5.10.1-RELEASE swift-6.0-RELEASE swift-6.0.1-RELEASE swift-6.0.2-RELEASE swift-6.0.3-RELEASE"
+  toolchains="Xcode_15.4 Xcode_16 Xcode_16.1 Xcode_16.2 Xcode_16.3_beta"
   versions="510.0.0 510.0.1 510.0.2 510.0.3 600.0.0 600.0.1"
   
   for toolchain in $toolchains; do
-    export TOOLCHAINS="$(plutil -extract CFBundleIdentifier raw /Library/Developer/Toolchains/${toolchain}.xctoolchain/Info.plist)"
+    sudo xcode-select --switch /Applications/${toolchain}.app
     for version in $versions; do
       swift --version
       swift package resolve
@@ -16,6 +16,8 @@ main() {
       swift package reset
     done
   done
+  
+  sudo xcode-select --reset
 }
 
 main
