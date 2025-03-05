@@ -2,15 +2,15 @@
 
 set -euox pipefail
 
-package() {
-  local subcommand="$1"
+function package() {
+  local subcommand=${1}
   
   local versions="510.0.0 510.0.1 510.0.2 510.0.3 600.0.0 600.0.1"
   
-  for version in $versions; do
+  for version in ${versions}; do
     swift package reset
     swift package resolve
-    swift package resolve --version "$version" swift-syntax
+    swift package resolve --version ${version} swift-syntax
     swift ${subcommand} --configuration debug
     swift package clean
     swift ${subcommand} --configuration release
@@ -18,16 +18,14 @@ package() {
   done
 }
 
-main() {
-  local toolchains="Xcode_15.4 Xcode_16 Xcode_16.1 Xcode_16.2 Xcode_16.3_beta"
+function main() {
+  local toolchains="Xcode_15.4 Xcode_16 Xcode_16.1 Xcode_16.2 Xcode_16.3_beta_2"
   
-  for toolchain in $toolchains; do
-    sudo xcode-select --switch /Applications/${toolchain}.app
+  for toolchain in ${toolchains}; do
+    export DEVELOPER_DIR="/Applications/${toolchain}.app"
     swift --version
     package test
   done
-  
-  sudo xcode-select --reset
 }
 
 main
