@@ -1,4 +1,4 @@
-name: CowBox
+name: CowBox Tests
 
 permissions:
   contents: read
