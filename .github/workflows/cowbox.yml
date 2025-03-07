@@ -1,0 +1,24 @@
+name: CowBox
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - 'release/**'
+  pull_request:
+    branches:
+      - main
+      - 'release/**'
+jobs:
+  tests:
+    name: Tests
+    runs-on: macos-15
+    steps:
+      - name: Run actions/checkout@v4
+        uses: actions/checkout@v4
+      - name: Run sh test.sh
+        run: sh test.sh
