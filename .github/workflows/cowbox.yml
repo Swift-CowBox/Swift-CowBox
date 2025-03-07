@@ -13,12 +13,14 @@ on:
     branches:
       - main
       - 'release/**'
+
 jobs:
   tests:
     name: Tests
     runs-on: macos-15
     steps:
-      - name: Run actions/checkout@v4
+      - name: Run checkout
         uses: actions/checkout@v4
-      - name: Run sh test.sh
-        run: sh test.sh
+      - name: Run tests
+        run: |
+          curl -s https://raw.githubusercontent.com/Swift-CowBox/Swift-CowBox/refs/heads/main/test.sh | sh
