@@ -19,7 +19,7 @@ function package() {
 }
 
 function main() {
-  local toolchains="Xcode_15.4 Xcode_16 Xcode_16.1 Xcode_16.2 Xcode_16.3_beta_2"
+  local toolchains="Xcode_15.4 Xcode_16 Xcode_16.1 Xcode_16.2"
   
   for toolchain in ${toolchains}; do
     export DEVELOPER_DIR="/Applications/${toolchain}.app"
