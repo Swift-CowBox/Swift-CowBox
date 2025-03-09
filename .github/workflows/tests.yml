@@ -1,0 +1,49 @@
+name: Tests
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - 'release/**'
+  pull_request:
+    branches:
+      - main
+      - 'release/**'
+
+jobs:
+  tests:
+    name: Xcode ${{ matrix.xcode-version }} / swift-syntax ${{ matrix.swift-syntax-version }} / ${{ matrix.configuration }}
+    runs-on: macos-15
+    strategy:
+      matrix:
+        xcode-version: [
+          '15.4',
+          '16.0',
+          '16.1',
+          '16.2',
+        ]
+        swift-syntax-version: [
+          '510.0.0',
+          '510.0.1',
+          '510.0.2',
+          '510.0.3',
+          '600.0.0',
+          '600.0.1',
+        ]
+        configuration: [
+          'debug',
+          'release',
+        ]
+    steps:
+      - name: Run checkout
+        uses: actions/checkout@v4
+      - name: Run tests
+        run: |
+          export DEVELOPER_DIR="/Applications/Xcode_${{ matrix.xcode-version }}.app"
+          swift package resolve
+          swift package resolve --version ${{ matrix.swift-syntax-version }} swift-syntax
+          swift test --configuration ${{ matrix.configuration }}
