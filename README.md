@@ -1,6 +1,7 @@
 # Swift-CowBox 1.0.0
 
-[![CowBox Tests](https://github.com/Swift-CowBox/Swift-CowBox/actions/workflows/cowbox.yml/badge.svg?branch=main)](https://github.com/Swift-CowBox/Swift-CowBox/actions/workflows/cowbox.yml)
+[![Builds](https://github.com/Swift-CowBox/Swift-CowBox/actions/workflows/builds.yml/badge.svg?branch=main)](https://github.com/Swift-CowBox/Swift-CowBox/actions/workflows/builds.yml)
+[![Tests](https://github.com/Swift-CowBox/Swift-CowBox/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/Swift-CowBox/Swift-CowBox/actions/workflows/tests.yml)
 
 `Swift-CowBox` is a simple set of Swift Macros for adding easy copy-on-write semantics to Swift Structs.
 
