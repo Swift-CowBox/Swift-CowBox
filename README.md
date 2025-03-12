@@ -1,5 +1,9 @@
 # Swift-CowBox 1.0.0
 
+[![Swift](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FSwift-CowBox%2FSwift-CowBox%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/Swift-CowBox/Swift-CowBox)
+
+[![Platforms](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FSwift-CowBox%2FSwift-CowBox%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/Swift-CowBox/Swift-CowBox)
+
 [![Builds](https://github.com/Swift-CowBox/Swift-CowBox/actions/workflows/builds.yml/badge.svg?branch=main)](https://github.com/Swift-CowBox/Swift-CowBox/actions/workflows/builds.yml)
 [![Tests](https://github.com/Swift-CowBox/Swift-CowBox/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/Swift-CowBox/Swift-CowBox/actions/workflows/tests.yml)
 
