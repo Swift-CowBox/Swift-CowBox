@@ -1,7 +1,7 @@
 // swift-tools-version: 5.10
 
-import PackageDescription
 import CompilerPluginSupport
+import PackageDescription
 
 let platforms: [SupportedPlatform] = [
   .macOS(.v10_15),
@@ -23,7 +23,10 @@ let products: [Product] = [
 ]
 
 let dependencies: [Package.Dependency] = [
-  .package(url: "https://github.com/apple/swift-syntax.git", "510.0.0"..<"601.0.0"),
+  .package(
+    url: "https://github.com/apple/swift-syntax.git",
+    "510.0.0"..<"602.0.0"
+  )
 ]
 
 let targets: [Target] = [
@@ -32,7 +35,7 @@ let targets: [Target] = [
     name: "CowBoxMacros",
     dependencies: [
       .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-      .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
+      .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
     ]
   ),
   // Library that exposes a macro as part of its API, which is used in client programs.

@@ -5,7 +5,7 @@ set -euox pipefail
 function package() {
   local subcommand=${1}
   
-  local versions="510.0.0 510.0.1 510.0.2 510.0.3 600.0.0 600.0.1"
+  local versions="510.0.0 510.0.1 510.0.2 510.0.3 600.0.0 600.0.1 601.0.0"
   
   for version in ${versions}; do
     swift package reset
