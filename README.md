@@ -41,7 +41,7 @@ Writing our own copy-on-write data structures has always been an option, but mea
 
 ## Requirements
 
-`Swift-CowBox` builds from Swift 5.10 (and up) and `Swift-Syntax` 510.0.0 (up to 601.0.0). There are no explicit platform requirements (other than what is required from `Swift-Syntax`). Please file a GitHub issue if you encounter any compatibility issues while building or deploying.
+`Swift-CowBox` builds from Swift 5.10 (and up) and `Swift-Syntax` 510.0.0 (up to 602.0.0). There are no explicit platform requirements (other than what is required from `Swift-Syntax`). Please file a GitHub issue if you encounter any compatibility issues while building or deploying.
 
 ## Usage
 
