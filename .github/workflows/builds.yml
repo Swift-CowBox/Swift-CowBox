@@ -1,52 +1,87 @@
 name: Builds
-
-permissions:
-  contents: read
-
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
-      - 'release/**'
   pull_request:
     branches:
       - main
-      - 'release/**'
-
+      - "release/**"
+  push:
+    branches:
+      - main
+      - "release/**"
+  workflow_dispatch:
+permissions:
+  contents: read
 jobs:
-  tests:
-    name: Xcode ${{ matrix.xcode-version }} / swift-syntax ${{ matrix.swift-syntax-version }} / ${{ matrix.configuration }}
-    runs-on: macos-15
+  linux:
+    name: Swift ${{ matrix.swift-version }} / swift-syntax ${{ matrix.swift-syntax-version }} / ${{ matrix.configuration }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Run checkout
+        uses: actions/checkout@v4
+      - name: Run swiftly
+        uses: vapor/swiftly-action@v0.2.0
+        with:
+          toolchain: ${{ matrix.swift-version }}
+      - name: Run builds
+        run: |
+          swift --version
+          swift package resolve
+          swift package resolve --version ${{ matrix.swift-syntax-version }} swift-syntax
+          swift build --configuration ${{ matrix.configuration }}
     strategy:
       matrix:
-        xcode-version: [
-          '15.4',
-          '16.0',
-          '16.1',
-          '16.2',
-          '16.3',
-        ]
-        swift-syntax-version: [
-          '510.0.0',
-          '510.0.1',
-          '510.0.2',
-          '510.0.3',
-          '600.0.0',
-          '600.0.1',
-          '601.0.0',
-          '601.0.1',
-        ]
-        configuration: [
-          'debug',
-          'release',
-        ]
+        swift-version:
+          - "5.10.1"
+          - "6.0.0"
+          - "6.0.1"
+          - "6.0.2"
+          - "6.0.3"
+          - "6.1.0"
+        swift-syntax-version:
+          - "510.0.0"
+          - "510.0.1"
+          - "510.0.2"
+          - "510.0.3"
+          - "600.0.0"
+          - "600.0.1"
+          - "601.0.0"
+          - "601.0.1"
+        configuration:
+          - debug
+          - release
+      fail-fast: false
+  macos:
+    name: Xcode ${{ matrix.xcode-version }} / swift-syntax ${{ matrix.swift-syntax-version }} / ${{ matrix.configuration }}
+    runs-on: macos-15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode-version }}.app
     steps:
       - name: Run checkout
         uses: actions/checkout@v4
       - name: Run builds
         run: |
-          export DEVELOPER_DIR="/Applications/Xcode_${{ matrix.xcode-version }}.app"
+          swift --version
           swift package resolve
           swift package resolve --version ${{ matrix.swift-syntax-version }} swift-syntax
           swift build --configuration ${{ matrix.configuration }}
+    strategy:
+      matrix:
+        xcode-version:
+          - "15.4"
+          - "16.0"
+          - "16.1"
+          - "16.2"
+          - "16.3"
+        swift-syntax-version:
+          - "510.0.0"
+          - "510.0.1"
+          - "510.0.2"
+          - "510.0.3"
+          - "600.0.0"
+          - "600.0.1"
+          - "601.0.0"
+          - "601.0.1"
+        configuration:
+          - debug
+          - release
+      fail-fast: false
