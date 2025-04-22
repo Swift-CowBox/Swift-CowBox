@@ -73,7 +73,7 @@ jobs:
           - "6.0.3"
           - "6.1.0"
         swift-syntax-version:
-          # - "510.0.0"
+          - "510.0.0"
           - "510.0.1"
           - "510.0.2"
           - "510.0.3"
@@ -84,4 +84,17 @@ jobs:
         configuration:
           - debug
           - release
+        exclude:
+          - swift-version: "6.0.0"
+            swift-syntax-version: "510.0.0"
+            configuration: debug
+          - swift-version: "6.0.1"
+            swift-syntax-version: "510.0.0"
+            configuration: debug
+          - swift-version: "6.0.2"
+            swift-syntax-version: "510.0.0"
+            configuration: debug
+          - swift-version: "6.0.3"
+            swift-syntax-version: "510.0.0"
+            configuration: debug
       fail-fast: false
