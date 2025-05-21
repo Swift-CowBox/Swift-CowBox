@@ -29,7 +29,6 @@ jobs:
     strategy:
       matrix:
         xcode-version:
-          - "15.4"
           - "16.0"
           - "16.1"
           - "16.2"
