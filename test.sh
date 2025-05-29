@@ -19,7 +19,7 @@ function package() {
 }
 
 function main() {
-  local versions="15.4 16.0 16.1 16.2 16.3"
+  local versions="15.4 16.0 16.1 16.2 16.3 16.4"
   
   for version in ${versions}; do
     export DEVELOPER_DIR="/Applications/Xcode_${version}.app"
