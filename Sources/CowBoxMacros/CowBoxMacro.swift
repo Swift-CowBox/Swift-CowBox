@@ -89,7 +89,7 @@ extension CowBoxMacro.SimpleDiagnosticMessage {
 }
 
 extension CowBoxMacro.SimpleDiagnosticMessage {
-  static var notProperty: Self {
+  package static var notProperty: Self {
     Self(
       message: "Not a Property.",
       diagnosticID: MessageID(
@@ -102,7 +102,7 @@ extension CowBoxMacro.SimpleDiagnosticMessage {
 }
 
 extension CowBoxMacro.SimpleDiagnosticMessage {
-  static var notStoredProperty: Self {
+  package static var notStoredProperty: Self {
     Self(
       message: "Not a Stored Property.",
       diagnosticID: MessageID(
@@ -115,7 +115,7 @@ extension CowBoxMacro.SimpleDiagnosticMessage {
 }
 
 extension CowBoxMacro.SimpleDiagnosticMessage {
-  static var notInstanceProperty: Self {
+  package static var notInstanceProperty: Self {
     Self(
       message: "Not an Instance Property.",
       diagnosticID: MessageID(
@@ -251,13 +251,6 @@ extension CowBoxMacro: ExtensionMacro {
     guard
       let declaration = declaration.as(StructDeclSyntax.self)
     else {
-//      let message = SimpleDiagnosticMessage.notStruct
-//      context.diagnose(
-//        Diagnostic(
-//          node: node,
-//          message: message
-//        )
-//      )
       return []
     }
     

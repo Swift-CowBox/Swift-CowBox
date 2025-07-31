@@ -3496,7 +3496,7 @@ extension CowBoxMacroTests {
 }
 
 extension CowBoxMacroTests {
-  func testCowBoxClassDiagnostic() throws {
+  func testCowBoxClassNotStructDiagnostic() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
         """
@@ -3522,7 +3522,7 @@ extension CowBoxMacroTests {
 }
 
 extension CowBoxMacroTests {
-  func testCowBoxEnumDiagnostic() throws {
+  func testCowBoxEnumNotStructDiagnostic() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
         """
@@ -3548,7 +3548,7 @@ extension CowBoxMacroTests {
 }
 
 extension CowBoxMacroTests {
-  func testCowBoxActorDiagnostic() throws {
+  func testCowBoxActorNotStructDiagnostic() throws {
 #if canImport(CowBoxMacros)
     assertMacroExpansion(
         """
@@ -3562,6 +3562,186 @@ extension CowBoxMacroTests {
             message: CowBoxMacro.SimpleDiagnosticMessage.notStruct.message,
             line: 1,
             column: 1
+          )
+        ],
+        macros: testMacros,
+        indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxNonMutatingSubscriptNotPropertyDiagnostic() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+        """
+        struct Person {
+          @CowBoxNonMutating subscript(index: Int) -> Int { 0 }
+        }
+        """,
+        expandedSource: #"""
+          struct Person {
+            subscript(index: Int) -> Int { 0 }
+          }
+          """#,
+        diagnostics: [
+          DiagnosticSpec(
+            message: CowBoxMacro.SimpleDiagnosticMessage.notProperty.message,
+            line: 2,
+            column: 3
+          )
+        ],
+        macros: testMacros,
+        indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxNonMutatingComputedPropertyNotStoredPropertyDiagnostic() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+        """
+        struct Person {
+          @CowBoxNonMutating var x: Int { 0 }
+        }
+        """,
+        expandedSource: #"""
+          struct Person {
+            var x: Int { 0 }
+          }
+          """#,
+        diagnostics: [
+          DiagnosticSpec(
+            message: CowBoxMacro.SimpleDiagnosticMessage.notStoredProperty.message,
+            line: 2,
+            column: 3
+          )
+        ],
+        macros: testMacros,
+        indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxNonMutatingStaticPropertyNotInstancePropertyDiagnostic() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+        """
+        struct Person {
+          @CowBoxNonMutating static var x: Int
+        }
+        """,
+        expandedSource: #"""
+          struct Person {
+            static var x: Int
+          }
+          """#,
+        diagnostics: [
+          DiagnosticSpec(
+            message: CowBoxMacro.SimpleDiagnosticMessage.notInstanceProperty.message,
+            line: 2,
+            column: 3
+          )
+        ],
+        macros: testMacros,
+        indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxMutatingSubscriptNotPropertyDiagnostic() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+        """
+        struct Person {
+          @CowBoxMutating subscript(index: Int) -> Int { 0 }
+        }
+        """,
+        expandedSource: #"""
+          struct Person {
+            subscript(index: Int) -> Int { 0 }
+          }
+          """#,
+        diagnostics: [
+          DiagnosticSpec(
+            message: CowBoxMacro.SimpleDiagnosticMessage.notProperty.message,
+            line: 2,
+            column: 3
+          )
+        ],
+        macros: testMacros,
+        indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxMutatingComputedPropertyNotStoredPropertyDiagnostic() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+        """
+        struct Person {
+          @CowBoxMutating var x: Int { 0 }
+        }
+        """,
+        expandedSource: #"""
+          struct Person {
+            var x: Int { 0 }
+          }
+          """#,
+        diagnostics: [
+          DiagnosticSpec(
+            message: CowBoxMacro.SimpleDiagnosticMessage.notStoredProperty.message,
+            line: 2,
+            column: 3
+          )
+        ],
+        macros: testMacros,
+        indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxMutatingStaticPropertyNotInstancePropertyDiagnostic() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+        """
+        struct Person {
+          @CowBoxMutating static var x: Int
+        }
+        """,
+        expandedSource: #"""
+          struct Person {
+            static var x: Int
+          }
+          """#,
+        diagnostics: [
+          DiagnosticSpec(
+            message: CowBoxMacro.SimpleDiagnosticMessage.notInstanceProperty.message,
+            line: 2,
+            column: 3
           )
         ],
         macros: testMacros,
