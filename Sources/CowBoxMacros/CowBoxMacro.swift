@@ -68,15 +68,15 @@ public struct CowBoxMacro {
 }
 
 extension CowBoxMacro {
-  struct SimpleDiagnosticMessage: DiagnosticMessage, Error {
-    let message: String
-    let diagnosticID: MessageID
-    let severity: DiagnosticSeverity
+  package struct SimpleDiagnosticMessage: DiagnosticMessage, Error {
+    package let message: String
+    package let diagnosticID: MessageID
+    package let severity: DiagnosticSeverity
   }
 }
 
 extension CowBoxMacro.SimpleDiagnosticMessage {
-  static var notStruct: Self {
+  package static var notStruct: Self {
     Self(
       message: "Not a Struct.",
       diagnosticID: MessageID(
@@ -137,13 +137,14 @@ extension CowBoxMacro: MemberMacro {
     guard
       let declaration = declaration.as(StructDeclSyntax.self)
     else {
+      let message = SimpleDiagnosticMessage.notStruct
       context.diagnose(
         Diagnostic(
           node: node,
-          message: SimpleDiagnosticMessage.notStruct
+          message: message
         )
       )
-      throw SimpleDiagnosticMessage.notStruct
+      return []
     }
     
     let variables = declaration.instanceStoredVariables
@@ -250,14 +251,14 @@ extension CowBoxMacro: ExtensionMacro {
     guard
       let declaration = declaration.as(StructDeclSyntax.self)
     else {
-      let message = SimpleDiagnosticMessage.notStruct
-      context.diagnose(
-        Diagnostic(
-          node: node,
-          message: message
-        )
-      )
-      throw message
+//      let message = SimpleDiagnosticMessage.notStruct
+//      context.diagnose(
+//        Diagnostic(
+//          node: node,
+//          message: message
+//        )
+//      )
+      return []
     }
     
     let isCowBox = declaration.instanceStoredVariables.allSatisfy { $0.isCowBox }
@@ -901,7 +902,7 @@ extension CowBoxMutatingMacro: AccessorMacro {
           message: message
         )
       )
-      throw message
+      return []
     }
     
     guard
@@ -914,7 +915,7 @@ extension CowBoxMutatingMacro: AccessorMacro {
           message: message
         )
       )
-      throw message
+      return []
     }
     
     guard
@@ -927,7 +928,7 @@ extension CowBoxMutatingMacro: AccessorMacro {
           message: message
         )
       )
-      throw message
+      return []
     }
     
     guard
@@ -968,7 +969,7 @@ extension CowBoxNonMutatingMacro: AccessorMacro {
           message: message
         )
       )
-      throw message
+      return []
     }
     
     guard
@@ -981,7 +982,7 @@ extension CowBoxNonMutatingMacro: AccessorMacro {
           message: message
         )
       )
-      throw message
+      return []
     }
     
     guard
@@ -994,7 +995,7 @@ extension CowBoxNonMutatingMacro: AccessorMacro {
           message: message
         )
       )
-      throw message
+      return []
     }
     
     guard

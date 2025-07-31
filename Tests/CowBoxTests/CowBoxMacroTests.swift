@@ -3494,3 +3494,81 @@ extension CowBoxMacroTests {
 #endif
   }
 }
+
+extension CowBoxMacroTests {
+  func testCowBoxClassDiagnostic() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+        """
+        @CowBox class Person { }
+        """,
+        expandedSource: #"""
+          class Person { }
+          """#,
+        diagnostics: [
+          DiagnosticSpec(
+            message: CowBoxMacro.SimpleDiagnosticMessage.notStruct.message,
+            line: 1,
+            column: 1
+          )
+        ],
+        macros: testMacros,
+        indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxEnumDiagnostic() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+        """
+        @CowBox enum Person { }
+        """,
+        expandedSource: #"""
+          enum Person { }
+          """#,
+        diagnostics: [
+          DiagnosticSpec(
+            message: CowBoxMacro.SimpleDiagnosticMessage.notStruct.message,
+            line: 1,
+            column: 1
+          )
+        ],
+        macros: testMacros,
+        indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}
+
+extension CowBoxMacroTests {
+  func testCowBoxActorDiagnostic() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+        """
+        @CowBox actor Person { }
+        """,
+        expandedSource: #"""
+          actor Person { }
+          """#,
+        diagnostics: [
+          DiagnosticSpec(
+            message: CowBoxMacro.SimpleDiagnosticMessage.notStruct.message,
+            line: 1,
+            column: 1
+          )
+        ],
+        macros: testMacros,
+        indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}

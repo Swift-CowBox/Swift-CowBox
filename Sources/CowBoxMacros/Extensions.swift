@@ -12,7 +12,6 @@
 import SwiftSyntax
 import SwiftSyntaxMacros
 import SwiftDiagnostics
-import SwiftOperators
 import SwiftSyntaxBuilder
 
 extension VariableDeclSyntax {
@@ -38,7 +37,7 @@ extension VariableDeclSyntax {
   var type: TypeSyntax? {
     bindings.first?.typeAnnotation?.type
   }
-  
+
   func accessorsMatching(_ predicate: (TokenKind) -> Bool) -> [AccessorDeclSyntax] {
     let accessors: [AccessorDeclListSyntax.Element] = bindings.compactMap { patternBinding in
       switch patternBinding.accessorBlock?.accessors {
