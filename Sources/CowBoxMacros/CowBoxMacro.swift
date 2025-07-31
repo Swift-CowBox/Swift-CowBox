@@ -412,7 +412,7 @@ extension CowBoxMacro {
     
     let arguments: [LabeledExprSyntax] = variables.compactMap { variable in
       guard
-        let identifier = variable.identifierPattern?.identifier
+        let identifier = variable.identifier
       else {
         return nil
       }
@@ -472,7 +472,7 @@ extension CowBoxMacro {
       )
     ) {
       for variable in variables {
-        if let identifier = variable.identifierPattern?.identifier,
+        if let identifier = variable.identifier,
            variable.isCowBox == false {
           if variable.initializer != nil,
              variable.bindingSpecifier.tokenKind == .keyword(.let) {
@@ -519,7 +519,7 @@ extension CowBoxMacro {
     
     let array: [CodeBlockItemListSyntax] = variables.compactMap { variable in
       guard
-        let identifier = variable.identifierPattern?.identifier
+        let identifier = variable.identifier
       else {
         return nil
       }
@@ -611,14 +611,14 @@ extension CowBoxMacro {
       )
     ) {
       for variable in variables {
-        if let identifier = variable.identifierPattern?.identifier,
+        if let identifier = variable.identifier,
            variable.isCowBox == false {
           "guard lhs.\(identifier.trimmed) == rhs.\(identifier.trimmed) else { return false }"
         }
       }
       "if lhs._storage === rhs._storage { return true }"
       for variable in variables {
-        if let identifier = variable.identifierPattern?.identifier,
+        if let identifier = variable.identifier,
            variable.isCowBox {
           "guard lhs.\(identifier.trimmed) == rhs.\(identifier.trimmed) else { return false }"
         }
@@ -658,7 +658,7 @@ extension CowBoxMacro {
       )
     ) {
       for variable in variables {
-        if let identifier = variable.identifierPattern?.identifier {
+        if let identifier = variable.identifier {
           "hasher.combine(self.\(identifier.trimmed))"
         }
       }
@@ -681,7 +681,7 @@ extension CowBoxMacro {
       }
     ) {
       for variable in variables {
-        if let identifier = variable.identifierPattern?.identifier {
+        if let identifier = variable.identifier {
           EnumCaseDeclSyntax(
             elements: EnumCaseElementListSyntax {
               EnumCaseElementSyntax(name: identifier)
@@ -705,7 +705,7 @@ extension CowBoxMacro {
         if variable.isCowBoxNonMutating {
           return false
         }
-        if variable.bindingSpecifier.tokenKind == .keyword(.let) {
+        if variable.isImmutable {
           return false
         }
       }
@@ -714,7 +714,7 @@ extension CowBoxMacro {
     
     let arguments: [LabeledExprSyntax] = variables.compactMap { variable in
       guard
-        let identifier = variable.identifierPattern?.identifier
+        let identifier = variable.identifier
       else {
         return nil
       }
@@ -755,7 +755,7 @@ extension CowBoxMacro {
     ) {
       "let values = try decoder.container(keyedBy: CodingKeys.self)"
       for variable in variables {
-        if let identifier = variable.identifierPattern?.identifier,
+        if let identifier = variable.identifier,
            let type = variable.type {
           "let \(identifier.trimmed) = try values.decode(\(type).self, forKey: .\(identifier.trimmed))"
         }
@@ -817,7 +817,7 @@ extension CowBoxMacro {
     ) {
       "var container = encoder.container(keyedBy: CodingKeys.self)"
       for variable in variables {
-        if let identifier = variable.identifierPattern?.identifier {
+        if let identifier = variable.identifier {
           "try container.encode(self.\(identifier.trimmed), forKey: .\(identifier.trimmed))"
         }
       }
@@ -925,7 +925,7 @@ extension CowBoxMutatingMacro: AccessorMacro {
     }
     
     guard
-      let identifier = variableDecl.identifierPattern?.identifier
+      let identifier = variableDecl.identifier
     else {
       //  TODO: THROW ERROR
       return []
@@ -992,7 +992,7 @@ extension CowBoxNonMutatingMacro: AccessorMacro {
     }
     
     guard
-      let identifier = variableDecl.identifierPattern?.identifier
+      let identifier = variableDecl.identifier
     else {
       //  TODO: THROW ERROR
       return []
@@ -1124,7 +1124,7 @@ extension StructDeclSyntax {
     self.definedVariables.filter { variable in
       if variable.isComputed == false,
          variable.isInstance,
-         let identifier = variable.identifierPattern?.identifier,
+         let identifier = variable.identifier,
          identifier.text != CowBoxMacro.storageVariableName {
         return true
       }
@@ -1386,7 +1386,7 @@ extension VariableDeclSyntax {
   var isDescriptionVariable: Bool {
     guard
       self.isInstance,
-      let identifier = self.identifierPattern?.identifier
+      let identifier = self.identifier
     else {
       return false
     }
@@ -1458,7 +1458,7 @@ extension VariableDeclSyntax {
 
 extension VariableDeclSyntax {
   var functionParameter: FunctionParameterSyntax? {
-    if let identifier = self.identifierPattern?.identifier,
+    if let identifier = self.identifier,
        let type = self.type {
       return FunctionParameterSyntax(
         firstName: identifier.trimmed,
