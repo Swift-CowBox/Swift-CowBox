@@ -1,4 +1,4 @@
-# Swift-CowBox 1.1.0
+# Swift-CowBox 1.2.0
 
 [![Swift](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FSwift-CowBox%2FSwift-CowBox%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/Swift-CowBox/Swift-CowBox)
 [![Platforms](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FSwift-CowBox%2FSwift-CowBox%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/Swift-CowBox/Swift-CowBox)
@@ -41,7 +41,7 @@ Writing our own copy-on-write data structures has always been an option, but mea
 
 ## Requirements
 
-`Swift-CowBox` builds from Swift 5.10 (and up) and `Swift-Syntax` 510.0.0 (up to 602.0.0). There are no explicit platform requirements (other than what is required from `Swift-Syntax`). Please file a GitHub issue if you encounter any compatibility issues while building or deploying.
+`Swift-CowBox` builds from Swift 5.10 (and up) and `Swift-Syntax` 510.0.0 (up to 603.0.0). There are no explicit platform requirements (other than what is required from `Swift-Syntax`). Please file a GitHub issue if you encounter any compatibility issues while building or deploying.
 
 ## Usage
 
