@@ -19,7 +19,7 @@ jobs:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode-version }}.app
     steps:
       - name: Run checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Run builds
         run: |
           swift --version
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Run checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Run swiftly
         uses: vapor/swiftly-action@v0.2
         with:
