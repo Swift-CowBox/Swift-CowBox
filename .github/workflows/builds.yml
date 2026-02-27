@@ -98,6 +98,10 @@ jobs:
     steps:
       - name: Run checkout
         uses: actions/checkout@v6
+        # https://github.com/swiftlang/swiftly/pull/509
+      - name: apt-get update
+        run: |
+          sudo apt-get update
       - name: Run swiftly
         uses: vapor/swiftly-action@v0.2
         with:
