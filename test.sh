@@ -5,7 +5,7 @@ set -euox pipefail
 function package() {
   local subcommand=${1}
   
-  local versions="510.0.0 510.0.1 510.0.2 510.0.3 600.0.0 600.0.1 601.0.0 601.0.1 602.0.0 603.0.0"
+  local versions="510.0.0 510.0.1 510.0.2 510.0.3 600.0.0 600.0.1 601.0.0 601.0.1 602.0.0 603.0.0 603.0.1"
   
   for version in ${versions}; do
     swift package reset
@@ -19,7 +19,7 @@ function package() {
 }
 
 function main() {
-  local versions="15.4 16.0 16.1 16.2 16.3 16.4 26.0 26.1 26.2"
+  local versions="15.4 16.0 16.1 16.2 16.3 16.4 26.0 26.1 26.2 26.3 26.4 26.5"
   
   for version in ${versions}; do
     export DEVELOPER_DIR="/Applications/Xcode_${version}.app"
