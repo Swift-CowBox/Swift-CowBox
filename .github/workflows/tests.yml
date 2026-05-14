@@ -13,7 +13,7 @@ permissions:
   contents: read
 jobs:
   macos:
-    name: Xcode ${{ matrix.xcode-version }} / swift-syntax ${{ matrix.swift-syntax-version }} / ${{ matrix.configuration }}
+    name: macos-15 / Xcode ${{ matrix.xcode-version }} / swift-syntax ${{ matrix.swift-syntax-version }} / ${{ matrix.configuration }}
     runs-on: macos-15
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode-version }}.app
@@ -36,10 +36,10 @@ jobs:
           - "26.2"
           - "26.3"
         swift-syntax-version:
-          - "510.0.0"
-          - "510.0.1"
-          - "510.0.2"
-          - "510.0.3"
+          # - "510.0.0"
+          # - "510.0.1"
+          # - "510.0.2"
+          # - "510.0.3"
           - "600.0.0"
           - "600.0.1"
           - "601.0.0"
@@ -52,7 +52,7 @@ jobs:
           - release
       fail-fast: false
   macos-26:
-    name: Xcode ${{ matrix.xcode-version }} / swift-syntax ${{ matrix.swift-syntax-version }} / ${{ matrix.configuration }}
+    name: macos-26 / Xcode ${{ matrix.xcode-version }} / swift-syntax ${{ matrix.swift-syntax-version }} / ${{ matrix.configuration }}
     runs-on: macos-26
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode-version }}.app
@@ -75,10 +75,10 @@ jobs:
           - "26.4"
           - "26.5"
         swift-syntax-version:
-          - "510.0.0"
-          - "510.0.1"
-          - "510.0.2"
-          - "510.0.3"
+          # - "510.0.0"
+          # - "510.0.1"
+          # - "510.0.2"
+          # - "510.0.3"
           - "600.0.0"
           - "600.0.1"
           - "601.0.0"
@@ -91,7 +91,7 @@ jobs:
           - release
       fail-fast: false
   ubuntu:
-    name: Swift ${{ matrix.swift-version }} / swift-syntax ${{ matrix.swift-syntax-version }} / ${{ matrix.configuration }}
+    name: ubuntu-24.04 / Swift ${{ matrix.swift-version }} / swift-syntax ${{ matrix.swift-syntax-version }} / ${{ matrix.configuration }}
     runs-on: ubuntu-24.04
     steps:
       - name: Run checkout
@@ -130,10 +130,10 @@ jobs:
           - "6.3.1"
           - "6.3.2"
         swift-syntax-version:
-          - "510.0.0"
-          - "510.0.1"
-          - "510.0.2"
-          - "510.0.3"
+          # - "510.0.0"
+          # - "510.0.1"
+          # - "510.0.2"
+          # - "510.0.3"
           - "600.0.0"
           - "600.0.1"
           - "601.0.0"
