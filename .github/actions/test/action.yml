@@ -11,9 +11,14 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Set GitHub Path
+      run: echo "$GITHUB_ACTION_PATH" >> $GITHUB_PATH
+      shell: bash
+      env:
+        GITHUB_ACTION_PATH: ${{ github.action_path }}
     - name: Run tests
       shell: bash
       env:
         INPUT_SWIFT_SYNTAX_VERSION: ${{ inputs.swift-syntax-version }}
         INPUT_CONFIGURATION: ${{ inputs.configuration }}
-      run: ./action.sh
+      run: action.sh
