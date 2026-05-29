@@ -26,14 +26,6 @@ jobs:
         with:
           swift-syntax-version: ${{ matrix.swift-syntax-version }}
           configuration: ${{ matrix.configuration }}
-      # - name: Run checkout
-      #   uses: actions/checkout@v6
-      # - name: Run builds
-      #   run: |
-      #     swift --version
-      #     swift package resolve
-      #     swift package resolve --version ${{ matrix.swift-syntax-version }} swift-syntax
-      #     swift build --configuration ${{ matrix.configuration }}
     strategy:
       matrix:
         xcode-version:
@@ -70,14 +62,6 @@ jobs:
         with:
           swift-syntax-version: ${{ matrix.swift-syntax-version }}
           configuration: ${{ matrix.configuration }}
-      # - name: Run checkout
-      #   uses: actions/checkout@v6
-      # - name: Run builds
-      #   run: |
-      #     swift --version
-      #     swift package resolve
-      #     swift package resolve --version ${{ matrix.swift-syntax-version }} swift-syntax
-      #     swift build --configuration ${{ matrix.configuration }}
     strategy:
       matrix:
         xcode-version:
@@ -114,14 +98,6 @@ jobs:
         with:
           swift-syntax-version: ${{ matrix.swift-syntax-version }}
           configuration: ${{ matrix.configuration }}
-      # - name: Run checkout
-      #   uses: actions/checkout@v6
-      # - name: Run builds
-      #   run: |
-      #     swift --version
-      #     swift package resolve
-      #     swift package resolve --version ${{ matrix.swift-syntax-version }} swift-syntax
-      #     swift build --configuration ${{ matrix.configuration }}
     strategy:
       matrix:
         swift-version:

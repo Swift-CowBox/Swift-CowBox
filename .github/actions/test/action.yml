@@ -13,8 +13,7 @@ runs:
   steps:
     - name: Run tests
       shell: bash
-      run: |
-        swift --version
-        swift package resolve
-        swift package resolve --version ${{ inputs.swift-syntax-version }} swift-syntax
-        swift test --configuration ${{ inputs.configuration }}
+      env:
+        INPUT_SWIFT_SYNTAX_VERSION: ${{ inputs.swift-syntax-version }}
+        INPUT_CONFIGURATION: ${{ inputs.configuration }}
+      run: action.sh
