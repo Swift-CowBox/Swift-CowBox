@@ -16,4 +16,4 @@ runs:
       env:
         INPUT_SWIFT_SYNTAX_VERSION: ${{ inputs.swift-syntax-version }}
         INPUT_CONFIGURATION: ${{ inputs.configuration }}
-      run: action.sh
+      run: ./action.sh
