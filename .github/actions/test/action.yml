@@ -12,6 +12,7 @@ runs:
   using: composite
   steps:
     - name: Run tests
+      shell: bash
       run: |
         swift --version
         swift package resolve
