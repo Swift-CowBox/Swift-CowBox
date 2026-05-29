@@ -21,8 +21,10 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode-version }}.app
     steps:
-      - uses: actions/checkout@v6
-      - uses: ./.github/actions/build
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Build
+        uses: ./.github/actions/build
         with:
           swift-syntax-version: ${{ matrix.swift-syntax-version }}
           configuration: ${{ matrix.configuration }}
@@ -57,8 +59,10 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode-version }}.app
     steps:
-      - uses: actions/checkout@v6
-      - uses: ./.github/actions/build
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Build
+        uses: ./.github/actions/build
         with:
           swift-syntax-version: ${{ matrix.swift-syntax-version }}
           configuration: ${{ matrix.configuration }}
@@ -93,8 +97,10 @@ jobs:
     container:
       image: swift:${{matrix.swift-version}}
     steps:
-      - uses: actions/checkout@v6
-      - uses: ./.github/actions/build
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Build
+        uses: ./.github/actions/build
         with:
           swift-syntax-version: ${{ matrix.swift-syntax-version }}
           configuration: ${{ matrix.configuration }}

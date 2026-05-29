@@ -16,9 +16,9 @@ runs:
       shell: bash
       env:
         GITHUB_ACTION_PATH: ${{ github.action_path }}
-    - name: Run builds
+    - name: Build
+      run: action.sh
       shell: bash
       env:
         INPUT_SWIFT_SYNTAX_VERSION: ${{ inputs.swift-syntax-version }}
         INPUT_CONFIGURATION: ${{ inputs.configuration }}
-      run: action.sh
