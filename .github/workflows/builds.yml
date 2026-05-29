@@ -21,14 +21,19 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode-version }}.app
     steps:
-      - name: Run checkout
-        uses: actions/checkout@v6
-      - name: Run builds
-        run: |
-          swift --version
-          swift package resolve
-          swift package resolve --version ${{ matrix.swift-syntax-version }} swift-syntax
-          swift build --configuration ${{ matrix.configuration }}
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/build
+        with:
+          swift-syntax-version: ${{ matrix.swift-syntax-version }}
+          configuration: ${{ matrix.configuration }}
+      # - name: Run checkout
+      #   uses: actions/checkout@v6
+      # - name: Run builds
+      #   run: |
+      #     swift --version
+      #     swift package resolve
+      #     swift package resolve --version ${{ matrix.swift-syntax-version }} swift-syntax
+      #     swift build --configuration ${{ matrix.configuration }}
     strategy:
       matrix:
         xcode-version:
@@ -60,14 +65,19 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode-version }}.app
     steps:
-      - name: Run checkout
-        uses: actions/checkout@v6
-      - name: Run builds
-        run: |
-          swift --version
-          swift package resolve
-          swift package resolve --version ${{ matrix.swift-syntax-version }} swift-syntax
-          swift build --configuration ${{ matrix.configuration }}
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/build
+        with:
+          swift-syntax-version: ${{ matrix.swift-syntax-version }}
+          configuration: ${{ matrix.configuration }}
+      # - name: Run checkout
+      #   uses: actions/checkout@v6
+      # - name: Run builds
+      #   run: |
+      #     swift --version
+      #     swift package resolve
+      #     swift package resolve --version ${{ matrix.swift-syntax-version }} swift-syntax
+      #     swift build --configuration ${{ matrix.configuration }}
     strategy:
       matrix:
         xcode-version:
@@ -99,22 +109,19 @@ jobs:
     container:
       image: swift:${{matrix.swift-version}}
     steps:
-      - name: Run checkout
-        uses: actions/checkout@v6
-        # https://github.com/swiftlang/swiftly/pull/509
-      # - name: apt-get update
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/build
+        with:
+          swift-syntax-version: ${{ matrix.swift-syntax-version }}
+          configuration: ${{ matrix.configuration }}
+      # - name: Run checkout
+      #   uses: actions/checkout@v6
+      # - name: Run builds
       #   run: |
-      #     sudo apt-get update
-      # - name: Run swiftly
-      #   uses: vapor/swiftly-action@v0.2
-      #   with:
-      #     toolchain: ${{ matrix.swift-version }}
-      - name: Run builds
-        run: |
-          swift --version
-          swift package resolve
-          swift package resolve --version ${{ matrix.swift-syntax-version }} swift-syntax
-          swift build --configuration ${{ matrix.configuration }}
+      #     swift --version
+      #     swift package resolve
+      #     swift package resolve --version ${{ matrix.swift-syntax-version }} swift-syntax
+      #     swift build --configuration ${{ matrix.configuration }}
     strategy:
       matrix:
         swift-version:

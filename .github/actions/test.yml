@@ -1,0 +1,19 @@
+name: 'Test'
+description: 'Test'
+inputs:
+  swift-syntax-version:
+    description: 'swift-syntax-version'
+    required: true
+  configuration:
+    description: 'configuration'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Run tests
+      run: |
+        swift --version
+        swift package resolve
+        swift package resolve --version ${{ inputs.swift-syntax-version }} swift-syntax
+        swift test --configuration ${{ inputs.configuration }}

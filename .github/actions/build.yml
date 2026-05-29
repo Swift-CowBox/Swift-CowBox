@@ -1,0 +1,19 @@
+name: 'Build'
+description: 'Build'
+inputs:
+  swift-syntax-version:
+    description: 'swift-syntax-version'
+    required: true
+  configuration:
+    description: 'configuration'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Run builds
+      run: |
+        swift --version
+        swift package resolve
+        swift package resolve --version ${{ inputs.swift-syntax-version }} swift-syntax
+        swift build --configuration ${{ inputs.configuration }}
