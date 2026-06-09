@@ -3752,3 +3752,49 @@ extension CowBoxMacroTests {
 #endif
   }
 }
+
+extension CowBoxMacroTests {
+  func testCowBoxNoCowBoxPropertiesDiagnostic() throws {
+#if canImport(CowBoxMacros)
+    assertMacroExpansion(
+        """
+        @CowBox struct Person {
+          var x: Int
+        }
+        """,
+        expandedSource: #"""
+          struct Person {
+            var x: Int
+
+            private final class _Storage: @unchecked Sendable {
+              init() {
+              }
+              func copy() -> _Storage {
+                _Storage()
+              }
+            }
+
+            private var _storage: _Storage
+
+            init(x: Int) {
+              self.x = x
+              self._storage = _Storage()
+            }
+          }
+          """#,
+        diagnostics: [
+          DiagnosticSpec(
+            message: CowBoxMacro.SimpleDiagnosticMessage.noCowBoxProperties.message,
+            line: 1,
+            column: 1,
+            severity: .warning
+          )
+        ],
+        macros: testMacros,
+        indentationWidth: .spaces(2)
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
+}

@@ -127,6 +127,19 @@ extension CowBoxMacro.SimpleDiagnosticMessage {
   }
 }
 
+extension CowBoxMacro.SimpleDiagnosticMessage {
+  package static var noCowBoxProperties: Self {
+    Self(
+      message: "No CowBox Properties Found.",
+      diagnosticID: MessageID(
+        domain: "CowBoxMacro",
+        id: "NoCowBoxPropertiesFound"
+      ),
+      severity: .warning
+    )
+  }
+}
+
 extension CowBoxMacro: MemberMacro {
   public static func expansion(
     of node: AttributeSyntax,
@@ -148,6 +161,15 @@ extension CowBoxMacro: MemberMacro {
     }
     
     let variables = declaration.instanceStoredVariables
+    if variables.contains(where: { $0.isCowBox }) == false {
+      let message = SimpleDiagnosticMessage.noCowBoxProperties
+      context.diagnose(
+        Diagnostic(
+          node: node,
+          message: message
+        )
+      )
+    }
     
     var expansion = [
       DeclSyntax(
