@@ -14,6 +14,21 @@ import SwiftSyntaxMacros
 import SwiftDiagnostics
 import SwiftSyntaxBuilder
 
+extension Syntax {
+  var isNonGeneric: Bool {
+    if let classDecl = self.as(ClassDeclSyntax.self) {
+      if classDecl.genericParameterClause == nil { return true }
+    } else if let structDecl = self.as(StructDeclSyntax.self) {
+      if structDecl.genericParameterClause == nil { return true }
+    } else if let enumDecl = self.as(EnumDeclSyntax.self) {
+      if enumDecl.genericParameterClause == nil { return true }
+    } else if let actorDecl = self.as(ActorDeclSyntax.self) {
+      if actorDecl.genericParameterClause == nil { return true }
+    }
+    return false
+  }
+}
+
 extension VariableDeclSyntax {
   var identifierPattern: IdentifierPatternSyntax? {
     bindings.first?.pattern.as(IdentifierPatternSyntax.self)
@@ -37,7 +52,7 @@ extension VariableDeclSyntax {
   var type: TypeSyntax? {
     bindings.first?.typeAnnotation?.type
   }
-
+  
   func accessorsMatching(_ predicate: (TokenKind) -> Bool) -> [AccessorDeclSyntax] {
     let accessors: [AccessorDeclListSyntax.Element] = bindings.compactMap { patternBinding in
       switch patternBinding.accessorBlock?.accessors {
