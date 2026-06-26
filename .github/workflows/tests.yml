@@ -49,6 +49,7 @@ jobs:
           - "602.0.0"
           - "603.0.0"
           - "603.0.1"
+          - "603.0.2"
         configuration:
           - debug
           - release
@@ -75,6 +76,7 @@ jobs:
           - "26.3"
           - "26.4"
           - "26.5"
+          - "26.6"
         swift-syntax-version:
           # - "510.0.0"
           # - "510.0.1"
@@ -87,6 +89,7 @@ jobs:
           - "602.0.0"
           - "603.0.0"
           - "603.0.1"
+          - "603.0.2"
         configuration:
           - debug
           - release
@@ -135,6 +138,7 @@ jobs:
           - "602.0.0"
           - "603.0.0"
           - "603.0.1"
+          - "603.0.2"
         configuration:
           - debug
           - release
