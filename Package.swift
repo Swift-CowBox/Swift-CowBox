@@ -25,7 +25,7 @@ let products: [Product] = [
 let dependencies: [Package.Dependency] = [
   .package(
     url: "https://github.com/swiftlang/swift-syntax.git",
-    "510.0.0"..<"604.0.0"
+    "510.0.0"..<"605.0.0"
   )
 ]
 
